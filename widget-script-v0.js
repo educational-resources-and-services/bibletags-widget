@@ -1,6 +1,6 @@
 !(function (d) {
 
-  const widgetDomain = 'https://www.bibletags.org'
+  const widgetDomain = 'https://cdn.bibletags.org'
   const preloaderUrl = `${widgetDomain}/preloader`
   const widgetUrl = `${widgetDomain}/widget`
 
@@ -67,6 +67,16 @@
     },
 
     show: function(options) {
+
+      let uiLanguageCode
+      try {
+        uiLanguageCode = options.uiLanguageCode
+          || localStorage.getItem(`uiLang-${options.versions[0].versionCode}`)
+          || 'eng'  // unknown; widget will redirect to correct language if necessary
+      } catch(e) {
+        uiLanguageCode = 'eng'
+      }
+
       // create widget container
       let widgetContainerEl = newEl('div', {
         style: `
@@ -90,7 +100,7 @@
 
       // create iframe with widget
       const iframeEl = newEl('iframe', {
-        src: widgetUrl,
+        src: `${widgetUrl}/${uiLanguageCode}/index.html`,
         style: `
           visibility: hidden;
           width: 1px;
