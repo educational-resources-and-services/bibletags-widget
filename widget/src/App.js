@@ -9,6 +9,8 @@ import { ApolloClient } from 'apollo-client'
 import { HttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 
+require('dotenv').config()
+
 const client = new ApolloClient({
   link: new HttpLink({ uri: 'https://bibletags.org/graphql' }),
   cache: new InMemoryCache(),
@@ -16,6 +18,7 @@ const client = new ApolloClient({
 
 class App extends Component {
   render() {
+    console.log('process.env', process.env)  // keys must start with REACT_APP_
     return (
       <ApolloProvider client={client}>
         <MuiThemeProvider>
