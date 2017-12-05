@@ -2,9 +2,22 @@
 
   if(window.bibleTagsWidget) return
 
-  const widgetDomain = 'https://cdn.bibletags.org'
-  const preloaderUrl = `${widgetDomain}/preloader`
-  const widgetUrl = `${widgetDomain}/widget`
+  // development
+  const widgetDomain = '*'
+  const widgetUrl = `http://localhost:3000/index.html`
+  
+  // // staging
+  // const widgetDomain = 'https://s3.amazonaws.com'
+  // const widgetUrl = `${widgetDomain}/cdn.bibletags.org/build/index.html`
+  
+  // // production
+  // const widgetDomain = 'https://cdn.bibletags.org'
+  // const widgetUrl = `${widgetDomain}/index-{{LANG}}.html`
+
+
+  const instances = {};
+  let settings = {};
+  let idIndex = 1;
 
   const newEl = function (type, attrs) {
     const el = d.createElement(type);
@@ -12,6 +25,26 @@
       el[attr] = attrs[attr];
     }
     return el;
+  }
+
+  const getUiLanguageCode = options => {
+    let uiLanguageCode
+    try {
+      uiLanguageCode = options.uiLanguageCode
+        || localStorage.getItem(`uiLang-${options.versions[0].versionCode}`)
+        || 'eng'  // unknown; widget will redirect to correct language if necessary
+    } catch(e) {
+      uiLanguageCode = 'eng'
+    }
+    return uiLanguageCode
+  }
+
+  const destroyInstance = id => {
+    if(!instances[id]) return
+    const { containerEl, iframeElEvent } = instances[id]
+    containerEl.remove()
+    window.removeEventListener('message', iframeElEvent)          
+    delete instances[id];
   }
 
   const pseudoHiddenStyles = `
@@ -23,15 +56,9 @@
     left: 0;
   `
 
-  if(!window.bibleTagsWidget) {
-    const node = d.createElement('style');
-    node.innerHTML = '';  // add styles in here
-    d.head.appendChild(node);
-  }
-
-  let settings = {};
-  let instances = {};
-  let idIndex = 1;
+  const node = d.createElement('style');
+  node.innerHTML = '';  // add styles in here
+  d.head.appendChild(node);
 
   window.bibleTagsWidget = {
 
@@ -40,63 +67,71 @@
 
       // load iframe with eng widget to try and ensure no delay on show
       let iframeEl = newEl('iframe', {
-        src: `${widgetUrl}/eng/index.html`,
+        src: widgetUrl.replace('{{LANG}}', 'eng'),
         style: pseudoHiddenStyles,
       });
 
       document.body.appendChild(iframeEl);
       
       // destroy it in 30 seconds no matter what
-      setTimeout(() => iframeEl && iframeEl.remove(), 30 * 1000);
+      setTimeout(() => iframeEl.remove(), 30 * 1000);
     },
 
     preload: function(options) {
+
+      const uiLanguageCode = getUiLanguageCode(options)
+
       // create iframe that will retrieve the data and place it in localstorage (filtering out old preloads)
       let iframeEl = newEl('iframe', {
-        src: preloaderUrl,
+        src: widgetUrl.replace('{{LANG}}', uiLanguageCode),
         style: pseudoHiddenStyles,
       });
 
       // postMessage the options upon iframe load 
       iframeEl.onload = () => {
-        // iframeEl.contentWindow.postMessage(options, widgetDomain);
-        iframeEl.contentWindow.postMessage(options, '*');
+        iframeEl.contentWindow.postMessage({
+          action: 'preload',
+          payload: {
+            settings,
+            options,
+          },
+        }, widgetDomain);
       };
 
       // set up postMessage communcation
-      window.addEventListener('message', event => {
+      const iframeElEvent = event => {
         const { data, source, origin } = event;
 
         if(source != iframeEl.contentWindow) return;
-        if(origin != widgetDomain) return;
+        if(origin != widgetDomain && widgetDomain != '*') return;
 
         switch(data.action) {
           case 'close':
-            iframeEl.remove();
-            iframeEl = null;
+            close();
             break;
         }
-      });
+      };
+
+      const close = () => {
+        if(!iframeEl) return;
+        iframeEl.remove();
+        window.removeEventListener('message', iframeElEvent);
+        iframeEl = null;
+      }
+
+      window.addEventListener('message', iframeElEvent)
 
       document.body.appendChild(iframeEl);
       
       // destroy it in 30 seconds no matter what
-      setTimeout(() => iframeEl && iframeEl.remove(), 30 * 1000);
+      setTimeout(close, 30 * 1000);
 
     },
 
     show: function(options) {
 
       const id = idIndex++
-
-      let uiLanguageCode
-      try {
-        uiLanguageCode = options.uiLanguageCode
-          || localStorage.getItem(`uiLang-${options.versions[0].versionCode}`)
-          || 'eng'  // unknown; widget will redirect to correct language if necessary
-      } catch(e) {
-        uiLanguageCode = 'eng'
-      }
+      const uiLanguageCode = getUiLanguageCode(options)
 
       // create widget container
       let containerEl = newEl('div', {
@@ -121,8 +156,7 @@
 
       // create iframe with widget
       const iframeEl = newEl('iframe', {
-        // src: `${widgetUrl}/${uiLanguageCode}/index.html`,
-        src: `widget/build/index.html`,
+        src: widgetUrl.replace('{{LANG}}', uiLanguageCode),
         style: `
           visibility: hidden;
           width: 100px;
@@ -133,45 +167,45 @@
         `,
       });
 
-      instances[id] = {
-        containerEl,
-      }
-
       containerEl.appendChild(arrowEl);
       containerEl.appendChild(iframeEl);
       (options.containerEl || document.body).appendChild(containerEl);
 
       // postMessage the options upon iframe load 
       iframeEl.onload = () => {
-console.log('go postMessage setup')
         iframeEl.contentWindow.postMessage({
-          action: 'setup',
+          action: 'show',
           payload: {
             settings,
             options,
           },
-        // }, widgetDomain);
-        }, '*');
+        }, widgetDomain);
       };
 
       // set up postMessage communcation
-      window.addEventListener('message', event => {
+      const iframeElEvent = event => {
         const { data, source, origin } = event;
 
         if(source != iframeEl.contentWindow) return;
-        if(origin != widgetDomain) return;
+        if(origin != widgetDomain && widgetDomain != '*') return;
 
         switch(data.action) {
           case 'close':
-            iframeEl.remove();
-            iframeEl = null;
+            destroyInstance(id)
             break;
 
           case '':
             break;
         }
-      });
+      };
 
+      window.addEventListener('message', iframeElEvent)
+
+      instances[id] = {
+        containerEl,
+        iframeElEvent,
+      }
+      
       return id;
       
     },
@@ -179,13 +213,9 @@ console.log('go postMessage setup')
     hide: function(id) {
       // destroy the matching widget iframe (or all, if id is absent)
       if(id) {
-        if(instances[id]) {
-          instances[id].containerEl.remove();
-          delete instances[id];
-        }
+        destroyInstance(id)
       } else {
-        Object.values(instances).forEach(instance => instance.containerEl.remove())
-        instances = {};
+        Object.keys(instances).forEach(id => destroyInstance(id))
       }
     },
 
