@@ -1,0 +1,22 @@
+{
+  "name": "bibletags-widget",
+  "version": "1.0.0",
+  "description": "",
+  "main": "deployScript.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AndyHubert/bibletags-widget.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AndyHubert/bibletags-widget/issues"
+  },
+  "homepage": "https://github.com/AndyHubert/bibletags-widget#readme",
+  "dependencies": {
+    "uglify-es": "3.2.1"
+  }
+}
