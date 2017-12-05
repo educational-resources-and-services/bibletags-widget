@@ -12,6 +12,15 @@
     return el;
   }
 
+  const pseudoHiddenStyles = `
+    visibility: hidden;
+    width: 1px;
+    height: 1px;
+    position: absolute;
+    top: 0;
+    left: 0;
+  `
+
   if(!window.bibleTagsWidget) {
     const node = d.createElement('style');
     node.innerHTML = '';  // add styles in here
@@ -25,20 +34,24 @@
 
     setup: function(options) {
       settings = options;
+
+      // load iframe with eng widget to try and ensure no delay on show
+      let iframeEl = newEl('iframe', {
+        src: `${widgetUrl}/eng/index.html`,
+        style: pseudoHiddenStyles,
+      });
+
+      document.body.appendChild(iframeEl);
+      
+      // destroy it in 30 seconds no matter what
+      setTimeout(() => iframeEl && iframeEl.remove(), 30 * 1000);
     },
 
     preload: function(options) {
       // create iframe that will retrieve the data and place it in localstorage (filtering out old preloads)
       let iframeEl = newEl('iframe', {
         src: preloaderUrl,
-        style: `
-          visibility: hidden;
-          width: 1px;
-          height: 1px;
-          position: absolute;
-          top: 0;
-          left: 0;
-        `,
+        style: pseudoHiddenStyles,
       });
 
       // postMessage the options upon iframe load 
@@ -60,6 +73,8 @@
             break;
         }
       });
+
+      document.body.appendChild(iframeEl);
       
       // destroy it in 30 seconds no matter what
       setTimeout(() => iframeEl && iframeEl.remove(), 30 * 1000);
