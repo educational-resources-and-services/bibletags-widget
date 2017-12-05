@@ -1,5 +1,7 @@
 !(function (d) {
 
+  if(window.bibleTagsWidget) return
+
   const widgetDomain = 'https://cdn.bibletags.org'
   const preloaderUrl = `${widgetDomain}/preloader`
   const widgetUrl = `${widgetDomain}/widget`
@@ -27,10 +29,11 @@
     d.head.appendChild(node);
   }
 
-  const settings = {};
+  let settings = {};
   let instances = {};
+  let idIndex = 1;
 
-  window.bibleTagsWidget = window.bibleTagsWidget || {
+  window.bibleTagsWidget = {
 
     setup: function(options) {
       settings = options;
@@ -55,15 +58,16 @@
       });
 
       // postMessage the options upon iframe load 
-      iframeEl.addEventListener('onload', () => {
-        iframeEl.postMessage(options, widgetDomain);
-      });
+      iframeEl.onload = () => {
+        // iframeEl.contentWindow.postMessage(options, widgetDomain);
+        iframeEl.contentWindow.postMessage(options, '*');
+      };
 
       // set up postMessage communcation
       window.addEventListener('message', event => {
         const { data, source, origin } = event;
 
-        if(source != iframeEl) return;
+        if(source != iframeEl.contentWindow) return;
         if(origin != widgetDomain) return;
 
         switch(data.action) {
@@ -83,6 +87,8 @@
 
     show: function(options) {
 
+      const id = idIndex++
+
       let uiLanguageCode
       try {
         uiLanguageCode = options.uiLanguageCode
@@ -93,7 +99,7 @@
       }
 
       // create widget container
-      let widgetContainerEl = newEl('div', {
+      let containerEl = newEl('div', {
         style: `
           position: absolute;
           top: 50px;
@@ -115,37 +121,44 @@
 
       // create iframe with widget
       const iframeEl = newEl('iframe', {
-        src: `${widgetUrl}/${uiLanguageCode}/index.html`,
+        // src: `${widgetUrl}/${uiLanguageCode}/index.html`,
+        src: `widget/build/index.html`,
         style: `
           visibility: hidden;
-          width: 1px;
-          height: 1px;
+          width: 100px;
+          height: 100px;
           position: absolute;
           top: 0;
           left: 0;
         `,
       });
 
-      widgetContainerEl.appendChild(arrowEl);
-      widgetContainerEl.appendChild(iframeEl);
-      (options.containerEl || document.body).appendChild(widgetContainerEl);
+      instances[id] = {
+        containerEl,
+      }
+
+      containerEl.appendChild(arrowEl);
+      containerEl.appendChild(iframeEl);
+      (options.containerEl || document.body).appendChild(containerEl);
 
       // postMessage the options upon iframe load 
-      iframeEl.addEventListener('onload', () => {
-        iframeEl.postMessage({
+      iframeEl.onload = () => {
+console.log('go postMessage setup')
+        iframeEl.contentWindow.postMessage({
           action: 'setup',
           payload: {
             settings,
             options,
           },
-        }, widgetDomain);
-      });
+        // }, widgetDomain);
+        }, '*');
+      };
 
       // set up postMessage communcation
       window.addEventListener('message', event => {
         const { data, source, origin } = event;
 
-        if(source != iframeEl) return;
+        if(source != iframeEl.contentWindow) return;
         if(origin != widgetDomain) return;
 
         switch(data.action) {
@@ -158,18 +171,20 @@
             break;
         }
       });
+
+      return id;
       
     },
 
-    hide: function(uid) {
-      // destroy the matching widget iframe (or all, if uid is absent)
-      if(uid) {
-        if(instances[uid]) {
-          instances[uid].containerEl.remove();
-          delete instances[uid];
+    hide: function(id) {
+      // destroy the matching widget iframe (or all, if id is absent)
+      if(id) {
+        if(instances[id]) {
+          instances[id].containerEl.remove();
+          delete instances[id];
         }
       } else {
-        instances.forEach(instance => instance.containerEl.remove())
+        Object.values(instances).forEach(instance => instance.containerEl.remove())
         instances = {};
       }
     },

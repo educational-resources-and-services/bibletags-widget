@@ -1,0 +1,14 @@
+<html>
+  <head>
+    <script src="./widget-script-v0.js"></script>
+  </head>
+  <body>
+    <div>
+      <button onClick="window.bibleTagsWidget.setup({one: 1, two: 2})">Setup</button>
+      <button onClick="window.bibleTagsWidget.preload({one: 1, two: 2})">Preload</button>
+      <button onClick="window.lastWidgetId = window.bibleTagsWidget.show({one: 1, two: 2})">Show</button>
+      <button onClick="window.bibleTagsWidget.hide(window.lastWidgetId)">Hide last showed</button>
+      <button onClick="window.bibleTagsWidget.hide()">Hide all</button>
+    </div>
+  </body>
+</html>
