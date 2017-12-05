@@ -17,6 +17,45 @@ const client = new ApolloClient({
 })
 
 class App extends Component {
+
+  componentDidMount() {
+    window.addEventListener('message', this.postMessageListener)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('message', this.postMessageListener)
+  }
+
+  postMessageListener = event => {
+    const { data, source, origin } = event
+
+    // record origin in ga
+    
+    if(source !== window.parent) return
+
+    switch(data.action) {
+      case 'preload':
+        setTimeout(() => {
+          source.postMessage({
+            action: 'close',
+          }, process.env.NODE_ENV === 'development' ? '*' : origin)
+        }, 2000)
+        break;
+
+      case 'show':
+        setTimeout(() => {
+          source.postMessage({
+            action: 'close',
+          }, process.env.NODE_ENV === 'development' ? '*' : origin)
+        }, 5000)
+        break;
+
+      default:
+        console.log('unknown postMessage', data)
+        break;
+    }
+  }
+
   render() {
     console.log('process.env', process.env)  // keys must start with REACT_APP_
     return (
