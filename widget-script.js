@@ -67,6 +67,8 @@
     widgetEl.style.width = `${width}px`;
     widgetEl.style.height = `${initialHeight}px`;
     widgetEl.style.visibility = `visible`;
+
+    return maxHeight;
   };
 
   const getInstanceTemplate = options => {
@@ -200,7 +202,7 @@
       const id = idIndex++;
       const { widgetEl, iframeEl } = d.body.contains(onDeckInstance.widgetEl) ? onDeckInstance : getInstanceTemplate(options);
 
-      setWidgetElStyle({ widgetEl, options });
+      options.maxHeight = setWidgetElStyle({ widgetEl, options });
       
       // postMessage the options upon iframe load 
       const sendShowPostMessage = () => {
@@ -225,7 +227,9 @@
             destroyInstance(id);
             break;
 
-          case '':
+          case 'updateHeight':
+            const newHeight = parseInt(data.payload.height)
+            if(newHeight) widgetEl.style.height = `${newHeight}px`;
             break;
         }
       };

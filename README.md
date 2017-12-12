@@ -4,10 +4,14 @@
 
 * Jesse:
   confirm that USFM is free to use (unrestricted)
-    ask Jesse about all markup options
-    common Bible search language exists?
+    ask Jesse about all markup options - osis (xml), usx (xml counterpart to usfm)
+     - usfm 3 milestones, named-attributes allows for overlapping
+    common Bible search language exists?  json-ld, named attributes, url-query
   ask Jesse about best way to identify a lemma (extended strongs?)
     is extended strongs clearly defined?
+    - https://www.academia.edu/35220175/Linking_Lexical_Resources_for_Biblical_Greek
+    - https://git.door43.org/Door43/UGNT/src/tw_occurrences/57-TIT.usfm#L19
+    - BHP => UGNT fits James - talk to Alan
 * explore using localstorage with apollo (for preloading and caching scripture data) - this likely better than redux-persist since otherwise an already loaded widget will not updated info when a different widget gets more data
   - I want:
     * sharing of data between iframe instances
@@ -18,8 +22,6 @@
       // https://www.apollographql.com/docs/react/basics/network-layer.html
       // https://www.apollographql.com/docs/link/composition.html
       // https://github.com/apollographql/apollo-link/issues/158
-* basic formatting of widget container
-* positioning of widget container
 * flexible widget height
 * set up basic widget ui structure (make spot for BibleTags.org logo)
 * set up widget to to expand on word selection
@@ -32,6 +34,9 @@
 * set up search
 * set up cfs and notes
 * use BHP? (compare lemmas and forms between NA28 and BHP)
+* add ability to ondeck different containerEls, and have the script choose the appropriate ondeck instance
+* basic formatting of widget container
+* positioning of widget container
 
 ### Project components
 

@@ -45,6 +45,14 @@ class App extends Component {
       case 'show':
         setTimeout(() => {
           source.postMessage({
+            action: 'updateHeight',
+            payload: {
+              height: Math.min(data.payload.options.maxHeight || 9999999, 3600),
+            },
+          }, process.env.NODE_ENV === 'development' ? '*' : origin)
+        }, 1000)
+        setTimeout(() => {
+          source.postMessage({
             action: 'close',
           }, process.env.NODE_ENV === 'development' ? '*' : origin)
         }, 5000)
