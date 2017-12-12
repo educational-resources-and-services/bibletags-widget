@@ -77,3 +77,29 @@ class App extends Component {
 }
 
 export default App;
+
+
+/*
+
+** Versification mapping for versions will be in the widget. If I make this smart, then we are talking 1k-2k.
+
+// talk to unfolding word about how they do versification
+https://crosswire.org/wiki/Survey_of_versification_schemes_in_French_Bibles#Canons_proposals_for_The_Sword_Project
+https://crosswire.org/wiki/Alternate_Versification
+https://github.com/openscriptures/BibleOrgSys/tree/master/DataFiles/VersificationSystems
+[
+  {
+    versions: ['esv','nasb','kjv',...],
+    notVersions: ['udi',...],
+    mappings: {
+      "0211030":"0212001",
+      "0212001-":-1,
+      "0512001-512002":"512001",
+      "0522005":"0522005-0522006",
+      ...
+    }
+  },
+  ...
+]
+
+*/
