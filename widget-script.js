@@ -16,7 +16,6 @@
 
 
   let onDeckInstance;
-  let onDeckContainerEl;
   const instances = {};
   let settings = {};
   let idIndex = 1;
@@ -42,6 +41,14 @@
     return uiLanguageCode;
   };
   
+  const hideWidgetEl = widgetEl => {
+    widgetEl.style.top = 0;
+    widgetEl.style.left = 0;
+    widgetEl.style.width = `1px`;
+    widgetEl.style.height = `1px`;
+    widgetEl.style.visibility = `hidden`;
+  };
+
   const setWidgetElStyle = ({ widgetEl, options }) => {
     const mobileMode = Math.min(window.innerWidth, window.innerHeight) < 500;
     const width = mobileMode ? '100%' : 400;
@@ -52,13 +59,14 @@
     const left = mobileMode ? 0 : 100;  // calculate
 
     if(top) {
-      widgetEl.style.top = `${top}px;`;
+      widgetEl.style.top = `${top}px`;
     } else {
-      widgetEl.style.bottom = `${bottom}px;`;
+      widgetEl.style.bottom = `${bottom}px`;
     }
     widgetEl.style.left = `${left}px`;
     widgetEl.style.width = `${width}px`;
     widgetEl.style.height = `${initialHeight}px`;
+    widgetEl.style.visibility = `visible`;
   };
 
   const getInstanceTemplate = options => {
@@ -115,24 +123,9 @@
   };
 
   const addOnDeckInstance = options => {
-
-    if(!d.body.contains(onDeckContainerEl)) {
-      onDeckContainerEl = newEl('div', {
-        style: `
-          visibility: hidden;
-          overflow: hidden;
-          width: 1px;
-          height: 1px;
-          position: absolute;
-          top: 0;
-          left: 0;
-        `,
-      });
-      d.body.appendChild(onDeckContainerEl);
-    }
-
     onDeckInstance = getInstanceTemplate(options);
-    onDeckContainerEl.appendChild(onDeckInstance.widgetEl);
+    hideWidgetEl(onDeckInstance.widgetEl);
+    (options.containerEl || d.body).appendChild(onDeckInstance.widgetEl);
   };
 
   const destroyInstance = id => {
@@ -157,10 +150,12 @@
 
     preload: (options={}) => {
 
-      const { widgetEl, iframeEl } = d.body.contains(onDeckInstance.widgetEl) ? onDeckInstance : getInstanceTemplate(options);
+      let { widgetEl, iframeEl } = getInstanceTemplate(options);
+
+      hideWidgetEl(widgetEl);
 
       // postMessage the options upon iframe load 
-      const sendPreloadPostMessage = () => {
+      iframeEl.onload = () => {
         iframeEl.contentWindow.postMessage({
           action: 'preload',
           payload: {
@@ -168,11 +163,6 @@
             options,
           },
         }, widgetDomain);
-      }
-      if(iframeEl.loaded) {
-        sendPreloadPostMessage();
-      } else {
-        iframeEl.onload = sendPreloadPostMessage;
       }
 
       // set up postMessage communcation
@@ -190,10 +180,10 @@
       };
 
       const close = () => {
-        if(!instance) return;
+        if(!widgetEl) return;
         widgetEl.remove();
         window.removeEventListener('message', iframeElEvent);
-        instance = null;
+        widgetEl = iframeEl = null;
       }
 
       window.addEventListener('message', iframeElEvent);
@@ -202,8 +192,6 @@
       
       // destroy it in 30 seconds no matter what
       setTimeout(close, 30 * 1000);
-
-      addOnDeckInstance(options);
 
     },
 
@@ -224,11 +212,6 @@
           },
         }, widgetDomain);
       }
-      if(iframeEl.loaded) {
-        sendShowPostMessage();
-      } else {
-        iframeEl.onload = sendShowPostMessage;
-      }
 
       // set up postMessage communcation
       const iframeElEvent = event => {
@@ -247,9 +230,17 @@
         }
       };
 
-      (options.containerEl || d.body).appendChild(widgetEl);
+      if(widgetEl.parentElement != (options.containerEl || d.body)) {
+        (options.containerEl || d.body).appendChild(widgetEl);
+      }
 
       window.addEventListener('message', iframeElEvent)
+
+      if(iframeEl.loaded) {
+        sendShowPostMessage();
+      } else {
+        iframeEl.onload = sendShowPostMessage;
+      }
 
       instances[id] = {
         widgetEl,
@@ -263,7 +254,6 @@
     },
 
     hide: id => {
-console.log('instances', instances)
       // destroy the matching widget iframe (or all, if id is absent)
       if(id) {
         destroyInstance(id);
