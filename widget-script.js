@@ -1,4 +1,4 @@
-!(function (d) {
+!((d) => {
 
   if(window.bibleTagsWidget) return;
 
@@ -16,11 +16,12 @@
 
 
   let onDeckInstance;
+  let onDeckContainerEl;
   const instances = {};
   let settings = {};
   let idIndex = 1;
 
-  const newEl = function (type, attrs) {
+  const newEl = (type, attrs) => {
     const el = d.createElement(type);
     for (let attr in attrs) {
       el[attr] = attrs[attr];
@@ -32,12 +33,106 @@
     let uiLanguageCode
     try {
       uiLanguageCode = options.uiLanguageCode
-        || localStorage.getItem(`uiLang-${options.versions[0].versionCode}`)
+        || localStorage.getItem(`uiLang-${options.versions && (options.versions[0] || {}).versionCode}`)
+        || localStorage.getItem(`uiLang`)  // latest language code used
         || 'eng'  // unknown; widget will redirect to correct language if necessary
     } catch(e) {
       uiLanguageCode = 'eng';
     }
     return uiLanguageCode;
+  };
+  
+  const setWidgetElStyle = ({ widgetEl, options }) => {
+    const mobileMode = Math.min(window.innerWidth, window.innerHeight) < 500;
+    const width = mobileMode ? '100%' : 400;
+    const maxHeight = 800;  // calculate
+    const initialHeight = mobileMode ? '100%' : Math.min(350, maxHeight);
+    const top = mobileMode ? 0 : 100;  // calculate
+    const bottom = mobileMode ? 0 : null;  // calculate
+    const left = mobileMode ? 0 : 100;  // calculate
+
+    if(top) {
+      widgetEl.style.top = `${top}px;`;
+    } else {
+      widgetEl.style.bottom = `${bottom}px;`;
+    }
+    widgetEl.style.left = `${left}px`;
+    widgetEl.style.width = `${width}px`;
+    widgetEl.style.height = `${initialHeight}px`;
+  };
+
+  const getInstanceTemplate = options => {
+
+    const uiLanguageCode = getUiLanguageCode(options);
+
+    // create widget container
+    const widgetEl = newEl('div', {
+      style: `
+        position: absolute;
+        border: 1px solid #333;
+        border-radius: 3px;
+        overflow: hidden;
+      `,
+    });
+
+    setWidgetElStyle({ widgetEl, options });
+
+    // create widget arrow element
+    const arrowEl = options.anchorEl && newEl('div', {
+      style: `
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        border: 1px solid #333;
+      `,
+    });
+
+    // create iframe with widget
+    const iframeEl = newEl('iframe', {
+      src: widgetUrl.replace('{{LANG}}', uiLanguageCode),
+      style: `
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: white;
+        border: none;
+      `,
+    });
+
+    iframeEl.onload = () => iframeEl.loaded = true;
+
+    arrowEl && widgetEl.appendChild(arrowEl);
+    widgetEl.appendChild(iframeEl);
+
+    return {
+      widgetEl,
+      arrowEl,
+      iframeEl,
+    };
+    
+  };
+
+  const addOnDeckInstance = options => {
+
+    if(!d.body.contains(onDeckContainerEl)) {
+      onDeckContainerEl = newEl('div', {
+        style: `
+          visibility: hidden;
+          overflow: hidden;
+          width: 1px;
+          height: 1px;
+          position: absolute;
+          top: 0;
+          left: 0;
+        `,
+      });
+      d.body.appendChild(onDeckContainerEl);
+    }
+
+    onDeckInstance = getInstanceTemplate(options);
+    onDeckContainerEl.appendChild(onDeckInstance.widgetEl);
   };
 
   const destroyInstance = id => {
@@ -48,48 +143,24 @@
     delete instances[id];
   };
 
-  const pseudoHiddenStyles = `
-    visibility: hidden;
-    width: 1px;
-    height: 1px;
-    position: absolute;
-    top: 0;
-    left: 0;
-  `;
+  const styleEl = d.createElement('style');
+  styleEl.innerHTML = '';  // add styles in here
+  d.head.appendChild(styleEl);
 
-  const node = d.createElement('style');
-  node.innerHTML = '';  // add styles in here
-  d.head.appendChild(node);
-
+  window.onload = () => addOnDeckInstance({});
+  
   window.bibleTagsWidget = {
 
-    setup: function(options) {
-      settings = options;
-
-      // load iframe with eng widget to try and ensure no delay on show
-      let iframeEl = newEl('iframe', {
-        src: widgetUrl.replace('{{LANG}}', 'eng'),
-        style: pseudoHiddenStyles,
-      });
-
-      document.body.appendChild(iframeEl);
-      
-      // destroy it in 30 seconds no matter what
-      setTimeout(() => iframeEl.remove(), 30 * 1000);
+    setup: (options={}) => {
+      settings = options || {};
     },
 
-    preload: function(options) {
+    preload: (options={}) => {
 
-      const uiLanguageCode = getUiLanguageCode(options);
-
-      // create iframe that will retrieve the data and place it in localstorage (filtering out old preloads)
-      let iframeEl = newEl('iframe', {
-        src: widgetUrl.replace('{{LANG}}', uiLanguageCode),
-        style: pseudoHiddenStyles,
-      });
+      const { widgetEl, iframeEl } = d.body.contains(onDeckInstance.widgetEl) ? onDeckInstance : getInstanceTemplate(options);
 
       // postMessage the options upon iframe load 
-      iframeEl.onload = () => {
+      const sendPreloadPostMessage = () => {
         iframeEl.contentWindow.postMessage({
           action: 'preload',
           payload: {
@@ -97,7 +168,12 @@
             options,
           },
         }, widgetDomain);
-      };
+      }
+      if(iframeEl.loaded) {
+        sendPreloadPostMessage();
+      } else {
+        iframeEl.onload = sendPreloadPostMessage;
+      }
 
       // set up postMessage communcation
       const iframeElEvent = event => {
@@ -114,75 +190,32 @@
       };
 
       const close = () => {
-        if(!iframeEl) return;
-        iframeEl.remove();
+        if(!instance) return;
+        widgetEl.remove();
         window.removeEventListener('message', iframeElEvent);
-        iframeEl = null;
+        instance = null;
       }
 
       window.addEventListener('message', iframeElEvent);
 
-      document.body.appendChild(iframeEl);
+      d.body.appendChild(widgetEl);
       
       // destroy it in 30 seconds no matter what
       setTimeout(close, 30 * 1000);
 
+      addOnDeckInstance(options);
+
     },
 
-    show: function(options) {
+    show: (options={}) => {
 
       const id = idIndex++;
-      const uiLanguageCode = getUiLanguageCode(options);
+      const { widgetEl, iframeEl } = d.body.contains(onDeckInstance.widgetEl) ? onDeckInstance : getInstanceTemplate(options);
 
-      const mobileMode = Math.min(window.innerWidth, window.innerHeight) < 500;
-      const width = mobileMode ? '100%' : 400;
-      const maxHeight = 800;  // calculate
-      const initialHeight = mobileMode ? '100%' : Math.min(350, maxHeight);
-      const top = mobileMode ? 0 : 100;  // calculate
-      const bottom = mobileMode ? 0 : null;  // calculate
-      const left = mobileMode ? 0 : 100;  // calculate
-
-      // create widget container
-      const widgetEl = newEl('div', {
-        style: `
-          position: absolute;
-          ${top ? `top: ${top}px;` : ``}
-          ${!top ? `bottom: ${bottom}px;` : ``}
-          left: ${left}px;
-          width: ${width}px;
-          height: ${initialHeight}px;
-          border: 1px solid #333;
-          border-radius: 3px;
-          overflow: hidden;
-        `,
-      });
-
-      // create widget arrow element
-      const arrowEl = options.anchorEl && newEl('div', {
-        style: `
-          position: absolute;
-          width: 16px;
-          height: 16px;
-          border: 1px solid #333;
-        `,
-      });
-
-      // create iframe with widget
-      const iframeEl = newEl('iframe', {
-        src: widgetUrl.replace('{{LANG}}', uiLanguageCode),
-        style: `
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background: white;
-          border: none;
-        `,
-      });
-
+      setWidgetElStyle({ widgetEl, options });
+      
       // postMessage the options upon iframe load 
-      iframeEl.onload = () => {
+      const sendShowPostMessage = () => {
         iframeEl.contentWindow.postMessage({
           action: 'show',
           payload: {
@@ -190,7 +223,12 @@
             options,
           },
         }, widgetDomain);
-      };
+      }
+      if(iframeEl.loaded) {
+        sendShowPostMessage();
+      } else {
+        iframeEl.onload = sendShowPostMessage;
+      }
 
       // set up postMessage communcation
       const iframeElEvent = event => {
@@ -209,9 +247,7 @@
         }
       };
 
-      arrowEl && widgetEl.appendChild(arrowEl);
-      widgetEl.appendChild(iframeEl);
-      (options.containerEl || document.body).appendChild(widgetEl);
+      (options.containerEl || d.body).appendChild(widgetEl);
 
       window.addEventListener('message', iframeElEvent)
 
@@ -220,11 +256,14 @@
         iframeElEvent,
       };
       
+      addOnDeckInstance(options);
+
       return id;
       
     },
 
-    hide: function(id) {
+    hide: id => {
+console.log('instances', instances)
       // destroy the matching widget iframe (or all, if id is absent)
       if(id) {
         destroyInstance(id);
