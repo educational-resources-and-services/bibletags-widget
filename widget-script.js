@@ -41,8 +41,8 @@
 
   const destroyInstance = id => {
     if(!instances[id]) return
-    const { containerEl, iframeElEvent } = instances[id]
-    containerEl.remove()
+    const { widgetEl, iframeElEvent } = instances[id]
+    widgetEl.remove()
     window.removeEventListener('message', iframeElEvent)          
     delete instances[id];
   }
@@ -133,19 +133,31 @@
       const id = idIndex++
       const uiLanguageCode = getUiLanguageCode(options)
 
+      const mobileMode = Math.min(window.innerWidth, window.innerHeight) < 500
+      const width = mobileMode ? '100%' : 400
+      const maxHeight = 800  // calculate
+      const initialHeight = mobileMode ? '100%' : Math.min(350, maxHeight)
+      const top = mobileMode ? 0 : 100  // calculate
+      const bottom = mobileMode ? 0 : null  // calculate
+      const left = mobileMode ? 0 : 100  // calculate
+
       // create widget container
-      let containerEl = newEl('div', {
+      const widgetEl = newEl('div', {
         style: `
           position: absolute;
-          top: 50px;
-          left: 50px;
-          width: 400px;
-          max-height: 600px;
+          ${top ? `top: ${top}px;` : ``}
+          ${!top ? `bottom: ${bottom}px;` : ``}
+          left: ${left}px;
+          width: ${width}px;
+          height: ${initialHeight}px;
+          border: 1px solid #333;
+          border-radius: 3px;
+          overflow: hidden;
         `,
       });
 
       // create widget arrow element
-      let arrowEl = newEl('div', {
+      const arrowEl = options.anchorEl && newEl('div', {
         style: `
           position: absolute;
           width: 16px;
@@ -158,18 +170,15 @@
       const iframeEl = newEl('iframe', {
         src: widgetUrl.replace('{{LANG}}', uiLanguageCode),
         style: `
-          visibility: hidden;
-          width: 100px;
-          height: 100px;
           position: absolute;
           top: 0;
           left: 0;
+          width: 100%;
+          height: 100%;
+          background: white;
+          border: none;
         `,
       });
-
-      containerEl.appendChild(arrowEl);
-      containerEl.appendChild(iframeEl);
-      (options.containerEl || document.body).appendChild(containerEl);
 
       // postMessage the options upon iframe load 
       iframeEl.onload = () => {
@@ -199,10 +208,14 @@
         }
       };
 
+      arrowEl && widgetEl.appendChild(arrowEl);
+      widgetEl.appendChild(iframeEl);
+      (options.containerEl || document.body).appendChild(widgetEl);
+
       window.addEventListener('message', iframeElEvent)
 
       instances[id] = {
-        containerEl,
+        widgetEl,
         iframeElEvent,
       }
       
