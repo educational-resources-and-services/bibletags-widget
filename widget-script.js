@@ -1,20 +1,21 @@
 !(function (d) {
 
-  if(window.bibleTagsWidget) return
+  if(window.bibleTagsWidget) return;
 
   // development
-  const widgetDomain = '*'
-  const widgetUrl = `http://localhost:3000/index.html`
+  const widgetDomain = '*';
+  const widgetUrl = `http://localhost:3000/index.html`;
   
   // // staging
-  // const widgetDomain = 'https://s3.amazonaws.com'
-  // const widgetUrl = `${widgetDomain}/cdn.bibletags.org/build/index.html`
+  // const widgetDomain = 'https://s3.amazonaws.com';
+  // const widgetUrl = `${widgetDomain}/cdn.bibletags.org/build/index.html`;
   
   // // production
-  // const widgetDomain = 'https://cdn.bibletags.org'
-  // const widgetUrl = `${widgetDomain}/index-{{LANG}}.html`
+  // const widgetDomain = 'https://cdn.bibletags.org';
+  // const widgetUrl = `${widgetDomain}/index-{{LANG}}.html`;
 
 
+  let onDeckInstance;
   const instances = {};
   let settings = {};
   let idIndex = 1;
@@ -25,7 +26,7 @@
       el[attr] = attrs[attr];
     }
     return el;
-  }
+  };
 
   const getUiLanguageCode = options => {
     let uiLanguageCode
@@ -34,18 +35,18 @@
         || localStorage.getItem(`uiLang-${options.versions[0].versionCode}`)
         || 'eng'  // unknown; widget will redirect to correct language if necessary
     } catch(e) {
-      uiLanguageCode = 'eng'
+      uiLanguageCode = 'eng';
     }
-    return uiLanguageCode
-  }
+    return uiLanguageCode;
+  };
 
   const destroyInstance = id => {
-    if(!instances[id]) return
-    const { widgetEl, iframeElEvent } = instances[id]
-    widgetEl.remove()
-    window.removeEventListener('message', iframeElEvent)          
+    if(!instances[id]) return;
+    const { widgetEl, iframeElEvent } = instances[id];
+    widgetEl.remove();
+    window.removeEventListener('message', iframeElEvent) ;         
     delete instances[id];
-  }
+  };
 
   const pseudoHiddenStyles = `
     visibility: hidden;
@@ -54,7 +55,7 @@
     position: absolute;
     top: 0;
     left: 0;
-  `
+  `;
 
   const node = d.createElement('style');
   node.innerHTML = '';  // add styles in here
@@ -79,7 +80,7 @@
 
     preload: function(options) {
 
-      const uiLanguageCode = getUiLanguageCode(options)
+      const uiLanguageCode = getUiLanguageCode(options);
 
       // create iframe that will retrieve the data and place it in localstorage (filtering out old preloads)
       let iframeEl = newEl('iframe', {
@@ -119,7 +120,7 @@
         iframeEl = null;
       }
 
-      window.addEventListener('message', iframeElEvent)
+      window.addEventListener('message', iframeElEvent);
 
       document.body.appendChild(iframeEl);
       
@@ -130,16 +131,16 @@
 
     show: function(options) {
 
-      const id = idIndex++
-      const uiLanguageCode = getUiLanguageCode(options)
+      const id = idIndex++;
+      const uiLanguageCode = getUiLanguageCode(options);
 
-      const mobileMode = Math.min(window.innerWidth, window.innerHeight) < 500
-      const width = mobileMode ? '100%' : 400
-      const maxHeight = 800  // calculate
-      const initialHeight = mobileMode ? '100%' : Math.min(350, maxHeight)
-      const top = mobileMode ? 0 : 100  // calculate
-      const bottom = mobileMode ? 0 : null  // calculate
-      const left = mobileMode ? 0 : 100  // calculate
+      const mobileMode = Math.min(window.innerWidth, window.innerHeight) < 500;
+      const width = mobileMode ? '100%' : 400;
+      const maxHeight = 800;  // calculate
+      const initialHeight = mobileMode ? '100%' : Math.min(350, maxHeight);
+      const top = mobileMode ? 0 : 100;  // calculate
+      const bottom = mobileMode ? 0 : null;  // calculate
+      const left = mobileMode ? 0 : 100;  // calculate
 
       // create widget container
       const widgetEl = newEl('div', {
@@ -200,7 +201,7 @@
 
         switch(data.action) {
           case 'close':
-            destroyInstance(id)
+            destroyInstance(id);
             break;
 
           case '':
@@ -217,7 +218,7 @@
       instances[id] = {
         widgetEl,
         iframeElEvent,
-      }
+      };
       
       return id;
       
@@ -226,9 +227,9 @@
     hide: function(id) {
       // destroy the matching widget iframe (or all, if id is absent)
       if(id) {
-        destroyInstance(id)
+        destroyInstance(id);
       } else {
-        Object.keys(instances).forEach(id => destroyInstance(id))
+        Object.keys(instances).forEach(id => destroyInstance(id));
       }
     },
 
