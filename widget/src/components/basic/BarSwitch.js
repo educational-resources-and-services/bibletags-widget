@@ -9,7 +9,7 @@ import styled from 'styled-components'
 //   height: 3px;
 // `
 
-class EntryDetails extends React.Component {
+class BarSwitch extends React.Component {
   render() {
     const { something } = this.props 
 
@@ -20,4 +20,4 @@ class EntryDetails extends React.Component {
 
 }
 
-export default EntryDetails
+export default BarSwitch

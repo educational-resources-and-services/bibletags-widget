@@ -8,6 +8,7 @@ import { ApolloProvider } from 'react-apollo'
 import { ApolloClient } from 'apollo-client'
 import { HttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
+import { setup } from './utils/postMessage.js'
 
 import CompareView from './components/views/CompareView'
 
@@ -30,6 +31,7 @@ class App extends Component {
 
   postMessageListener = event => {
     const { data, source, origin } = event
+    const { settings, options } = data.payload || {}
 
     // record origin in ga
     
@@ -45,19 +47,14 @@ class App extends Component {
         break;
 
       case 'show':
-        // setTimeout(() => {
-        //   source.postMessage({
-        //     action: 'updateHeight',
-        //     payload: {
-        //       height: Math.min(data.payload.options.maxHeight || 9999999, 3600),
-        //     },
-        //   }, process.env.NODE_ENV === 'development' ? '*' : origin)
-        // }, 1000)
-        // setTimeout(() => {
-        //   source.postMessage({
-        //     action: 'close',
-        //   }, process.env.NODE_ENV === 'development' ? '*' : origin)
-        // }, 5000)
+        const { maxHeight } = options || {}
+
+        setup({
+          origin: process.env.NODE_ENV === 'development' ? '*' : origin,
+          source,
+          maxHeight,
+        })
+        
         break;
 
       default:

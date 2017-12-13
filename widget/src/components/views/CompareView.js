@@ -1,8 +1,12 @@
 import React from 'react'
 import i18n from '../../utils/i18n.js'
+import { close } from '../../utils/postMessage.js'
 import styled from 'styled-components'
 import { graphql, compose } from 'react-apollo'
 
+import Bar from '../basic/Bar'
+import BarSwitch from '../basic/BarSwitch'
+import BarSwitchButton from '../basic/BarSwitchButton'
 import View from '../basic/View'
 import Button from 'material-ui/Button'
 
@@ -30,9 +34,18 @@ class CompareView extends React.Component {
 
     return (
       <View show={show}>
+        <Bar
+          back={back}
+        >
+          <BarSwitch>
+            <BarSwitchButton />
+            <BarSwitchButton />
+          </BarSwitch>
+        </Bar>
         hi there
         <Button raised
-          onTouchTap={() => this.setState({ showChildView: true })}
+          // onTouchTap={() => this.setState({ showChildView: true })}
+          onTouchTap={() => close()}
         >Add</Button>
         <Button raised
           onTouchTap={back}
