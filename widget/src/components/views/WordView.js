@@ -1,9 +1,9 @@
 import React from 'react'
-import i18n from "../../utils/i18n.js"
+import i18n from '../../utils/i18n.js'
 import styled from 'styled-components'
 import { graphql } from 'react-apollo'
 
-// import TextField from 'material-ui/TextField';
+// import TextField from 'material-ui/TextField'
 // import Waiting from '../smart/Waiting';
 
 // import createCourse from '../../data/mutations/createCourse'

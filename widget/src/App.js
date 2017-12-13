@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+// import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import logo from './logo.svg'
 import './App.css'
@@ -8,6 +8,8 @@ import { ApolloProvider } from 'react-apollo'
 import { ApolloClient } from 'apollo-client'
 import { HttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
+
+import CompareView from './components/views/CompareView'
 
 require('dotenv').config()
 
@@ -43,19 +45,19 @@ class App extends Component {
         break;
 
       case 'show':
-        setTimeout(() => {
-          source.postMessage({
-            action: 'updateHeight',
-            payload: {
-              height: Math.min(data.payload.options.maxHeight || 9999999, 3600),
-            },
-          }, process.env.NODE_ENV === 'development' ? '*' : origin)
-        }, 1000)
-        setTimeout(() => {
-          source.postMessage({
-            action: 'close',
-          }, process.env.NODE_ENV === 'development' ? '*' : origin)
-        }, 5000)
+        // setTimeout(() => {
+        //   source.postMessage({
+        //     action: 'updateHeight',
+        //     payload: {
+        //       height: Math.min(data.payload.options.maxHeight || 9999999, 3600),
+        //     },
+        //   }, process.env.NODE_ENV === 'development' ? '*' : origin)
+        // }, 1000)
+        // setTimeout(() => {
+        //   source.postMessage({
+        //     action: 'close',
+        //   }, process.env.NODE_ENV === 'development' ? '*' : origin)
+        // }, 5000)
         break;
 
       default:
@@ -65,20 +67,14 @@ class App extends Component {
   }
 
   render() {
-    console.log('process.env', process.env)  // keys must start with REACT_APP_
+    console.log('process.env', process.env, this.state)  // keys must start with REACT_APP_
     return (
       <ApolloProvider client={client}>
-        <MuiThemeProvider>
-          <div className="App">
-            <header className="App-header">
-              <img src={logo} className="App-logo" alt="logo" />
-              <h1 className="App-title">Welcome to React</h1>
-            </header>
-            <p className="App-intro">
-              To get started, edit <code>src/App.js</code> and save to reload.
-            </p>
-          </div>
-        </MuiThemeProvider>
+        {/* <MuiThemeProvider> */}
+          <CompareView
+            show={true}
+          />
+        {/* </MuiThemeProvider> */}
       </ApolloProvider>
     )
   }
