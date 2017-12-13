@@ -5,8 +5,6 @@ import { graphql, compose } from 'react-apollo'
 
 import ResultsView from './ResultsView'
 import Bar from '../basic/Bar'
-import BarSwitch from '../basic/BarSwitch'
-import BarSwitchButton from '../basic/BarSwitchButton'
 import View from '../basic/View'
 import Button from 'material-ui/Button'
 
@@ -38,10 +36,6 @@ class SearchView extends React.Component {
           back={back}
           title={"Search"}
         >
-          <BarSwitch>
-            <BarSwitchButton />
-            <BarSwitchButton />
-          </BarSwitch>
         </Bar>
         search options
         <Button raised
