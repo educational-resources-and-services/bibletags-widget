@@ -1,9 +1,9 @@
 import React from 'react'
 import i18n from '../../utils/i18n.js'
-import { close } from '../../utils/postMessage.js'
 import styled from 'styled-components'
 import { graphql, compose } from 'react-apollo'
 
+import SearchView from './SearchView'
 import Bar from '../basic/Bar'
 import BarSwitch from '../basic/BarSwitch'
 import BarSwitchButton from '../basic/BarSwitchButton'
@@ -19,7 +19,7 @@ import Button from 'material-ui/Button'
 class CompareView extends React.Component {
 
   state = {
-    showChildView: false,
+    showSearchView: false,
   }
   
   // constructor(props) {
@@ -30,12 +30,13 @@ class CompareView extends React.Component {
 
   render() {
     const { show, back } = this.props 
-    const { showChildView } = this.state 
+    const { showSearchView } = this.state 
 
     return (
       <View show={show}>
         <Bar
           back={back}
+          title={"John 3:16"}
         >
           <BarSwitch>
             <BarSwitchButton />
@@ -44,15 +45,11 @@ class CompareView extends React.Component {
         </Bar>
         hi there
         <Button raised
-          // onTouchTap={() => this.setState({ showChildView: true })}
-          onTouchTap={() => close()}
-        >Add</Button>
-        <Button raised
-          onTouchTap={back}
-        >Back</Button>
-        <CompareView
-          show={showChildView}
-          back={() => this.setState({ showChildView: false })}
+          onTouchTap={() => this.setState({ showSearchView: true })}
+        >Search</Button>
+        <SearchView
+          show={showSearchView}
+          back={() => this.setState({ showSearchView: false })}
         />
       </View>
     )
