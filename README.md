@@ -3,7 +3,6 @@
 ### ToDo's
 
 * Jesse:
-  confirm that USFM is free to use (unrestricted)
     ask Jesse about all markup options - osis (xml), usx (xml counterpart to usfm)
      - usfm 3 milestones, named-attributes allows for overlapping
     common Bible search language exists?  json-ld, named attributes, url-query
@@ -22,8 +21,6 @@
       // https://www.apollographql.com/docs/react/basics/network-layer.html
       // https://www.apollographql.com/docs/link/composition.html
       // https://github.com/apollographql/apollo-link/issues/158
-* flexible widget height
-* set up basic widget ui structure (make spot for BibleTags.org logo)
 * set up widget to to expand on word selection
 * set up widget to page to new screen (using CSSTransitionGroup)
 * would it speed things up to always have an iframe loaded and ready?
