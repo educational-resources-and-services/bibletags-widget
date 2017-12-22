@@ -49,7 +49,7 @@ class Bar extends React.Component {
         <Title>{title}</Title>
         {children}
         <IconButton
-          aria-label="Back"
+          aria-label="Close"
           onTouchTap={close}
         >
           <CloseIcon />
