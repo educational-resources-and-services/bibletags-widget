@@ -142,7 +142,7 @@
   styleEl.innerHTML = '';  // add styles in here
   d.head.appendChild(styleEl);
 
-  window.onload = () => addOnDeckInstance({});
+  window.addEventListener('load', () => addOnDeckInstance({}));
   
   window.bibleTagsWidget = {
 
