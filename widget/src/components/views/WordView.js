@@ -1,10 +1,11 @@
 import React from 'react'
 import i18n from '../../utils/i18n.js'
 import styled from 'styled-components'
-import { graphql } from 'react-apollo'
+import { graphql, compose } from 'react-apollo'
 
-// import TextField from 'material-ui/TextField'
-// import Waiting from '../smart/Waiting';
+import View from '../basic/View'
+import Entry from '../smart/Entry'
+import SearchView from './SearchView'
 
 // import createCourse from '../../data/mutations/createCourse'
 
@@ -15,19 +16,19 @@ import { graphql } from 'react-apollo'
 class WordView extends React.Component {
 
   state = {
+    showSearchView: false,
   }
-  
-  // constructor(props) {
-  //   super(props)
-  //   this.state = {
-  //   }
-  // }
 
   render() {
     const { something } = this.state 
 
     return (
-      <div />
+      <View show={show}>
+        <SearchView
+          show={showSearchView}
+          back={() => this.setState({ showSearchView: false })}
+        />
+      </View>
     )
   }
 

@@ -1,10 +1,13 @@
 import React from 'react'
 import i18n from '../../utils/i18n.js'
 import styled from 'styled-components'
-import { graphql } from 'react-apollo'
+import { graphql, compose } from 'react-apollo'
 
-// import TextField from 'material-ui/TextField'
-// import Waiting from '../smart/Waiting';
+import View from '../basic/View'
+import Bar from '../basic/Bar'
+import Parallel from '../smart/Parallel'
+import Entry from '../smart/Entry'
+import Button from 'material-ui/Button'
 
 // import createCourse from '../../data/mutations/createCourse'
 
@@ -16,18 +19,25 @@ class TagView extends React.Component {
 
   state = {
   }
-  
-  // constructor(props) {
-  //   super(props)
-  //   this.state = {
-  //   }
-  // }
 
   render() {
+    const { show, back } = this.props 
     const { something } = this.state 
 
     return (
-      <div />
+      <View show={show}>
+        <Bar
+          back={back}
+          title={i18n("Tagging {{passage}}", { passage: "John 3:16" })}
+        />
+        <Parallel />
+        <Entry />
+        <div>
+          <Button raised
+            onTouchTap={() => {}}
+          >Submit tags</Button>
+        </div>
+      </View>
     )
   }
 

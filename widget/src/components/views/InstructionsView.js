@@ -1,12 +1,9 @@
 import React from 'react'
 import i18n from '../../utils/i18n.js'
 import styled from 'styled-components'
-import { graphql, compose } from 'react-apollo'
 
-// import TextField from 'material-ui/TextField'
-// import Waiting from '../smart/Waiting';
-
-// import createCourse from '../../data/mutations/createCourse'
+import Bar from '../basic/Bar'
+import View from '../basic/View'
 
 // const StyledSomething = styled.div`
 //   height: 3px;
@@ -14,25 +11,19 @@ import { graphql, compose } from 'react-apollo'
 
 class InstructionsView extends React.Component {
 
-  state = {
-  }
-  
-  // constructor(props) {
-  //   super(props)
-  //   this.state = {
-  //   }
-  // }
-
   render() {
-    const { something } = this.state 
+    const { show, back } = this.props 
 
     return (
-      <div />
+      <View show={show}>
+        <Bar
+          back={back}
+          title={i18n("Instructions")}
+        />
+      </View>
     )
   }
 
 }
 
-export default compose(
-  // graphql(createCourseAdmin, { name: 'createCourseAdmin' }),
-)(InstructionsView)
+export default InstructionsView

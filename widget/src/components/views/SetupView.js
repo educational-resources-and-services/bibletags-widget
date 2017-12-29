@@ -1,10 +1,13 @@
 import React from 'react'
-import i18n from '../../utils/i18n.js'
+// import i18n from '../../utils/i18n.js'  --This component purposely not in i18n because it is the translation setup
 import styled from 'styled-components'
-import { graphql } from 'react-apollo'
+import { graphql, compose } from 'react-apollo'
 
-// import TextField from 'material-ui/TextField'
-// import Waiting from '../smart/Waiting';
+import View from '../basic/View'
+import Bar from '../basic/Bar'
+import SwitchButtons from '../basic/SwitchButtons'
+import SwitchButton from '../basic/SwitchButton'
+import Button from 'material-ui/Button'
 
 // import createCourse from '../../data/mutations/createCourse'
 
@@ -15,19 +18,34 @@ import { graphql } from 'react-apollo'
 class SetupView extends React.Component {
 
   state = {
+    mode: 'books',
   }
-  
-  // constructor(props) {
-  //   super(props)
-  //   this.state = {
-  //   }
-  // }
 
   render() {
-    const { something } = this.state 
+    const { show, back } = this.props 
+    const { mode } = this.state 
 
     return (
-      <div />
+      <View show={show}>
+        <Bar
+          back={back}
+          title="Setup"
+        >
+          <SwitchButtons
+            selectedId={mode}
+            setSelectedId={mode => this.setState({ mode })}
+          >
+            <SwitchButton id="books">Books</SwitchButton>
+            <SwitchButton id="ui">UI</SwitchButton>
+            <SwitchButton id="grammar">Grammar</SwitchButton>
+          </SwitchButtons>
+        </Bar>
+        <div>
+          <Button raised
+            onTouchTap={() => {}}
+          >Submit translations</Button>
+        </div>
+      </View>
     )
   }
 

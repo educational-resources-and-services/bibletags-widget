@@ -3,9 +3,13 @@ import i18n from '../../utils/i18n.js'
 import styled from 'styled-components'
 import { graphql, compose } from 'react-apollo'
 
-import Bar from '../basic/Bar'
 import View from '../basic/View'
-import Button from 'material-ui/Button'
+import Bar from '../basic/Bar'
+import SwitchButtons from '../basic/SwitchButtons'
+import SwitchButton from '../basic/SwitchButton'
+import ResultBook from '../basic/ResultBook'
+import ResultItem from '../basic/ResultItem'
+import CompareView from './CompareView'
 
 // import createCourse from '../../data/mutations/createCourse'
 
@@ -13,30 +17,44 @@ import Button from 'material-ui/Button'
 //   height: 3px;
 // `
 
-class SearchView extends React.Component {
+class ResultsView extends React.Component {
 
   state = {
-    showResultsView: false,
+    mode: 'translation',  // options: translation | orig | both
+    showCompareView: false,
   }
-  
-  // constructor(props) {
-  //   super(props)
-  //   this.state = {
-  //   }
-  // }
 
   render() {
     const { show, back } = this.props 
-    const { showResultsView } = this.state 
+    const { mode, showCompareView } = this.state 
 
     return (
       <View show={show}>
         <Bar
           back={back}
-          title={"Results"}
+          title={"υἱός"}
+          subtitle={
+            <div>
+              <div>John’s writings</div>
+              <div>86x</div>
+            </div>
+          }
         >
+          <SwitchButtons
+            selectedId={mode}
+            setSelectedId={mode => this.setState({ mode })}
+          >
+            <SwitchButton id="translation">{"ESV"}</SwitchButton>
+            <SwitchButton id="orig">{true ? i18n("Greek") : i18n("Hebrew")}</SwitchButton>
+            <SwitchButton id="both">{i18n("Both")}</SwitchButton>
+          </SwitchButtons>
         </Bar>
-        search results
+        <ResultBook />
+        <ResultItem />
+        <CompareView
+          show={showCompareView}
+          back={() => this.setState({ showCompareView: false })}
+        />
       </View>
     )
   }
@@ -45,4 +63,4 @@ class SearchView extends React.Component {
 
 export default compose(
   // graphql(createCourseAdmin, { name: 'createCourseAdmin' }),
-)(SearchView)
+)(ResultsView)
