@@ -3,8 +3,12 @@ import i18n from '../../utils/i18n.js'
 import styled from 'styled-components'
 import { graphql, compose } from 'react-apollo'
 
-// import TextField from 'material-ui/TextField'
-// import Waiting from '../basic/Waiting';
+import Morph from '../basic/Morph'
+import EntrySection from '../basic/EntrySection'
+import EntryWord from '../basic/EntryWord'
+import EntryDetails from '../basic/EntryDetails'
+import EntryHits from '../basic/EntryHits'
+import EntrySimilar from '../basic/EntrySimilar'
 
 // import createCourse from '../../data/mutations/createCourse'
 
