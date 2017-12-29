@@ -1,8 +1,7 @@
 import React from 'react'
-import i18n from '../../utils/i18n.js'
 import styled from 'styled-components'
-import { graphql, compose } from 'react-apollo'
 
+import Logo from './Logo'
 import Transition from 'react-transition-group/Transition'
 
 const duration = 200

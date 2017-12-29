@@ -2,14 +2,11 @@ import React from 'react'
 import i18n from '../../utils/i18n.js'
 import styled from 'styled-components'
 
-// import TextField from 'material-ui/TextField'
-// import Waiting from './Waiting'
-
 // const StyledSomething = styled.div`
 //   height: 3px;
 // `
 
-class EntryDetails extends React.Component {
+class ParallelHeader extends React.Component {
   render() {
     const { something } = this.props 
 
@@ -20,4 +17,4 @@ class EntryDetails extends React.Component {
 
 }
 
-export default EntryDetails
+export default ParallelHeader

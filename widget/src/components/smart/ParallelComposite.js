@@ -3,8 +3,8 @@ import i18n from '../../utils/i18n.js'
 import styled from 'styled-components'
 import { graphql, compose } from 'react-apollo'
 
-// import TextField from 'material-ui/TextField'
-// import Waiting from '../basic/Waiting';
+import ParallelCompositeUnit from '../basic/ParallelCompositeUnit'
+import CompareView from '../views/CompareView'
 
 // import createCourse from '../../data/mutations/createCourse'
 
