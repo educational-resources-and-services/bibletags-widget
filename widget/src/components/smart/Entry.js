@@ -32,7 +32,9 @@ class Entry extends React.Component {
     const { something2 } = this.state 
 
     return (
-      <div />
+      <div>
+        Entry!
+      </div>
     )
   }
 

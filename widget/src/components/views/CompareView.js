@@ -168,7 +168,11 @@ class CompareView extends React.Component {
           wordIndex={wordIndex}
           updateWordIndex={wordIndex => this.setState({ wordIndex })}
         />
-        <Entry />
+        {wordIndex !== null &&
+          <Entry
+          
+          />
+        }
         <SearchView
           show={showSearchView}
           back={() => this.setState({ showSearchView: false })}
