@@ -3,18 +3,95 @@ import i18n from '../../utils/i18n.js'
 import styled from 'styled-components'
 import { graphql, compose } from 'react-apollo'
 
-import SearchView from './SearchView'
+import View from '../basic/View'
 import Bar from '../basic/Bar'
 import SwitchButtons from '../basic/SwitchButtons'
 import SwitchButton from '../basic/SwitchButton'
-import View from '../basic/View'
-import Button from 'material-ui/Button'
+import Parallel from '../smart/Parallel'
+import Entry from '../smart/Entry'
+import SearchView from './SearchView'
 
 // import createCourse from '../../data/mutations/createCourse'
 
-const StyledSwitchButtons = styled(SwitchButtons)`
-  margin: auto 0;
-`
+const verse = {
+  id: '0010101-wlc',
+  usfm: `
+    \\w ב/רשית|strongs="H234"\\w*
+    \\w ברא|lemma="hi!"\\w*
+    \\w אלוהים\\w*,
+    \\w את\\w*
+    \\w ה/שמים\\w*
+    \\w ו/את\\w*
+    \\w ה/ארץ\\w*
+  `.replace(/\s+/g, ' ')
+}
+
+const tagSet = {
+  id: '0010101-esv',
+  tags: [
+    {
+      o: ["|1|1"],
+      t: [1]
+    },
+    {
+      o: ["|1|2"],
+      t: [3]
+    },
+    {
+      o: ["|2"],
+      t: [5]
+    },
+    {
+      o: ["|3"],
+      t: [4]
+    },
+    {
+      o: ["|5|1"],
+      t: [6]
+    },
+    {
+      o: ["|5|2"],
+      t: [6]
+    },
+    {
+      o: ["|6|1"],
+      t: [8]
+    },
+    {
+      o: ["|7|1"],
+      t: [9]
+    },
+    {
+      o: ["|7|2"],
+      t: [10]
+    },
+  ]
+}
+
+const word = {
+  id: 'H234-eng',
+  lemma: 'אַזְכָּרָה',
+  lemmaUnique: true,
+  vocal: 'ʼazkârâh',
+  hits: 7,
+  gloss: 'reminder',
+  pos: ['N'],
+  syn: [],
+  rel: [{"lemma":"זָכַר","strongs":"G2142","hits":232,"gloss":"remember"}],
+  lxx: [{"w":"ἀρχῇ","lemma":"ἀρχή","strongs":"G746","hits":236,"bhpHits":55}],
+  lxxHits: [],
+}
+
+const translations = {
+  id: 'H234-esv',
+  tr: [{"son":299,"sons":56}],
+}
+
+const lexEntry = {
+  id: 'H234-eng',
+  usfm: 'About the word...',
+}
+
 
 const DoubleLine = styled.div`
   width: 20px;
@@ -48,17 +125,12 @@ class CompareView extends React.Component {
   state = {
     showSearchView: false,
     mode: 'separate',
+    wordIndex: null,
   }
-  
-  // constructor(props) {
-  //   super(props)
-  //   this.state = {
-  //   }
-  // }
 
   render() {
     const { show, back } = this.props 
-    const { showSearchView, mode } = this.state 
+    const { showSearchView, mode, wordIndex } = this.state 
 
     return (
       <View show={show}>
@@ -66,7 +138,7 @@ class CompareView extends React.Component {
           back={back}
           title={"John 3:16"}
         >
-          <StyledSwitchButtons
+          <SwitchButtons
             selectedId={mode}
             setSelectedId={mode => this.setState({ mode })}
           >
@@ -89,12 +161,14 @@ class CompareView extends React.Component {
                 <DashedLine />
               </div>
             </SwitchButton>
-          </StyledSwitchButtons>
+          </SwitchButtons>
         </Bar>
-        hi there
-        <Button raised
-          onTouchTap={() => this.setState({ showSearchView: true })}
-        >Search</Button>
+        <Parallel
+          verse={verse}
+          wordIndex={wordIndex}
+          updateWordIndex={wordIndex => this.setState({ wordIndex })}
+        />
+        <Entry />
         <SearchView
           show={showSearchView}
           back={() => this.setState({ showSearchView: false })}
