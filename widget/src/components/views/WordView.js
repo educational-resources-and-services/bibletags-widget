@@ -13,7 +13,7 @@ import SearchView from './SearchView'
 //   height: 3px;
 // `
 
-class WordView extends React.Component {
+class WordView extends React.PureComponent {
 
   state = {
     showSearchView: false,

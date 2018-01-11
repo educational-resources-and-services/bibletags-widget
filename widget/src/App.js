@@ -22,6 +22,10 @@ const client = new ApolloClient({
 
 class App extends Component {
 
+  state = {
+    options: null,
+  }
+
   componentDidMount() {
     this.readyStatus = 0
     window.addEventListener('message', this.postMessageListener)
@@ -41,15 +45,13 @@ class App extends Component {
 
     switch(data.action) {
       case 'preload':
-        setTimeout(() => {
-          source.postMessage({
-            action: 'close',
-          }, process.env.NODE_ENV === 'development' ? '*' : origin)
-        }, 2000)
-        break;
+        console.log('preload', data)
+        break
 
       case 'show':
-        const { maxHeight } = options || {}
+        if(this.readyStatus >= 1) break   // only single show call allowed
+
+        const { maxHeight } = options
 
         setup({
           origin: process.env.NODE_ENV === 'development' ? '*' : origin,
@@ -57,13 +59,15 @@ class App extends Component {
           maxHeight,
         })
 
+        this.setState({ options })
+
         this.readyStatus = 1
         
-        break;
+        break
 
       default:
         console.log('unknown postMessage', data)
-        break;
+        break
     }
   }
 
@@ -77,7 +81,8 @@ class App extends Component {
   }
 
   render() {
-    console.log('process.env', process.env, this.state)  // keys must start with REACT_APP_
+    const { options } = this.state
+
     return (
       <ApolloProvider client={client}>
         {/* <MuiThemeProvider> */}
@@ -87,10 +92,11 @@ class App extends Component {
           >
             {({ measureRef }) =>
               <div
-                // for some reason, ref={measureRef} causes FF to not fire the first onResize
-                ref={ref => measureRef(ref)}
+                // TODO: for some reason, FF not firing the first onResize
+                ref={measureRef}
               >
                 <CompareView
+                  options={options}
                   style={{ position: 'relative' }}
                   show={true}
                 />

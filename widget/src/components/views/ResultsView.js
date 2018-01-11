@@ -17,7 +17,7 @@ import CompareView from './CompareView'
 //   height: 3px;
 // `
 
-class ResultsView extends React.Component {
+class ResultsView extends React.PureComponent {
 
   state = {
     mode: 'translation',  // options: translation | orig | both
@@ -27,7 +27,7 @@ class ResultsView extends React.Component {
   hideCompareView = () => this.setState({ showCompareView: false })
 
   render() {
-    const { show, back } = this.props 
+    const { options, show, back } = this.props 
     const { mode, showCompareView } = this.state 
 
     return (
@@ -54,6 +54,7 @@ class ResultsView extends React.Component {
         <ResultBook />
         <ResultItem />
         <CompareView
+          options={options}
           show={showCompareView}
           back={this.hideCompareView}
         />

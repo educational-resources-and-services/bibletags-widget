@@ -16,7 +16,7 @@ import ResultsView from './ResultsView'
 //   height: 3px;
 // `
 
-class SearchView extends React.Component {
+class SearchView extends React.PureComponent {
 
   state = {
     mode: 'nt',  // options: nt | ot | both (from NT), hebrew | greek (from OT)
@@ -26,7 +26,7 @@ class SearchView extends React.Component {
   hideResultsView = () => this.setState({ showResultsView: false })
 
   render() {
-    const { show, back } = this.props 
+    const { options, show, back } = this.props 
     const { mode, showResultsView } = this.state 
 
     return (
@@ -55,6 +55,7 @@ class SearchView extends React.Component {
         </Bar>
         <SearchGroup />
         <ResultsView
+          options={options}
           show={showResultsView}
           back={this.hideResultsView}
         />

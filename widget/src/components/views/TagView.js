@@ -15,7 +15,7 @@ import Button from 'material-ui/Button'
 //   height: 3px;
 // `
 
-class TagView extends React.Component {
+class TagView extends React.PureComponent {
 
   state = {
   }

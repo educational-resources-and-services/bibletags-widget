@@ -9,7 +9,7 @@ import View from '../basic/View'
 //   height: 3px;
 // `
 
-class InstructionsView extends React.Component {
+class InstructionsView extends React.PureComponent {
 
   render() {
     const { show, back } = this.props 

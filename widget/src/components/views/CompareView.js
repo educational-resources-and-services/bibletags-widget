@@ -120,7 +120,7 @@ const DashedLine = styled.div`
   }
 `
 
-class CompareView extends React.Component {
+class CompareView extends React.PureComponent {
 
   state = {
     showSearchView: false,
@@ -131,9 +131,11 @@ class CompareView extends React.Component {
   closeWord = () => this.setState({ wordIndex: null })
 
   hideSearchView = () => this.setState({ showSearchView: false })
+  
+  updateWordIndex = wordIndex => this.setState({ wordIndex })
 
   render() {
-    const { show, back, style } = this.props 
+    const { options, show, back, style } = this.props 
     const { showSearchView, mode, wordIndex } = this.state 
 
     return (
@@ -173,7 +175,7 @@ class CompareView extends React.Component {
         <Parallel
           verse={verse}
           wordIndex={wordIndex}
-          updateWordIndex={wordIndex => this.setState({ wordIndex })}
+          updateWordIndex={this.updateWordIndex}
         />
         {wordIndex !== null &&
           <Entry
@@ -181,6 +183,7 @@ class CompareView extends React.Component {
           />
         }
         <SearchView
+          options={options}
           show={showSearchView}
           back={this.hideSearchView}
         />

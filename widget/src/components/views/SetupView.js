@@ -15,7 +15,7 @@ import Button from 'material-ui/Button'
 //   height: 3px;
 // `
 
-class SetupView extends React.Component {
+class SetupView extends React.PureComponent {
 
   state = {
     mode: 'books',

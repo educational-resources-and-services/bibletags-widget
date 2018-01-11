@@ -230,11 +230,11 @@
         delete partialSettings.containerEls;
         delete partialOptions.anchorEl;
         delete partialOptions.containerEl;
-        (partialOptions.addlOptions || []).forEach(option => delete option.callback);
-        delete partialOptions.fetchVerseCallback;
-        delete partialOptions.jumpToLocationCallback;
-        partialOptions.searchData && delete partialOptions.searchData.callback;
-        delete partialOptions.infoCallback;
+        (partialOptions.addlOptions || []).forEach(option => option.callback = !!option.callback);
+        partialOptions.fetchVerseCallback = !!partialOptions.fetchVerseCallback;
+        partialOptions.jumpToLocationCallback = !!partialOptions.jumpToLocationCallback;
+        if(partialOptions.searchData) partialOptions.searchData.callback = !!partialOptions.searchData.callback;
+        partialOptions.infoCallback = !!partialOptions.infoCallback;
 
         iframeEl.contentWindow.postMessage({
           action: 'show',
