@@ -8,9 +8,11 @@ import CompareView from '../views/CompareView'
 
 // import createCourse from '../../data/mutations/createCourse'
 
-// const StyledSomething = styled.div`
-//   height: 3px;
-// `
+const Verse = styled.div`
+  font-size: 20px;
+  line-height: 1.4;
+  padding: 15px 15px 0;
+`
 
 class ParallelText extends React.Component {
 
@@ -24,11 +26,18 @@ class ParallelText extends React.Component {
   // }
 
   render() {
-    const { something1 } = this.props 
+    const { children, lang, style } = this.props 
     const { something2 } = this.state 
 
     return (
-      <div />
+      <Verse
+        style={{
+          ...(lang === 'he' ? { direction: 'rtl' } : {}),
+          ...style,
+        }}
+      >
+        {children}
+      </Verse>
     )
   }
 

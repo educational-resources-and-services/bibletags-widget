@@ -9,8 +9,14 @@ import ParallelHeader from '../basic/ParallelHeader'
 
 // import createCourse from '../../data/mutations/createCourse'
 
-const ParallelContainer = styled.div`
-  padding: 15px;
+const Word = styled.div`
+  display: inline-block;
+  cursor: pointer;
+`
+
+const SelectedWord = styled.div`
+  display: inline-block;
+  color: black;
 `
 
 class Parallel extends React.Component {
@@ -21,29 +27,40 @@ class Parallel extends React.Component {
     let wIndex = 0
 
     return (
-      <ParallelContainer>
-        {verse.usfm.split(/(\\w .*?\\w\*)/g).filter(piece => piece!='').map((piece, idx) => {
-          if(piece.match(/^\\w .*?\\w\*$/)) {
-            return (
-              <span
-                key={idx}
-                onClick={updateWordIndex.bind(this, ++wIndex)}
-              >
-                {
-                  piece
-                    .replace(/^\\w ([^\|]*?)(?:\|.*?)?\\w\*$/, '$1')
-                    .split(/\//g)
-                    .map((wordPart, wpIndex) => (
-                      <span key={wpIndex}>{wordPart}</span>
-                    ))
-                }
-              </span>
-            )
-          } else {
-            return piece
-          }
-        })}
-      </ParallelContainer>
+      <div>
+        <ParallelHeader
+          primary="Hebrew (OSHB)"
+          secondary="ESV"
+        />
+        <ParallelText
+          lang="he"
+          style={ wordIndex !== null ? { color: '#999' } : null }
+        >
+          {verse.usfm.split(/(\\w .*?\\w\*)/g).filter(piece => piece!='').map((piece, idx) => {
+            if(piece.match(/^\\w .*?\\w\*$/)) {
+              const thisWIndex = ++wIndex
+              const WordSpan = wordIndex === thisWIndex ? SelectedWord : Word
+              return (
+                <WordSpan
+                  key={idx}
+                  onClick={updateWordIndex.bind(this, thisWIndex)}
+                >
+                  {
+                    piece
+                      .replace(/^\\w ([^\|]*?)(?:\|.*?)?\\w\*$/, '$1')
+                      .split(/\//g)
+                      .map((wordPart, wpIndex) => (
+                        <span key={wpIndex}>{wordPart}</span>
+                      ))
+                  }
+                </WordSpan>
+              )
+            } else {
+              return piece
+            }
+          })}
+        </ParallelText>
+      </div>
     )
   }
 
