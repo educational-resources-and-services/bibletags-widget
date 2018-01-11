@@ -9,9 +9,9 @@ import ParallelHeader from '../basic/ParallelHeader'
 
 // import createCourse from '../../data/mutations/createCourse'
 
-// const StyledSomething = styled.div`
-//   height: 3px;
-// `
+const ParallelContainer = styled.div`
+  padding: 15px;
+`
 
 class Parallel extends React.Component {
 
@@ -21,7 +21,7 @@ class Parallel extends React.Component {
     let wIndex = 0
 
     return (
-      <div>
+      <ParallelContainer>
         {verse.usfm.split(/(\\w .*?\\w\*)/g).filter(piece => piece!='').map((piece, idx) => {
           if(piece.match(/^\\w .*?\\w\*$/)) {
             return (
@@ -43,7 +43,7 @@ class Parallel extends React.Component {
             return piece
           }
         })}
-      </div>
+      </ParallelContainer>
     )
   }
 
