@@ -14,7 +14,7 @@ const BarCont = styled.div`
 `
 
 const LeftSpace = styled.div`
-  width: 20px;
+  width: 15px;
 `
 
 const Title = styled.div`

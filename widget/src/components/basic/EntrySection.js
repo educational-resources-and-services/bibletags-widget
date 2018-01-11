@@ -1,16 +1,23 @@
 import React from 'react'
 import styled from 'styled-components'
 
-// const StyledSomething = styled.div`
-//   height: 3px;
-// `
+const Container = styled.div`
+  padding: 15px;
+`
 
 class EntrySection extends React.Component {
   render() {
-    const { something } = this.props 
+    const { children, bg, style } = this.props 
 
     return (
-      <div />
+      <Container
+        style={{
+          ...style,
+          backgroundColor: bg,
+        }}
+      >
+        {children}
+      </Container>
     )
   }
 

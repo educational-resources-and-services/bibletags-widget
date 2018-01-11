@@ -12,9 +12,20 @@ import EntrySimilar from '../basic/EntrySimilar'
 
 // import createCourse from '../../data/mutations/createCourse'
 
-// const StyledSomething = styled.div`
-//   height: 3px;
-// `
+const Parsing = styled.div`
+  padding: 15px 15px 10px;
+`
+
+const EntrySections = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
+const LeftSide = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+`
 
 class Entry extends React.Component {
 
@@ -33,7 +44,21 @@ class Entry extends React.Component {
 
     return (
       <div>
-        Entry!
+        <Parsing>qal perfect 3rd masculine singular</Parsing>
+        <EntrySections>
+          <LeftSide>
+            <EntrySection bg="#BBB">
+              <EntryWord />
+              <EntryDetails />
+            </EntrySection>
+            <EntrySection bg="#EEE" style={{ flex: 1 }}>
+              <EntrySimilar />
+            </EntrySection>
+          </LeftSide>
+          <EntrySection  bg="#DDD">
+            <EntryHits />
+          </EntrySection>
+        </EntrySections>
       </div>
     )
   }
