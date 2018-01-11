@@ -53,7 +53,7 @@
     const mobileMode = Math.min(window.innerWidth, window.innerHeight) < 500;
     const width = mobileMode ? '100%' : 400;
     const maxHeight = 800;  // calculate
-    const initialHeight = mobileMode ? '100%' : Math.min(350, maxHeight);
+    const initialHeight = mobileMode ? '100%' : Math.min(250, maxHeight);
     const top = mobileMode ? 0 : 100;  // calculate
     const bottom = mobileMode ? 0 : null;  // calculate
     const left = mobileMode ? 0 : 100;  // calculate
