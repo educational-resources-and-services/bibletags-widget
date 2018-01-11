@@ -49,7 +49,27 @@
     widgetEl.style.visibility = `hidden`;
   };
 
-  const setWidgetElStyle = ({ widgetEl, options }) => {
+  const setWidgetElStyle = ({ widgetEl, style, iframeEl }) => {
+    const { top, bottom, left, width, height, initialHeight, visibility } = style
+
+    const formVal = val => typeof val === 'number' ? val : `${val}px`
+    
+    if(top) {
+      widgetEl.style.top = `${top}px`;
+    } else {
+      widgetEl.style.top = `auto`;
+      widgetEl.style.bottom = `${bottom}px`;
+    }
+    widgetEl.style.left = `${left}px`;
+    widgetEl.style.width = formVal(width);
+    widgetEl.style.height = formVal(height || initialHeight);
+    widgetEl.style.visibility = visibility;
+
+    iframeEl.style.width = `100%`;
+    iframeEl.style.height = `100%`;
+  };
+
+  const getWidgetElStyle = ({ options }) => {
     const mobileMode = Math.min(window.innerWidth, window.innerHeight) < 500;
     const width = mobileMode ? '100%' : 400;
     const maxHeight = 800;  // calculate
@@ -58,17 +78,14 @@
     const bottom = mobileMode ? 0 : null;  // calculate
     const left = mobileMode ? 0 : 100;  // calculate
 
-    if(top) {
-      widgetEl.style.top = `${top}px`;
-    } else {
-      widgetEl.style.bottom = `${bottom}px`;
-    }
-    widgetEl.style.left = `${left}px`;
-    widgetEl.style.width = `${width}px`;
-    widgetEl.style.height = `${initialHeight}px`;
-    widgetEl.style.visibility = `visible`;
-
-    return maxHeight;
+    return {
+      top,
+      bottom,
+      left,
+      width,
+      initialHeight,
+      visibility: `visible`,
+    };
   };
 
   const getInstanceTemplate = options => {
@@ -85,8 +102,8 @@
       `,
     });
 
-    setWidgetElStyle({ widgetEl, options });
-
+    hideWidgetEl(widgetEl);
+    
     // create widget arrow element
     const arrowEl = options.anchorEl && newEl('div', {
       style: `
@@ -105,7 +122,7 @@
         top: 0;
         left: 0;
         width: 100%;
-        height: 100%;
+        height: 1px;
         background: white;
         border: none;
       `,
@@ -126,7 +143,6 @@
 
   const addOnDeckInstance = options => {
     onDeckInstance = getInstanceTemplate(options);
-    hideWidgetEl(onDeckInstance.widgetEl);
     (options.containerEl || d.body).appendChild(onDeckInstance.widgetEl);
   };
 
@@ -153,8 +169,6 @@
     preload: (options={}) => {
 
       let { widgetEl, iframeEl } = getInstanceTemplate(options);
-
-      hideWidgetEl(widgetEl);
 
       // postMessage the options upon iframe load 
       iframeEl.onload = () => {
@@ -201,8 +215,10 @@
 
       const id = idIndex++;
       const { widgetEl, iframeEl } = d.body.contains(onDeckInstance.widgetEl) ? onDeckInstance : getInstanceTemplate(options);
+      const style = getWidgetElStyle({ options });
 
-      options.maxHeight = setWidgetElStyle({ widgetEl, options });
+      iframeEl.style.width = `${style.width}px`;
+      options.maxHeight = style.maxHeight;
       
       // postMessage the options upon iframe load 
       const sendShowPostMessage = () => {
@@ -227,9 +243,16 @@
             destroyInstance(id);
             break;
 
+          case 'ready':
+            setWidgetElStyle({ widgetEl, style, iframeEl });
+            break;
+
           case 'updateHeight':
             const newHeight = parseInt(data.payload.height)
-            if(newHeight) widgetEl.style.height = `${newHeight}px`;
+            if(newHeight) {
+              widgetEl.style.height = `${newHeight}px`;
+              style.height = newHeight
+            }
             break;
         }
       };
@@ -251,7 +274,8 @@
         iframeElEvent,
       };
       
-      addOnDeckInstance(options);
+      // the timeout prevents this code from slowing down the initial resize of instance we are now showing
+      setTimeout(() => addOnDeckInstance(options), 500);
 
       return id;
       

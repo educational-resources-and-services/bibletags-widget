@@ -9,7 +9,7 @@ import { ApolloClient } from 'apollo-client'
 import { HttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import Measure from 'react-measure'
-import { setup, updateHeight } from './utils/postMessage.js'
+import { setup, ready, updateHeight } from './utils/postMessage.js'
 
 import CompareView from './components/views/CompareView'
 
@@ -23,6 +23,7 @@ const client = new ApolloClient({
 class App extends Component {
 
   componentDidMount() {
+    this.readyStatus = 0
     window.addEventListener('message', this.postMessageListener)
   }
 
@@ -55,6 +56,8 @@ class App extends Component {
           source,
           maxHeight,
         })
+
+        this.readyStatus = 1
         
         break;
 
@@ -64,7 +67,14 @@ class App extends Component {
     }
   }
 
-  onResize = (contentRect) => updateHeight(contentRect.bounds.height)
+  onResize = contentRect => {
+    updateHeight(contentRect.bounds.height)
+
+    if(this.readyStatus === 1) {
+      ready()
+      this.indicatedReady = 2
+    }
+  }
 
   render() {
     console.log('process.env', process.env, this.state)  // keys must start with REACT_APP_
@@ -76,7 +86,10 @@ class App extends Component {
             onResize={this.onResize}
           >
             {({ measureRef }) =>
-              <div ref={measureRef}>
+              <div
+                // for some reason, ref={measureRef} causes FF to not fire the first onResize
+                ref={ref => measureRef(ref)}
+              >
                 <CompareView
                   style={{ position: 'relative' }}
                   show={true}
