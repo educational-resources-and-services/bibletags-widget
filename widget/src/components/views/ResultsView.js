@@ -24,6 +24,10 @@ class ResultsView extends React.PureComponent {
     showCompareView: false,
   }
 
+  // I will set up a new window.addEventListener('message', this.postMessageListener) here,
+  // checking for the specific verse I'm asking the embedding site for
+
+  
   hideCompareView = () => this.setState({ showCompareView: false })
 
   render() {

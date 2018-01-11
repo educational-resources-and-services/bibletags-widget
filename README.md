@@ -21,9 +21,6 @@
       // https://www.apollographql.com/docs/react/basics/network-layer.html
       // https://www.apollographql.com/docs/link/composition.html
       // https://github.com/apollographql/apollo-link/issues/158
-* set up widget to to expand on word selection
-* set up widget to page to new screen (using CSSTransitionGroup)
-* would it speed things up to always have an iframe loaded and ready?
 * set up graphql backend
 * design and set up db (considering search and everything else)
 * get fetching of data working
