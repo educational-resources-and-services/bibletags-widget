@@ -14,6 +14,7 @@ import EntrySimilar from '../basic/EntrySimilar'
 
 const Parsing = styled.div`
   padding: 15px 15px 10px;
+  font-size: 14px;
 `
 
 const EntrySections = styled.div`
@@ -51,13 +52,13 @@ class Entry extends React.Component {
               <EntryWord />
               <EntryDetails />
             </EntrySection>
-            <EntrySection bg="#EEE" style={{ flex: 1 }}>
+            {/* <EntrySection bg="#EEE" style={{ flex: 1, paddingBottom: 45 }}>
               <EntrySimilar />
-            </EntrySection>
+            </EntrySection> */}
           </LeftSide>
-          <EntrySection  bg="#DDD">
+          {/* <EntrySection  bg="#DDD">
             <EntryHits />
-          </EntrySection>
+          </EntrySection> */}
         </EntrySections>
       </div>
     )

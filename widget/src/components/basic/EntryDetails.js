@@ -36,12 +36,12 @@ class EntryWord extends React.Component {
         <Definition>beginning</Definition>
         <span> </span>
         <PartOfSpeech>noun</PartOfSpeech>
-        <IconButtonStyled
+        {/* <IconButtonStyled
           aria-label="Lexicon"
           onTouchTap={() => {}}
         >
           <LibraryBooksIcon />
-        </IconButtonStyled>
+        </IconButtonStyled> */}
       </DetailsLine>
     )
   }

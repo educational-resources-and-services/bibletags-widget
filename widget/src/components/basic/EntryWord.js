@@ -53,12 +53,12 @@ class EntryWord extends React.Component {
         <Strongs>H938</Strongs>
         <span> </span>
         <Hits>13x</Hits>
-        <IconButtonStyled
+        {/* <IconButtonStyled
           aria-label="Search"
           onTouchTap={() => {}}
         >
           <SearchIcon />
-        </IconButtonStyled>
+        </IconButtonStyled> */}
       </WordLine>
     )
   }

@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 const Container = styled.div`
   position: relative;
-  padding: 15px;
+  padding: 15px 15px 20px;
 `
 
 class EntrySection extends React.Component {
