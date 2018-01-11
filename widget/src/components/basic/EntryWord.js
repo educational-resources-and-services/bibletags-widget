@@ -24,6 +24,7 @@ const Pronounciation = styled.div`
 `
 
 const Strongs = styled.div`
+  font-size: 14px;
   display: inline-block;
   margin-right: 3px;
 `
