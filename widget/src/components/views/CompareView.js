@@ -133,11 +133,14 @@ class CompareView extends React.Component {
   hideSearchView = () => this.setState({ showSearchView: false })
 
   render() {
-    const { show, back } = this.props 
+    const { show, back, style } = this.props 
     const { showSearchView, mode, wordIndex } = this.state 
 
     return (
-      <View show={show}>
+      <View
+        show={show}
+        style={style}
+      >
         <Bar
           back={back}
           title={"John 3:16"}

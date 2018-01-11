@@ -17,7 +17,7 @@ import EntrySimilar from '../basic/EntrySimilar'
 // import createCourse from '../../data/mutations/createCourse'
 
 const Parsing = styled.div`
-  padding: 25px 15px 15px;
+  padding: 10px 15px 15px;
   font-size: 14px;
 `
 

@@ -42,13 +42,13 @@ class SearchView extends React.Component {
             {
               true  // check if the search originates from the NT (or OT)
                 ? [
-                  <SwitchButton id="nt">{i18n("NT ({{nt_greek_version}})", { nt_greek_version: 'BHP' })}</SwitchButton>,
-                  <SwitchButton id="ot">{i18n("OT ({{ot_greek_version}})", { ot_greek_version: 'WLC' })}</SwitchButton>,
-                  <SwitchButton id="both">{i18n("Both")}</SwitchButton>,
+                  <SwitchButton id="nt" key="nt">{i18n("NT ({{nt_greek_version}})", { nt_greek_version: 'BHP' })}</SwitchButton>,
+                  <SwitchButton id="ot" key="ot">{i18n("OT ({{ot_greek_version}})", { ot_greek_version: 'WLC' })}</SwitchButton>,
+                  <SwitchButton id="both" key="both">{i18n("Both")}</SwitchButton>,
                 ]
                 : [
-                  <SwitchButton id="hebrew">Heb word</SwitchButton>,
-                  <SwitchButton id="greek">Grk word</SwitchButton>,
+                  <SwitchButton id="hebrew" key="hebrew">Heb word</SwitchButton>,
+                  <SwitchButton id="greek" key="greek">Grk word</SwitchButton>,
                 ]
             }
           </SwitchButtons>

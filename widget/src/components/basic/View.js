@@ -26,7 +26,7 @@ const ViewCont = styled.div`
 class View extends React.Component {
 
   render() {
-    const { show, children } = this.props 
+    const { show, children, style } = this.props 
 
     return (
       <Transition
@@ -35,7 +35,8 @@ class View extends React.Component {
       >
         {transitionState => (
           <ViewCont style={{
-            ...transitionStyles[transitionState]
+            ...style,
+            ...transitionStyles[transitionState],
           }}>
             {transitionState!='exited' && children}
           </ViewCont>

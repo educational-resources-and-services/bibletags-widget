@@ -14,6 +14,10 @@ const Word = styled.div`
   cursor: pointer;
 `
 
+const ParallelContainer = styled.div`
+  padding-bottom: 15px;
+`
+
 const SelectedWord = styled.div`
   display: inline-block;
   color: black;
@@ -27,7 +31,7 @@ class Parallel extends React.Component {
     let wIndex = 0
 
     return (
-      <div>
+      <ParallelContainer>
         <ParallelHeader
           primary="Hebrew (OSHB)"
           secondary="ESV"
@@ -36,7 +40,7 @@ class Parallel extends React.Component {
           lang="he"
           style={ wordIndex !== null ? { color: '#CCC' } : null }
         >
-          {verse.usfm.split(/(\\w .*?\\w\*)/g).filter(piece => piece!='').map((piece, idx) => {
+          {verse.usfm.split(/(\\w .*?\\w\*)/g).filter(piece => piece !== '').map((piece, idx) => {
             if(piece.match(/^\\w .*?\\w\*$/)) {
               const thisWIndex = ++wIndex
               const WordSpan = wordIndex === thisWIndex ? SelectedWord : Word
@@ -47,7 +51,7 @@ class Parallel extends React.Component {
                 >
                   {
                     piece
-                      .replace(/^\\w ([^\|]*?)(?:\|.*?)?\\w\*$/, '$1')
+                      .replace(/^\\w ([^|]*?)(?:\|.*?)?\\w\*$/, '$1')
                       .split(/\//g)
                       .map((wordPart, wpIndex) => (
                         <span key={wpIndex}>{wordPart}</span>
@@ -60,7 +64,7 @@ class Parallel extends React.Component {
             }
           })}
         </ParallelText>
-      </div>
+      </ParallelContainer>
     )
   }
 

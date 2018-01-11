@@ -5,6 +5,8 @@ export const setup = sttngs => settings = sttngs
 export const updateHeight = height => {
   const { origin, source, maxHeight=99999999 } = settings
 
+  if(!source) return
+
   source.postMessage({
     action: 'updateHeight',
     payload: {
@@ -16,6 +18,8 @@ export const updateHeight = height => {
 export const close = () => {
   const { origin, source } = settings
   
+  if(!source) return
+
   source.postMessage({
     action: 'close',
   }, origin)

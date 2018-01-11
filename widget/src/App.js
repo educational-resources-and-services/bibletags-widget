@@ -8,7 +8,8 @@ import { ApolloProvider } from 'react-apollo'
 import { ApolloClient } from 'apollo-client'
 import { HttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
-import { setup } from './utils/postMessage.js'
+import Measure from 'react-measure'
+import { setup, updateHeight } from './utils/postMessage.js'
 
 import CompareView from './components/views/CompareView'
 
@@ -63,14 +64,26 @@ class App extends Component {
     }
   }
 
+  onResize = (contentRect) => updateHeight(contentRect.bounds.height)
+
   render() {
     console.log('process.env', process.env, this.state)  // keys must start with REACT_APP_
     return (
       <ApolloProvider client={client}>
         {/* <MuiThemeProvider> */}
-          <CompareView
-            show={true}
-          />
+          <Measure
+            bounds
+            onResize={this.onResize}
+          >
+            {({ measureRef }) =>
+              <div ref={measureRef}>
+                <CompareView
+                  style={{ position: 'relative' }}
+                  show={true}
+                />
+              </div>
+            }
+          </Measure>        
         {/* </MuiThemeProvider> */}
       </ApolloProvider>
     )
