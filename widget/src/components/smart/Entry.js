@@ -3,6 +3,10 @@ import i18n from '../../utils/i18n.js'
 import styled from 'styled-components'
 import { graphql, compose } from 'react-apollo'
 
+import Icon from 'material-ui/Icon'
+import IconButton from 'material-ui/IconButton'
+import ArrowDropUpIcon from 'material-ui-icons/ArrowDropUp'
+
 import Morph from '../basic/Morph'
 import EntrySection from '../basic/EntrySection'
 import EntryWord from '../basic/EntryWord'
@@ -13,7 +17,7 @@ import EntrySimilar from '../basic/EntrySimilar'
 // import createCourse from '../../data/mutations/createCourse'
 
 const Parsing = styled.div`
-  padding: 15px 15px 10px;
+  padding: 15px 15px 15px;
   font-size: 14px;
 `
 
@@ -28,6 +32,23 @@ const LeftSide = styled.div`
   flex-direction: column;
 `
 
+const IconContainer = styled.div`
+  position: absolute;
+  width: 100%;
+  z-index: 1;
+  text-align: center;
+`
+
+const IconButtonStyled = styled(IconButton)`
+  position: absolute !important;
+  width: 24px !important;
+  height: 24px !important;
+  top: -10px !important;
+  margin-left: -12px !important;
+  background-color: #333 !important;
+  color: white !important;
+`
+
 class Entry extends React.Component {
 
   state = {
@@ -40,13 +61,21 @@ class Entry extends React.Component {
   // }
 
   render() {
-    const { something1 } = this.props 
+    const { closeWord } = this.props 
     const { something2 } = this.state 
 
     return (
       <div>
         <Parsing>qal perfect 3rd masculine singular</Parsing>
         <EntrySections>
+          <IconContainer>
+            <IconButtonStyled
+              aria-label="Minimize"
+              onTouchTap={closeWord}
+            >
+              <ArrowDropUpIcon />
+            </IconButtonStyled>
+          </IconContainer>
           <LeftSide>
             <EntrySection bg="#BBB">
               <EntryWord />

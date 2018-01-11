@@ -24,6 +24,8 @@ class ResultsView extends React.Component {
     showCompareView: false,
   }
 
+  hideCompareView = () => this.setState({ showCompareView: false })
+
   render() {
     const { show, back } = this.props 
     const { mode, showCompareView } = this.state 
@@ -53,7 +55,7 @@ class ResultsView extends React.Component {
         <ResultItem />
         <CompareView
           show={showCompareView}
-          back={() => this.setState({ showCompareView: false })}
+          back={this.hideCompareView}
         />
       </View>
     )

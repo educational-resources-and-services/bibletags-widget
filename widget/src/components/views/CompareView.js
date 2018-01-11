@@ -128,6 +128,10 @@ class CompareView extends React.Component {
     wordIndex: null,
   }
 
+  closeWord = () => this.setState({ wordIndex: null })
+
+  hideSearchView = () => this.setState({ showSearchView: false })
+
   render() {
     const { show, back } = this.props 
     const { showSearchView, mode, wordIndex } = this.state 
@@ -170,12 +174,12 @@ class CompareView extends React.Component {
         />
         {wordIndex !== null &&
           <Entry
-          
+            closeWord={this.closeWord}
           />
         }
         <SearchView
           show={showSearchView}
-          back={() => this.setState({ showSearchView: false })}
+          back={this.hideSearchView}
         />
       </View>
     )

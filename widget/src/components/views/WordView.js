@@ -19,6 +19,8 @@ class WordView extends React.Component {
     showSearchView: false,
   }
 
+  hideSearchView = () => this.setState({ showSearchView: false })
+
   render() {
     const { something } = this.state 
 
@@ -26,7 +28,7 @@ class WordView extends React.Component {
       <View show={show}>
         <SearchView
           show={showSearchView}
-          back={() => this.setState({ showSearchView: false })}
+          back={this.hideSearchView}
         />
       </View>
     )

@@ -23,6 +23,8 @@ class SearchView extends React.Component {
     showResultsView: false,
   }
 
+  hideResultsView = () => this.setState({ showResultsView: false })
+
   render() {
     const { show, back } = this.props 
     const { mode, showResultsView } = this.state 
@@ -54,7 +56,7 @@ class SearchView extends React.Component {
         <SearchGroup />
         <ResultsView
           show={showResultsView}
-          back={() => this.setState({ showResultsView: false })}
+          back={this.hideResultsView}
         />
       </View>
     )
