@@ -83,6 +83,7 @@
       bottom,
       left,
       width,
+      maxHeight,
       initialHeight,
       visibility: `visible`,
     };
@@ -222,11 +223,24 @@
       
       // postMessage the options upon iframe load 
       const sendShowPostMessage = () => {
+
+        const partialSettings = Object.assign({}, settings);
+        const partialOptions = Object.assign({}, options);
+
+        delete partialSettings.containerEls;
+        delete partialOptions.anchorEl;
+        delete partialOptions.containerEl;
+        (partialOptions.addlOptions || []).forEach(option => delete option.callback);
+        delete partialOptions.fetchVerseCallback;
+        delete partialOptions.jumpToLocationCallback;
+        partialOptions.searchData && delete partialOptions.searchData.callback;
+        delete partialOptions.infoCallback;
+
         iframeEl.contentWindow.postMessage({
           action: 'show',
           payload: {
-            settings,
-            options,
+            settings: partialSettings,
+            options: partialOptions,
           },
         }, widgetDomain);
       }

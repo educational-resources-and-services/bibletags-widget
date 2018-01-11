@@ -16,7 +16,7 @@ import SearchView from './SearchView'
 const verse = {
   id: '0010101-wlc',
   usfm: `
-    \\w ב/רשית|strongs="H234"\\w*
+    \\w ב/רשית|strongs="H234" morph="HR/Ncfsa"\\w*
     \\w ברא|lemma="hi!"\\w*
     \\w אלוהים\\w*,
     \\w את\\w*
