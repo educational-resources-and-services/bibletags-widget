@@ -34,7 +34,7 @@ class Parallel extends React.Component {
         />
         <ParallelText
           lang="he"
-          style={ wordIndex !== null ? { color: '#999' } : null }
+          style={ wordIndex !== null ? { color: '#CCC' } : null }
         >
           {verse.usfm.split(/(\\w .*?\\w\*)/g).filter(piece => piece!='').map((piece, idx) => {
             if(piece.match(/^\\w .*?\\w\*$/)) {
