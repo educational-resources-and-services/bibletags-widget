@@ -1,31 +1,13 @@
 import React, { Component } from 'react'
-// import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+// import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
-import logo from './logo.svg'
-import './App.css'
-
-import { ApolloProvider } from 'react-apollo'
-import { ApolloClient } from 'apollo-client'
-import { BatchHttpLink } from "apollo-link-batch-http";
-import { InMemoryCache } from 'apollo-cache-inmemory'
 import Measure from 'react-measure'
 import { setup, ready, updateHeight } from './utils/postMessage.js'
 
+import Apollo from './components/smart/Apollo'
 import CompareView from './components/views/CompareView'
 
 require('dotenv').config()
-
-const uri = process.env.NODE_ENV === 'development' ? "http://localhost:3001/graphql/" : "https://data.bibletags.org/graphql"
-
-const client = new ApolloClient({
-  link: new BatchHttpLink({
-    uri,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-    },
-  }),
-  cache: new InMemoryCache(),
-})
 
 class App extends Component {
 
@@ -91,7 +73,7 @@ class App extends Component {
     const { options } = this.state
 
     return (
-      <ApolloProvider client={client}>
+      <Apollo>
         {/* <MuiThemeProvider> */}
           <Measure
             bounds
@@ -111,12 +93,12 @@ class App extends Component {
             }
           </Measure>        
         {/* </MuiThemeProvider> */}
-      </ApolloProvider>
+      </Apollo>
     )
   }
 }
 
-export default App;
+export default App
 
 
 /*
