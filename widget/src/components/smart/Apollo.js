@@ -9,12 +9,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory'
 const uri = process.env.NODE_ENV === 'development' ? "http://localhost:3001/graphql/" : "https://data.bibletags.org/graphql"
 
 const client = new ApolloClient({
-  link: new BatchHttpLink({
-    uri,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-    },
-  }),
+  link: new BatchHttpLink({ uri }),
   cache: new InMemoryCache(),
 })
 
