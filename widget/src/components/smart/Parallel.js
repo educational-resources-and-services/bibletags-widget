@@ -3,6 +3,8 @@ import i18n from '../../utils/i18n.js'
 import styled from 'styled-components'
 import { graphql, compose } from 'react-apollo'
 
+import { CircularProgress } from 'material-ui/Progress';
+
 import ParallelText from './ParallelText'
 import ParallelComposite from './ParallelComposite'
 import ParallelHeader from '../basic/ParallelHeader'
@@ -23,6 +25,11 @@ const SelectedWord = styled.div`
   color: black;
 `
 
+const CircularProgressCont = styled.div`
+  text-align: center;
+  padding: 20px 0 10px;
+`
+
 class Parallel extends React.Component {
 
   render() {
@@ -30,43 +37,49 @@ class Parallel extends React.Component {
 
     let wIndex = 0
 
-    // TODO: Make a spinner here
-    if(!verse) return null
-
     return (
       <ParallelContainer>
         <ParallelHeader
           primary="Hebrew (OSHB)"
           secondary="ESV"
         />
-        <ParallelText
-          lang="he"
-          style={ wordIndex !== null ? { color: '#CCC' } : null }
-        >
-          {verse.usfm.split(/(\\w .*?\\w\*)/g).filter(piece => piece !== '').map((piece, idx) => {
-            if(piece.match(/^\\w .*?\\w\*$/)) {
-              const thisWIndex = ++wIndex
-              const WordSpan = wordIndex === thisWIndex ? SelectedWord : Word
-              return (
-                <WordSpan
-                  key={idx}
-                  onClick={updateWordIndex.bind(this, thisWIndex)}
-                >
-                  {
-                    piece
-                      .replace(/^\\w ([^|]*?)(?:\|.*?)?\\w\*$/, '$1')
-                      .split(/\//g)
-                      .map((wordPart, wpIndex) => (
-                        <span key={wpIndex}>{wordPart}</span>
-                      ))
-                  }
-                </WordSpan>
-              )
-            } else {
-              return piece
-            }
-          })}
-        </ParallelText>
+        {verse
+          ? (
+            <ParallelText
+              lang="he"
+              style={ wordIndex !== null ? { color: '#CCC' } : null }
+            >
+              {verse.usfm.split(/(\\w .*?\\w\*)/g).filter(piece => piece !== '').map((piece, idx) => {
+                if(piece.match(/^\\w .*?\\w\*$/)) {
+                  const thisWIndex = ++wIndex
+                  const WordSpan = wordIndex === thisWIndex ? SelectedWord : Word
+                  return (
+                    <WordSpan
+                      key={idx}
+                      onClick={updateWordIndex.bind(this, thisWIndex)}
+                    >
+                      {
+                        piece
+                          .replace(/^\\w ([^|]*?)(?:\|.*?)?\\w\*$/, '$1')
+                          .split(/\//g)
+                          .map((wordPart, wpIndex) => (
+                            <span key={wpIndex}>{wordPart}</span>
+                          ))
+                      }
+                    </WordSpan>
+                  )
+                } else {
+                  return piece
+                }
+              })}
+            </ParallelText>
+          )
+          : (
+            <CircularProgressCont>
+              <CircularProgress />
+            </CircularProgressCont>
+          )
+        }
       </ParallelContainer>
     )
   }
