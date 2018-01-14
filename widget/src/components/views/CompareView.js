@@ -10,24 +10,25 @@ import SwitchButton from '../basic/SwitchButton'
 import Parallel from '../smart/Parallel'
 import Entry from '../smart/Entry'
 import SearchView from './SearchView'
+import { formLoc, getDataVar } from '../../utils/helperFunctions.js'
 
-// import createCourse from '../../data/mutations/createCourse'
+import verseQuery from '../../data/queries/verse'
 
-const verse = {
-  id: '0010101-wlc',
-  usfm: `
-    \\w ב/רשית|strongs="H234" morph="HR/Ncfsa"\\w*
-    \\w ברא|lemma="hi!"\\w*
-    \\w אלוהים\\w*,
-    \\w את\\w*
-    \\w ה/שמים\\w*
-    \\w ו/את\\w*
-    \\w ה/ארץ\\w*
-  `.replace(/\s+/g, ' ')
-}
+// const verse = {
+//   id: '0010101-wlc',
+//   usfm: `
+//     \\w ב/רשית|strongs="H234" morph="HR/Ncfsa"\\w*
+//     \\w ברא|lemma="hi!"\\w*
+//     \\w אלוהים\\w*,
+//     \\w את\\w*
+//     \\w ה/שמים\\w*
+//     \\w ו/את\\w*
+//     \\w ה/ארץ\\w*
+//   `.replace(/\s+/g, ' ')
+// }
 
 const tagSet = {
-  id: '0010101-esv',
+  id: '01001001-esv',
   tags: [
     {
       o: ["|1|1"],
@@ -136,6 +137,7 @@ class CompareView extends React.PureComponent {
 
   render() {
     const { options, show, back, style } = this.props 
+    const { verse } = getDataVar(this.props)
     const { showSearchView, mode, wordIndex } = this.state 
 
     return (
@@ -193,6 +195,17 @@ class CompareView extends React.PureComponent {
 
 }
 
+const verseQueryOptions = {
+  name: 'verse',
+  skip: ({ options }) => !options || !(options.versions || []).length,
+  options: ({ options }) => ({
+    variables: {
+      // TODO: This needs to support multiple versions at once + translations
+      id: `${formLoc(options.versions[0])}-${options.versions[0].versionCode}`,
+    },
+  }),
+}
+
 export default compose(
-  // graphql(createCourseAdmin, { name: 'createCourseAdmin' }),
+  graphql(verseQuery, verseQueryOptions),
 )(CompareView)

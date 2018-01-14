@@ -30,6 +30,9 @@ class Parallel extends React.Component {
 
     let wIndex = 0
 
+    // TODO: Make a spinner here
+    if(!verse) return null
+
     return (
       <ParallelContainer>
         <ParallelHeader
