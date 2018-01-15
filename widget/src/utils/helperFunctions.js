@@ -279,6 +279,10 @@ const grammarColors = {
   Ti: "#D68945",
 }
 
+export const getGrammarColor = ({ isPrefixOrSuffix, morphPart }) => (
+  (isPrefixOrSuffix && (grammarColors[morphPart.substr(0,2)] || grammarColors[morphPart.substr(0,1)])) || ""  
+)
+
 const pushTerm = ({ morphStrs, term }) => term && morphStrs.push(term)
 
 const pushGenderNumberState = ({ morphStrs, morphPartLetters }) => {
@@ -297,7 +301,7 @@ const getHebrewMorphPartDisplayInfo = ({ lang, morphPart, isPrefixOrSuffix }) =>
 
   const morphPartLetters = morphPart.split("")
   const morphStrs = []
-  let color = (isPrefixOrSuffix && (grammarColors[morphPart.substr(0,2)] || grammarColors[morphPartLetters[0]])) || "black"
+  const color = getGrammarColor({ isPrefixOrSuffix, morphPart })
 
   isPrefixOrSuffix && pushTerm({ morphStrs, term: grammarTerms.pos[morphPartLetters[0]] })
 
@@ -365,3 +369,33 @@ export const getMorphPartDisplayInfo = ({ lang, morphPart, isPrefixOrSuffix }) =
   return ['H','A'].includes(lang) ? getHebrewMorphPartDisplayInfo({ lang, morphPart, isPrefixOrSuffix }) : getGreekMorphPartDisplayInfo({ morphPart, isPrefixOrSuffix })
 }
 
+export const usfmToJSON = usfm => {
+
+  const wordRegex = /^\\w (.*?[^\\])(?:\|(.*))?\\w\*$/
+
+  return usfm.split(/(\\w .*?\\w\*)/g).filter(fragment => fragment !== '').map(fragment => {
+
+    if(fragment.match(wordRegex)) {
+      const attributes = {}
+      fragment
+        .replace(wordRegex, '$2')
+        .trim()
+        .match(/\S+=["']?(?:.(?!["']?\s+(?:\S+)=|[>"']))+.["']?/g)
+        .forEach(attribute => {
+          const attributePieces = attribute.split('=')
+          attributes[attributePieces[0]] = attributePieces.splice(1).join('=').replace(/^"(.*)"$|'(.*)'^$/, '$1')
+        })
+
+      return {
+        parts: fragment.replace(wordRegex, '$1').split(/\//g),
+        attributes,
+      }
+
+    } else {
+      return fragment
+    }
+
+  })
+}
+
+export const getMainWordPartIndex = wordParts => (wordParts.length - (wordParts[wordParts.length - 1].match(/^S/) ? 2 : 1))

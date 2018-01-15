@@ -10,7 +10,7 @@ import SwitchButton from '../basic/SwitchButton'
 import Parallel from '../smart/Parallel'
 import Entry from '../smart/Entry'
 import SearchView from './SearchView'
-import { formLoc, getDataVar, getPassageStr } from '../../utils/helperFunctions.js'
+import { formLoc, getDataVar, getPassageStr, usfmToJSON } from '../../utils/helperFunctions.js'
 
 import verseQuery from '../../data/queries/verse'
 
@@ -147,7 +147,20 @@ class CompareView extends React.PureComponent {
     //   chapter: firstVersionObj.chapter,
     // } : false
 
-    const wordInfo = verse && wordIndex !== null && verse.usfm.match(/\\w .*?\\w\*/g)[wordIndex-1]
+    const versePieces = verse && usfmToJSON(verse.usfm)
+
+    let wordInfo = null
+    if(versePieces && wordIndex !== null) {
+      let wIdx = 1
+      versePieces.some(verseWord => {
+        if(verseWord.parts && wordIndex === wIdx++) {
+          wordInfo = verseWord
+          return true
+        }
+      })
+    }
+
+    const verses = versePieces ? [{ id: verse.id, pieces: versePieces }] : null
 
     return (
       <View
@@ -192,7 +205,7 @@ class CompareView extends React.PureComponent {
           </SwitchButtons> */}
         </Bar>
         <Parallel
-          verses={verse ? [verse] : null}  // TODO
+          verses={verses}  // TODO
           wordIndex={wordIndex}
           updateWordIndex={this.updateWordIndex}
         />

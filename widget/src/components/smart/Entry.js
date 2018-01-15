@@ -60,20 +60,10 @@ class Entry extends React.Component {
     const { wordInfo, closeWord } = this.props 
     const { something2 } = this.state 
 
-    const wordAttributes = {}
-    wordInfo
-      .replace(/^\\w .*?[^\\]\|(.*)\\w\*$/, '$1')
-      .trim()
-      .match(/\S+=["']?(?:.(?!["']?\s+(?:\S+)=|[>"']))+.["']?/g)
-      .forEach(attribute => {
-        const attributePieces = attribute.split('=')
-        wordAttributes[attributePieces[0]] = attributePieces.splice(1).join('=').replace(/^"(.*)"$|'(.*)'^$/, '$1')
-      })
-
     return (
       <div>
         <Parsing
-          morph={wordAttributes['x-morph']}
+          morph={wordInfo.attributes['x-morph']}
         />
         <EntrySections>
           <IconContainer>
