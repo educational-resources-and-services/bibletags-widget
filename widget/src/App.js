@@ -1,15 +1,15 @@
-import React, { Component } from 'react'
+import React from 'react'
 // import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 import Measure from 'react-measure'
 import { setup, ready, updateHeight } from './utils/postMessage.js'
 
-import Apollo from './components/smart/Apollo'
+import Apollo, { restoreCache } from './components/smart/Apollo'
 import CompareView from './components/views/CompareView'
 
 require('dotenv').config()
 
-class App extends Component {
+class App extends React.Component {
 
   state = {
     options: null,
@@ -35,6 +35,7 @@ class App extends Component {
     switch(data.action) {
       case 'preload':
         console.log('preload', data)
+        restoreCache()
         break
 
       case 'show':
@@ -47,6 +48,8 @@ class App extends Component {
           source,
           maxHeight,
         })
+
+        restoreCache()
 
         this.setState({ options })
 
