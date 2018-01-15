@@ -18,6 +18,8 @@ When `npm run buildAll` is executed, the following happens:
 
 Example:
 
+export const language = 'heb'
+
 export default {
   "Library here!": "ספריה",
   "Library {{here}}!": "ספריה {{here}}",
@@ -28,6 +30,8 @@ export default {
 }
 
 */
+
+export const language = 'eng'
 
 export default {}
   

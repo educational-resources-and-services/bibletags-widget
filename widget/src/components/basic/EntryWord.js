@@ -43,17 +43,20 @@ const IconButtonStyled = styled(IconButton)`
 
 class EntryWord extends React.Component {
   render() {
-    const { something } = this.props 
+    const { id, lemma, vocal, hits } = this.props
+
+    let strongs = id.split('-')[0]
+    strongs = strongs.substr(0,1) + parseInt(strongs.substr(1))
 
     return (
       <WordLine>
-        <Lemma>ראשית</Lemma>
+        <Lemma>{lemma}</Lemma>
         <span> </span>
-        <Pronounciation>reshit</Pronounciation>
+        <Pronounciation>{vocal}</Pronounciation>
         <span> </span>
-        <Strongs>H938</Strongs>
+        <Strongs>{strongs}</Strongs>
         <span> </span>
-        <Hits>13x</Hits>
+        <Hits>{i18n("{{hits}}x", { hits })}</Hits>
         {/* <IconButtonStyled
           aria-label="Search"
           onTouchTap={() => {}}

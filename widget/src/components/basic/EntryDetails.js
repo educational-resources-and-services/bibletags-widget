@@ -6,6 +6,8 @@ import Icon from 'material-ui/Icon'
 import IconButton from 'material-ui/IconButton'
 import LibraryBooksIcon from 'material-ui-icons/LibraryBooks'
 
+import { posTerms } from '../../utils/helperFunctions.js'
+
 const DetailsLine = styled.div`
   padding-top: 10px;
 `
@@ -29,13 +31,13 @@ const IconButtonStyled = styled(IconButton)`
 
 class EntryWord extends React.Component {
   render() {
-    const { something } = this.props 
+    const { gloss, pos } = this.props 
 
     return (
       <DetailsLine>
-        <Definition>beginning</Definition>
+        <Definition>{gloss}</Definition>
         <span> </span>
-        <PartOfSpeech>noun</PartOfSpeech>
+        <PartOfSpeech>{pos.map(onePos => posTerms[onePos])}</PartOfSpeech>
         {/* <IconButtonStyled
           aria-label="Lexicon"
           onTouchTap={() => {}}

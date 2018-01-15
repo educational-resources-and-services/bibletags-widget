@@ -132,12 +132,23 @@ export const getBibleBookName = bookid => {
 
 }
 
+export const posTerms = {
+  A: i18nGrammar("adjective"),
+  C: i18nGrammar("conjunction"),
+  D: i18nGrammar("adverb"),
+  N: i18nGrammar("noun"),
+  P: i18nGrammar("pronoun"),
+  R: i18nGrammar("preposition"),
+  T: i18nGrammar("particle"),
+  V: i18nGrammar("verb"),
+}
+
 const grammarTerms = {
   pos: {
     // These are the only pos's that I want to actually print
     // since others are shown in the Entry component
-    C: i18nGrammar("conjunction"),
-    R: i18nGrammar("preposition"),
+    C: posTerms.C,
+    R: posTerms.R,
   },
   person: {
     1: i18nGrammar("1st"),
