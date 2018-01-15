@@ -5,17 +5,20 @@ import { ApolloClient } from 'apollo-client'
 import { BatchHttpLink } from "apollo-link-batch-http"
 import { ApolloLink, from } from 'apollo-link'
 import { InMemoryCache } from 'apollo-cache-inmemory'
+import lzutf8 from 'lzutf8'
 
 import { onFinish } from './AfterwareLink'
 
-const uri = process.env.NODE_ENV === 'development' ? "http://localhost:3001/graphql/" : "https://api.bibletags.org/graphql/"
+const URI = process.env.NODE_ENV === 'development' ? "http://localhost:3001/graphql/" : "https://api.bibletags.org/graphql/"
+const MAX_CACHE_KEYS = 500
 
-const batchHttpLink = new BatchHttpLink({ uri })
+const batchHttpLink = new BatchHttpLink({ uri: URI })
 const cache = new InMemoryCache()
 
 export const restoreCache = () => {
   try {
-    cache.restore(JSON.parse(localStorage.getItem('apolloCache') || "{}"))
+    const cacheObj = JSON.parse(lzutf8.decompress(localStorage.getItem('apolloCache') || "{}", { inputEncoding: "BinaryString" }))
+    cache.restore(cacheObj)
     console.log('cache restored')
   } catch(e) {
     console.log('could not restore cache', e)
@@ -30,7 +33,22 @@ export const restoreCache = () => {
 const localStorageAfterware = onFinish(({ networkError, graphQLErrors, response, operation }) => {
   setTimeout(() => {
     try {
-      localStorage.setItem('apolloCache', JSON.stringify(cache.extract()))
+      const cacheObj = cache.extract()
+      let cacheIndex = parseInt(localStorage.getItem('apolloCacheIndex') || 1)
+      for(let key in cacheObj) {
+        const cacheValue = cacheObj[key]
+        if(key === 'ROOT_QUERY') {
+          
+        } else if(cacheValue.__i && cacheValue.__i < cacheIndex - MAX_CACHE_KEYS) {
+          delete cacheObj[key]
+          // TODO: delete the cooresponding key in ROOT_QUERY
+        } else if(!cacheValue.__i) {
+          cacheValue.__i = cacheIndex++
+        }
+      }
+
+      localStorage.setItem('apolloCache', lzutf8.compress(JSON.stringify(cacheObj), { outputEncoding: "BinaryString" }))
+      localStorage.setItem('apolloCacheIndex', cacheIndex)
       console.log('cache saved to localStorage')
     } catch(e) {
       console.log('could not save cache to localStorage', e)

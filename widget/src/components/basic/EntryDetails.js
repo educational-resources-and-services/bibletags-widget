@@ -37,7 +37,7 @@ class EntryWord extends React.Component {
       <DetailsLine>
         <Definition>{gloss}</Definition>
         <span> </span>
-        <PartOfSpeech>{pos.map(onePos => posTerms[onePos])}</PartOfSpeech>
+        <PartOfSpeech>{pos.map(onePos => posTerms[onePos]).join(i18n(", ", {}, "list separator"))}</PartOfSpeech>
         {/* <IconButtonStyled
           aria-label="Lexicon"
           onTouchTap={() => {}}
