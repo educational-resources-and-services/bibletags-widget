@@ -13,6 +13,7 @@
     i18n("{{num_results}} results!", { num_results: this.props.numResults })
     i18n("Back", {}, "i.e. go back")
     i18n("Back", {}, "i.e. the back of the book")  // Differing descriptions create separate variables to translate
+    i18n("John", {}, "", "book")  // Optionally include category as fourth parameter ("book" or "grammar")
 
 */
 

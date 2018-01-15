@@ -10,7 +10,7 @@ import SwitchButton from '../basic/SwitchButton'
 import Parallel from '../smart/Parallel'
 import Entry from '../smart/Entry'
 import SearchView from './SearchView'
-import { formLoc, getDataVar } from '../../utils/helperFunctions.js'
+import { formLoc, getDataVar, getPassageStr } from '../../utils/helperFunctions.js'
 
 import verseQuery from '../../data/queries/verse'
 
@@ -138,7 +138,14 @@ class CompareView extends React.PureComponent {
   render() {
     const { options, show, back, style } = this.props 
     const { verse } = getDataVar(this.props)
-    const { showSearchView, mode, wordIndex } = this.state 
+    const { showSearchView, mode, wordIndex } = this.state
+
+    const firstVersionObj = options && options.versions && options.versions[0]
+    const verseMisallignmentInfo = false
+    // const verseMisallignmentInfo = firstVersionObj ? {
+    //   bookId: firstVersionObj.bookId,
+    //   chapter: firstVersionObj.chapter,
+    // } : false
 
     return (
       <View
@@ -147,9 +154,17 @@ class CompareView extends React.PureComponent {
       >
         <Bar
           back={back}
-          title={"John 3:16"}
+          title={verseMisallignmentInfo
+            ?
+              <div>
+                {getPassageStr(verseMisallignmentInfo)}
+                <span>TODO: Icon</span>
+              </div>
+            :
+              (firstVersionObj && getPassageStr(firstVersionObj))
+          }
         >
-          <SwitchButtons
+          {/* <SwitchButtons
             selectedId={mode}
             setSelectedId={mode => this.setState({ mode })}
           >
@@ -172,10 +187,10 @@ class CompareView extends React.PureComponent {
                 <DashedLine />
               </div>
             </SwitchButton>
-          </SwitchButtons>
+          </SwitchButtons> */}
         </Bar>
         <Parallel
-          verse={verse}
+          verses={verse ? [verse] : null}  // TODO
           wordIndex={wordIndex}
           updateWordIndex={this.updateWordIndex}
         />
