@@ -8,6 +8,7 @@ import IconButton from 'material-ui/IconButton'
 import ArrowDropUpIcon from 'material-ui-icons/ArrowDropUp'
 
 import Morph from '../basic/Morph'
+import Parsing from '../basic/Parsing'
 import EntrySection from '../basic/EntrySection'
 import EntryWord from '../basic/EntryWord'
 import EntryDetails from '../basic/EntryDetails'
@@ -15,11 +16,6 @@ import EntryHits from '../basic/EntryHits'
 import EntrySimilar from '../basic/EntrySimilar'
 
 // import createCourse from '../../data/mutations/createCourse'
-
-const Parsing = styled.div`
-  padding: 10px 15px 15px;
-  font-size: 14px;
-`
 
 const EntrySections = styled.div`
   display: flex;
@@ -61,12 +57,24 @@ class Entry extends React.Component {
   // }
 
   render() {
-    const { closeWord } = this.props 
+    const { wordInfo, closeWord } = this.props 
     const { something2 } = this.state 
+
+    const wordAttributes = {}
+    wordInfo
+      .replace(/^\\w .*?[^\\]\|(.*)\\w\*$/, '$1')
+      .trim()
+      .match(/\S+=["']?(?:.(?!["']?\s+(?:\S+)=|[>"']))+.["']?/g)
+      .forEach(attribute => {
+        const attributePieces = attribute.split('=')
+        wordAttributes[attributePieces[0]] = attributePieces.splice(1).join('=').replace(/^"(.*)"$|'(.*)'^$/, '$1')
+      })
 
     return (
       <div>
-        <Parsing>qal perfect 3rd masculine singular</Parsing>
+        <Parsing
+          morph={wordAttributes['x-morph']}
+        />
         <EntrySections>
           <IconContainer>
             <IconButtonStyled

@@ -147,6 +147,8 @@ class CompareView extends React.PureComponent {
     //   chapter: firstVersionObj.chapter,
     // } : false
 
+    const wordInfo = verse && wordIndex !== null && verse.usfm.match(/\\w .*?\\w\*/g)[wordIndex-1]
+
     return (
       <View
         show={show}
@@ -196,6 +198,7 @@ class CompareView extends React.PureComponent {
         />
         {wordIndex !== null &&
           <Entry
+            wordInfo={wordInfo}
             closeWord={this.closeWord}
           />
         }
