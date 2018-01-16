@@ -15,7 +15,7 @@ import EntryWord from '../basic/EntryWord'
 import EntryDetails from '../basic/EntryDetails'
 import EntryHits from '../basic/EntryHits'
 import EntrySimilar from '../basic/EntrySimilar'
-import { getDataVar } from '../../utils/helperFunctions.js'
+import { getDataVar, getStrongs } from '../../utils/helperFunctions.js'
 import { language } from '../../utils/translations.js'
 
 import definitionQuery from '../../data/queries/definition'
@@ -62,14 +62,13 @@ class Entry extends React.Component {
   render() {
     const { wordInfo, closeWord } = this.props 
     const { definition } = getDataVar(this.props)
-    const { something2 } = this.state 
 
     return (
       <div>
         <Parsing
           morph={wordInfo.attributes['x-morph']}
         />
-        {definition
+        {definition && definition.id.split('-')[0] === getStrongs(wordInfo)
           ?
             <EntrySections>
               <IconContainer>
@@ -121,8 +120,6 @@ class Entry extends React.Component {
   }
 
 }
-
-const getStrongs = wordInfo => (wordInfo.attributes.strong || "").replace(/[a-z]:/g, '')
 
 const definitionQueryOptions = {
   name: 'definition',

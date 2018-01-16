@@ -410,3 +410,5 @@ export const usfmToJSON = usfm => {
 }
 
 export const getMainWordPartIndex = wordParts => (wordParts.length - (wordParts[wordParts.length - 1].match(/^S/) ? 2 : 1))
+
+export const getStrongs = wordInfo => (wordInfo.attributes.strong || "").replace(/[a-z]:/g, '')
