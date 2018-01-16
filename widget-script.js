@@ -117,22 +117,21 @@
           height: 0,
         };
     const containerElComputedStyle = getComputedStyle(containerEl)
-    const containerElBorderTop = parseInt(containerElComputedStyle.borderTopWidth, 10) || 0
-    const containerElBorderBottom = parseInt(containerElComputedStyle.borderBottomWidth, 10) || 0
-    const containerElBorderLeft = parseInt(containerElComputedStyle.borderLeftWidth, 10) || 0
-    const containerElBorderRight = parseInt(containerElComputedStyle.borderRightWidth, 10) || 0
-    const containerElBottomScrollHeight = containerElRect.height - containerElInnerHeight - containerElBorderTop - containerElBorderBottom;
+    const containerElBorderTop = parseInt(containerElComputedStyle.borderTopWidth, 10) || 0;
+    const containerElBorderLeft = parseInt(containerElComputedStyle.borderLeftWidth, 10) || 0;
+    const containerElBorderAndScrollBottom = containerElRect.height - containerElInnerHeight - containerElBorderTop;
+    const containerElBorderAndScrollRight = containerElRect.width - containerElInnerWidth - containerElBorderLeft;
 
     const width = mobileMode ? '100%' : Math.max(Math.min(containerElInnerWidth, MAXIMUM_NON_MOBILE_WIDGET_WIDTH), 0.1);
     const spaceAboveInContainer = anchorElRect.top - containerElRect.top - containerElBorderTop;
-    const spaceBelowInContainer = containerElRect.bottom - anchorElRect.bottom - containerElBorderBottom - containerElBottomScrollHeight;
+    const spaceBelowInContainer = containerElRect.bottom - anchorElRect.bottom - containerElBorderAndScrollBottom;
     const spaceAboveInViewPort = anchorElRect.top;
     const spaceBelowInViewPort = d.body.clientHeight - anchorElRect.bottom;
     const spaceAbove = Math.min(spaceAboveInContainer, spaceAboveInViewPort);
     const spaceBelow = Math.min(spaceBelowInContainer, spaceBelowInViewPort);
     const anchorElTopInContainer = containerElScroll.y + spaceAboveInContainer;
     const anchorElBottomInContainer = containerEl.scrollHeight - anchorElTopInContainer - anchorElRect.height;
-    const anchorElLeftInContainer = containerElScroll.x + (anchorElRect.left - containerElRect.left);
+    const anchorElLeftInContainer = containerElScroll.x + (anchorElRect.left - containerElBorderLeft - containerElRect.left);
     const expandsDown =
       spaceBelow > SPACE_BELOW_NEEDED_TO_AUTOMATICALLY_EXPAND_DOWN
         ||
@@ -148,10 +147,10 @@
       :
         Math.min(
           Math.max(
-            (anchorElLeftInContainer + anchorElRect.width/2) - width/2,
+            anchorElLeftInContainer + anchorElRect.width/2 - width/2,
             containerElScroll.x + Math.max(containerElRect.left * -1 - containerElBorderLeft, 0) + margin
           ),
-          containerElInnerWidth + containerEl.scrollLeft - Math.max(containerElRect.right - containerElBorderRight - d.body.clientWidth, 0) - margin - width
+          containerElInnerWidth + containerEl.scrollLeft - Math.max(containerElRect.right - containerElBorderAndScrollRight - d.body.clientWidth, 0) - margin - width
         );
     const maxHeight = mobileMode ? '100%' : Math.max((expandsDown ? spaceBelow : spaceAbove) - margin, MINIMUM_HEIGHT);
     const initialHeight = mobileMode ? '100%' : Math.min(INITIAL_HEIGHT, maxHeight);
