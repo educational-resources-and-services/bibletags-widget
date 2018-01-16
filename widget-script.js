@@ -41,6 +41,10 @@
     return uiLanguageCode;
   };
   
+  const getMobileMode = () => Math.min(window.innerWidth, window.innerHeight) < 500;
+  
+  const getContainerEl = options => ((!getMobileMode() && options.containerEl) || d.body);
+  
   const hideWidgetEl = widgetEl => {
     widgetEl.style.top = 0;
     widgetEl.style.left = 0;
@@ -71,7 +75,7 @@
   };
 
   const getWidgetElStyle = ({ options }) => {
-    const mobileMode = Math.min(window.innerWidth, window.innerHeight) < 500;
+    const mobileMode = getMobileMode();
     const width = mobileMode ? '100%' : 400;
     const maxHeight = 800;  // calculate
     const initialHeight = mobileMode ? '100%' : Math.min(250, maxHeight);
@@ -152,10 +156,13 @@
   };
 
   const addOnDeckInstance = options => {
-    if(onDeckInstance) return
+    if(onDeckInstance) return;
+
+    const containerEl = getContainerEl(options);
+
     onDeckInstance = getInstanceTemplate(options);
-    makeRelativeIfStatic(options.containerEl);
-    (options.containerEl || d.body).appendChild(onDeckInstance.widgetEl);
+    makeRelativeIfStatic(containerEl);
+    containerEl.appendChild(onDeckInstance.widgetEl);
   };
 
   const destroyInstance = id => {
@@ -227,6 +234,7 @@
 
       const id = idIndex++;
       const style = getWidgetElStyle({ options });
+      const containerEl = getContainerEl(options);
 
       const { widgetEl, iframeEl } = onDeckInstance || getInstanceTemplate(options);
       if(onDeckInstance && onDeckInstance.widgetEl === widgetEl) {
@@ -288,10 +296,10 @@
         }
       };
 
-      if(widgetEl.parentElement != (options.containerEl || d.body)) {
-        makeRelativeIfStatic(options.containerEl);
+      if(widgetEl.parentElement != containerEl) {
+        makeRelativeIfStatic(containerEl);
         iframeEl.loaded = false;
-        (options.containerEl || d.body).appendChild(widgetEl);
+        containerEl.appendChild(widgetEl);
       }
 
       window.addEventListener('message', iframeElEvent)
