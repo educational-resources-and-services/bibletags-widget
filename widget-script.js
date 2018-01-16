@@ -96,8 +96,8 @@
           options.containerElTargetScroll
             || 
           {
-            x: containerEl.scrollTop,
-            y: containerEl.scrollLeft,
+            x: containerEl.scrollLeft,
+            y: containerEl.scrollTop,
           }
         );
     
@@ -134,7 +134,7 @@
           : spaceBelowInViewPort >= spaceAboveInViewPort
       );
     const top = mobileMode ? 0 : (expandsDown ? (anchorElTopInContainer + anchorElRect.height) : null);
-    const bottom = mobileMode ? 0 : (expandsDown ? null : (anchorElBottomInContainer + anchorElRect.height));
+    const bottom = mobileMode ? 0 : (expandsDown ? null : (spaceBelowInContainer + containerElScroll.y + anchorElRect.height));
     const left = mobileMode
       ? 0
       :
@@ -149,6 +149,9 @@
     const initialHeight = mobileMode ? '100%' : Math.min(INITIAL_HEIGHT, maxHeight);
     const position = mobileMode ? 'fixed' : 'absolute';
     const zIndex = options.zIndex != null ? options.zIndex : DEFAULT_Z_INDEX;
+// console.log(spaceAboveInContainer, spaceBelowInContainer, spaceAboveInViewPort, spaceBelowInViewPort, spaceAbove, spaceBelow)
+// console.log(anchorElTopInContainer, anchorElBottomInContainer, anchorElLeftInContainer, expandsDown)
+// console.log(top, bottom, left, maxHeight)
 
     return {
       top,
