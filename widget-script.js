@@ -122,7 +122,7 @@
     const containerElBorderAndScrollBottom = containerElRect.height - containerElInnerHeight - containerElBorderTop;
     const containerElBorderAndScrollRight = containerElRect.width - containerElInnerWidth - containerElBorderLeft;
 
-    const width = mobileMode ? '100%' : Math.max(Math.min(containerElInnerWidth, MAXIMUM_NON_MOBILE_WIDGET_WIDTH), 0.1);
+    const width = mobileMode ? '100%' : Math.max(Math.min(containerElInnerWidth - margin * 2, MAXIMUM_NON_MOBILE_WIDGET_WIDTH), 0.1);
     const spaceAboveInContainer = anchorElRect.top - containerElRect.top - containerElBorderTop;
     const spaceBelowInContainer = containerElRect.bottom - anchorElRect.bottom - containerElBorderAndScrollBottom;
     const spaceAboveInViewPort = anchorElRect.top;
