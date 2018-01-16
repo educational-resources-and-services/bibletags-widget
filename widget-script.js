@@ -152,6 +152,7 @@
   };
 
   const addOnDeckInstance = options => {
+    if(onDeckInstance) return
     onDeckInstance = getInstanceTemplate(options);
     makeRelativeIfStatic(options.containerEl);
     (options.containerEl || d.body).appendChild(onDeckInstance.widgetEl);
@@ -225,8 +226,12 @@
     show: (options={}) => {
 
       const id = idIndex++;
-      const { widgetEl, iframeEl } = d.body.contains(onDeckInstance.widgetEl) ? onDeckInstance : getInstanceTemplate(options);
       const style = getWidgetElStyle({ options });
+
+      const { widgetEl, iframeEl } = onDeckInstance || getInstanceTemplate(options);
+      if(onDeckInstance && onDeckInstance.widgetEl === widgetEl) {
+        onDeckInstance = null;
+      }
 
       iframeEl.style.width = `${style.width}px`;
       options.maxHeight = style.maxHeight;
