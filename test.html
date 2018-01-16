@@ -13,18 +13,20 @@
             verse: 1,  // 0-176; 0 for psalm headings
           }],
           containerEl: document.getElementById('hey'),
-          anchorEl: this,
+          anchorEl: document.getElementById("show1"),
         })
       }
     </script>
   </head>
-  <body>
-    <div id='hey'>
-      <button onClick="window.bibleTagsWidget.setup({one: 1, two: 2})">Setup</button>
-      <button onClick="window.bibleTagsWidget.preload({one: 1, two: 2})">Preload</button>
-      <button onClick="window.show1()">Show Genesis 1:1</button>
-      <button onClick="window.bibleTagsWidget.hide(window.lastWidgetId)">Hide last showed</button>
-      <button onClick="window.bibleTagsWidget.hide()">Hide all</button>
+  <body style="height: 2000px; width: 2000px; margin: 30px; padding: 315px;">
+    <div id='hey' style="max-height: 500px; max-width: 500px; border: 1px solid black; overflow: auto;">
+      <div style="padding: 400px 400px;">
+        <button onClick="window.bibleTagsWidget.setup({one: 1, two: 2})">Setup</button>
+        <button onClick="window.bibleTagsWidget.preload({one: 1, two: 2})">Preload</button>
+        <button onClick="window.show1()" id="show1">Show Genesis 1:1</button>
+        <button onClick="window.bibleTagsWidget.hide(window.lastWidgetId)">Hide last showed</button>
+        <button onClick="window.bibleTagsWidget.hide()">Hide all</button>
+      </div>
     </div>
   </body>
 </html>
