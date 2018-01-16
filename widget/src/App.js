@@ -51,7 +51,10 @@ class App extends React.Component {
 
         restoreCache()
 
-        this.setState({ options })
+        this.setState({ options }, () => {
+          updateHeight(this.refEl.offsetHeight)
+          ready()
+        })
 
         this.readyStatus = 1
         
@@ -63,14 +66,9 @@ class App extends React.Component {
     }
   }
 
-  onResize = contentRect => {
-    updateHeight(contentRect.bounds.height)
+  setRefEl = ref => this.refEl = ref
 
-    if(this.readyStatus === 1) {
-      ready()
-      this.indicatedReady = 2
-    }
-  }
+  onResize = contentRect => updateHeight(contentRect.bounds.height)
 
   render() {
     const { options } = this.state
@@ -83,15 +81,14 @@ class App extends React.Component {
             onResize={this.onResize}
           >
             {({ measureRef }) =>
-              <div
-                // TODO: for some reason, FF not firing the first onResize
-                ref={measureRef}
-              >
-                <CompareView
-                  options={options}
-                  style={{ position: 'relative' }}
-                  show={true}
-                />
+              <div ref={this.setRefEl}>
+                <div ref={measureRef}>
+                  <CompareView
+                    options={options}
+                    style={{ position: 'relative' }}
+                    show={true}
+                  />
+                </div>
               </div>
             }
           </Measure>        
