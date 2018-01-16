@@ -358,6 +358,7 @@
 
           case 'ready':
             setWidgetElStyle({ widgetEl, style, iframeEl });
+            setTimeout(() => widgetEl.style.transition = `height .1s ease-in-out`, 100);
             break;
 
           case 'updateHeight':
