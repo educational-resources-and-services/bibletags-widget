@@ -8,11 +8,11 @@
   
   // // staging
   // const widgetDomain = 'https://s3.amazonaws.com';
-  // const widgetUrl = `${widgetDomain}/cdn.bibletags.org/build/index.html`;
+  // const widgetUrl = `${widgetDomain}/staging.cdn.bibletags.org/widget/{{LANG}}/index.html`;
   
   // // production
   // const widgetDomain = 'https://cdn.bibletags.org';
-  // const widgetUrl = `${widgetDomain}/index-{{LANG}}.html`;
+  // const widgetUrl = `${widgetDomain}/widget/{{LANG}}/index.html`;
 
 
   let onDeckInstance;
