@@ -12,13 +12,14 @@
             chapter: 1,  // 1-150
             verse: 1,  // 0-176; 0 for psalm headings
           }],
+          containerEl: document.getElementById('hey'),
           anchorEl: this,
         })
       }
     </script>
   </head>
   <body>
-    <div>
+    <div id='hey'>
       <button onClick="window.bibleTagsWidget.setup({one: 1, two: 2})">Setup</button>
       <button onClick="window.bibleTagsWidget.preload({one: 1, two: 2})">Preload</button>
       <button onClick="window.show1()">Show Genesis 1:1</button>

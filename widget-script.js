@@ -50,7 +50,7 @@
   };
 
   const setWidgetElStyle = ({ widgetEl, style, iframeEl }) => {
-    const { top, bottom, left, width, height, initialHeight, visibility } = style
+    const { top, bottom, left, width, height, initialHeight, zIndex, visibility } = style
 
     const formVal = val => typeof val === 'number' ? val : `${val}px`
     
@@ -63,6 +63,7 @@
     widgetEl.style.left = `${left}px`;
     widgetEl.style.width = formVal(width);
     widgetEl.style.height = formVal(height || initialHeight);
+    widgetEl.style.zIndex = zIndex;
     widgetEl.style.visibility = visibility;
 
     iframeEl.style.width = `100%`;
@@ -77,6 +78,7 @@
     const top = mobileMode ? 0 : 100;  // calculate
     const bottom = mobileMode ? 0 : null;  // calculate
     const left = mobileMode ? 0 : 100;  // calculate
+    const zIndex = options.zIndex != null ? options.zIndex : 100;
 
     return {
       top,
@@ -85,6 +87,7 @@
       width,
       maxHeight,
       initialHeight,
+      zIndex,
       visibility: `visible`,
     };
   };
@@ -142,8 +145,15 @@
     
   };
 
+  const makeRelativeIfStatic = el => {
+    if(el && (el.style.position === 'static' || el.style.position === '')) {
+      el.style.position = 'relative';
+    }
+  };
+
   const addOnDeckInstance = options => {
     onDeckInstance = getInstanceTemplate(options);
+    makeRelativeIfStatic(options.containerEl);
     (options.containerEl || d.body).appendChild(onDeckInstance.widgetEl);
   };
 
@@ -224,6 +234,8 @@
       // postMessage the options upon iframe load 
       const sendShowPostMessage = () => {
 
+        iframeEl.loaded = false;
+
         const partialSettings = Object.assign({}, settings);
         const partialOptions = Object.assign({}, options);
 
@@ -272,6 +284,8 @@
       };
 
       if(widgetEl.parentElement != (options.containerEl || d.body)) {
+        makeRelativeIfStatic(options.containerEl);
+        iframeEl.loaded = false;
         (options.containerEl || d.body).appendChild(widgetEl);
       }
 
