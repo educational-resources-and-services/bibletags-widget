@@ -102,6 +102,7 @@
         );
     
     const containerElRect = containerEl.getBoundingClientRect();
+    const containerElInnerWidth = containerEl.clientWidth;
     const tenPercentDownInContainerEl = containerElRect.top + containerElRect.height * .1;
     const anchorElRect = options.anchorEl
       ?
@@ -110,12 +111,15 @@
         {
           top: tenPercentDownInContainerEl,
           bottom: tenPercentDownInContainerEl,
-          left: containerElRect.left + containerElRect.width/2,
+          left: containerElRect.left + containerElInnerWidth/2,
           width: 0,
           height: 0,
         };
+    const containerElComputedStyle = getComputedStyle(containerEl)
+    const containerElBorderLeft = parseInt(containerElComputedStyle.borderLeftWidth, 10) || 0
+    const containerElBorderRight = parseInt(containerElComputedStyle.borderRightWidth, 10) || 0
 
-    const width = mobileMode ? '100%' : Math.max(Math.min(containerEl.clientWidth, MAXIMUM_NON_MOBILE_WIDGET_WIDTH), 0.1);
+    const width = mobileMode ? '100%' : Math.max(Math.min(containerElInnerWidth, MAXIMUM_NON_MOBILE_WIDGET_WIDTH), 0.1);
     const spaceAboveInContainer = anchorElRect.top - containerElRect.top;
     const spaceBelowInContainer = containerElRect.bottom - anchorElRect.bottom;
     const spaceAboveInViewPort = anchorElRect.top;
@@ -134,24 +138,21 @@
           : spaceBelowInViewPort >= spaceAboveInViewPort
       );
     const top = mobileMode ? 0 : (expandsDown ? (anchorElTopInContainer + anchorElRect.height) : null);
-    const bottom = mobileMode ? 0 : (expandsDown ? null : (spaceBelowInContainer + containerElScroll.y + anchorElRect.height));
+    const bottom = mobileMode ? 0 : (expandsDown ? null : (spaceBelowInContainer - containerElScroll.y + anchorElRect.height));
     const left = mobileMode
       ? 0
       :
         Math.min(
           Math.max(
             (anchorElLeftInContainer + anchorElRect.width/2) - width/2,
-            containerElScroll.x + margin
+            containerElScroll.x + Math.max(containerElRect.left * -1 - containerElBorderLeft, 0) + margin
           ),
-          containerEl.scrollWidth - margin - width
+          containerElInnerWidth + containerEl.scrollLeft - Math.max(containerElRect.right - containerElBorderRight - window.innerWidth, 0) - margin - width
         );
     const maxHeight = mobileMode ? '100%' : Math.max((expandsDown ? spaceBelow : spaceAbove) - margin, MINIMUM_HEIGHT);
     const initialHeight = mobileMode ? '100%' : Math.min(INITIAL_HEIGHT, maxHeight);
     const position = mobileMode ? 'fixed' : 'absolute';
     const zIndex = options.zIndex != null ? options.zIndex : DEFAULT_Z_INDEX;
-// console.log(spaceAboveInContainer, spaceBelowInContainer, spaceAboveInViewPort, spaceBelowInViewPort, spaceAbove, spaceBelow)
-// console.log(anchorElTopInContainer, anchorElBottomInContainer, anchorElLeftInContainer, expandsDown)
-// console.log(top, bottom, left, maxHeight)
 
     return {
       top,
