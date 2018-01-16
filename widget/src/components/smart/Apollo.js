@@ -14,46 +14,85 @@ const MAX_CACHE_KEYS = 500
 
 const batchHttpLink = new BatchHttpLink({ uri: URI })
 const cache = new InMemoryCache()
+let lastCacheUpdate = -1
+
+const getCacheFromLocalStorage = () => {
+  if(lastCacheUpdate === parseInt(localStorage.getItem('apolloCacheLastUpdateTime') || 0)) {
+    // this widget instance was the last to update the cache, so no need to get it
+    return null
+  }
+  const apolloCache = localStorage.getItem('apolloCache')
+  if(!apolloCache) return null
+  return JSON.parse(lzutf8.decompress(apolloCache, { inputEncoding: "BinaryString" }))
+}
 
 export const restoreCache = () => {
   try {
-    const cacheObj = JSON.parse(lzutf8.decompress(localStorage.getItem('apolloCache') || "{}", { inputEncoding: "BinaryString" }))
-    cache.restore(cacheObj)
-    console.log('cache restored')
+    const localStorageCacheObj = getCacheFromLocalStorage()
+    if(localStorageCacheObj) {
+      cache.restore(localStorageCacheObj)
+      lastCacheUpdate = parseInt(localStorage.getItem('apolloCacheLastUpdateTime') || 0)
+      console.log('cache restored')
+    } else {
+      // cache up-to-date or no cache available in localstorage
+    }
   } catch(e) {
     console.log('could not restore cache', e)
   }
 }
 
+export const saveCache = () => {
+  try {
+    const localStorageCacheObj = getCacheFromLocalStorage() || {}
+    const cacheObj = {
+      ...localStorageCacheObj,
+      ...cache.extract(),
+    }
+    cacheObj.ROOT_QUERY = {
+      ...localStorageCacheObj.ROOT_QUERY,
+      ...cacheObj.ROOT_QUERY,
+    }
+    let cacheIndex = parseInt(localStorage.getItem('apolloCacheIndex') || 1)
+
+    for(let key in cacheObj) {
+      const cacheValue = cacheObj[key]
+      if(key === 'ROOT_QUERY') {
+        // do nothing
+      } else if(cacheValue.__i && cacheValue.__i < cacheIndex - MAX_CACHE_KEYS) {
+        delete cacheObj[key]
+        // TODO: delete the cooresponding key in ROOT_QUERY
+      } else if(!cacheValue.__i) {
+        cacheValue.__i = cacheIndex++
+      }
+    }
+
+    lastCacheUpdate = Date.now()
+    localStorage.setItem('apolloCache', lzutf8.compress(JSON.stringify(cacheObj), { outputEncoding: "BinaryString" }))
+    localStorage.setItem('apolloCacheIndex', cacheIndex)
+    localStorage.setItem('apolloCacheLastUpdateTime', lastCacheUpdate)
+
+    console.log('cache saved to localStorage')
+
+  } catch(e) {
+    console.log('could not save cache to localStorage', e)
+  }
+}
 // const middleware = new ApolloLink((operation, forward) => {
 //   console.log('middleware', operation, forward)
 //   return forward(operation)
 // })
 
 const localStorageAfterware = onFinish(({ networkError, graphQLErrors, response, operation }) => {
-  setTimeout(() => {
-    try {
-      const cacheObj = cache.extract()
-      let cacheIndex = parseInt(localStorage.getItem('apolloCacheIndex') || 1)
-      for(let key in cacheObj) {
-        const cacheValue = cacheObj[key]
-        if(key === 'ROOT_QUERY') {
-          
-        } else if(cacheValue.__i && cacheValue.__i < cacheIndex - MAX_CACHE_KEYS) {
-          delete cacheObj[key]
-          // TODO: delete the cooresponding key in ROOT_QUERY
-        } else if(!cacheValue.__i) {
-          cacheValue.__i = cacheIndex++
-        }
-      }
+  if(networkError) {
+    // TODO: handle errors
+    
+  } else if(graphQLErrors) {
+    // TODO: handle errors
+     
+  } else {
+    setTimeout(saveCache)
 
-      localStorage.setItem('apolloCache', lzutf8.compress(JSON.stringify(cacheObj), { outputEncoding: "BinaryString" }))
-      localStorage.setItem('apolloCacheIndex', cacheIndex)
-      console.log('cache saved to localStorage')
-    } catch(e) {
-      console.log('could not save cache to localStorage', e)
-    }
-  })
+  }
 })
 
 const client = new ApolloClient({

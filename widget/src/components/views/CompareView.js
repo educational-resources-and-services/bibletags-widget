@@ -2,6 +2,7 @@ import React from 'react'
 import i18n from '../../utils/i18n.js'
 import styled from 'styled-components'
 import { graphql, compose } from 'react-apollo'
+import { restoreCache } from '../smart/Apollo'
 
 import View from '../basic/View'
 import Bar from '../basic/Bar'
@@ -133,7 +134,10 @@ class CompareView extends React.PureComponent {
 
   hideSearchView = () => this.setState({ showSearchView: false })
   
-  updateWordIndex = wordIndex => this.setState({ wordIndex })
+  updateWordIndex = wordIndex => {
+    restoreCache()
+    this.setState({ wordIndex })
+  }
 
   render() {
     const { options, show, back, style } = this.props 
