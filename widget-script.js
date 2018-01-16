@@ -1,6 +1,14 @@
 !((d) => {
-
+  
   if(window.bibleTagsWidget) return;
+
+  // constants
+  const INITIAL_HEIGHT = 250;
+  const MINIMUM_HEIGHT = 200;
+  const SPACE_BELOW_NEEDED_TO_AUTOMATICALLY_EXPAND_DOWN = 800;
+  const MAXIMUM_NON_MOBILE_WIDGET_WIDTH = 400;
+  const DEFAULT_MARGIN = 10;
+  const DEFAULT_Z_INDEX = 100;
 
   // development
   const widgetDomain = '*';
@@ -54,7 +62,7 @@
   };
 
   const setWidgetElStyle = ({ widgetEl, style, iframeEl }) => {
-    const { top, bottom, left, width, height, initialHeight, zIndex, visibility } = style
+    const { top, bottom, left, width, height, initialHeight, position, zIndex, visibility } = style
 
     const formVal = val => typeof val === 'number' ? val : `${val}px`
     
@@ -67,6 +75,7 @@
     widgetEl.style.left = `${left}px`;
     widgetEl.style.width = formVal(width);
     widgetEl.style.height = formVal(height || initialHeight);
+    widgetEl.style.position = position;
     widgetEl.style.zIndex = zIndex;
     widgetEl.style.visibility = visibility;
 
@@ -76,13 +85,70 @@
 
   const getWidgetElStyle = ({ options }) => {
     const mobileMode = getMobileMode();
-    const width = mobileMode ? '100%' : 400;
-    const maxHeight = 800;  // calculate
-    const initialHeight = mobileMode ? '100%' : Math.min(250, maxHeight);
-    const top = mobileMode ? 0 : 100;  // calculate
-    const bottom = mobileMode ? 0 : null;  // calculate
-    const left = mobileMode ? 0 : 100;  // calculate
-    const zIndex = options.zIndex != null ? options.zIndex : 100;
+    const containerEl = getContainerEl(options);
+
+    const margin = parseInt(options.margin, 10) || DEFAULT_MARGIN;
+    const containerElScroll = mobileMode
+      ?
+        { x:0, y:0 }
+      :
+        (
+          options.containerElTargetScroll
+            || 
+          {
+            x: containerEl.scrollTop,
+            y: containerEl.scrollLeft,
+          }
+        );
+    
+    const containerElRect = containerEl.getBoundingClientRect();
+    const tenPercentDownInContainerEl = containerElRect.top + containerElRect.height * .1;
+    const anchorElRect = options.anchorEl
+      ?
+        options.anchorEl.getBoundingClientRect()
+      : 
+        {
+          top: tenPercentDownInContainerEl,
+          bottom: tenPercentDownInContainerEl,
+          left: containerElRect.left + containerElRect.width/2,
+          width: 0,
+          height: 0,
+        };
+
+    const width = mobileMode ? '100%' : Math.max(Math.min(containerEl.clientWidth, MAXIMUM_NON_MOBILE_WIDGET_WIDTH), 0.1);
+    const spaceAboveInContainer = anchorElRect.top - containerElRect.top;
+    const spaceBelowInContainer = containerElRect.bottom - anchorElRect.bottom;
+    const spaceAboveInViewPort = anchorElRect.top;
+    const spaceBelowInViewPort = window.innerHeight - anchorElRect.bottom;
+    const spaceAbove = Math.min(spaceAboveInContainer, spaceAboveInViewPort);
+    const spaceBelow = Math.min(spaceBelowInContainer, spaceBelowInViewPort);
+    const anchorElTopInContainer = containerElScroll.y + spaceAboveInContainer;
+    const anchorElBottomInContainer = containerEl.scrollHeight - anchorElTopInContainer - anchorElRect.height;
+    const anchorElLeftInContainer = containerElScroll.x + (anchorElRect.left - containerElRect.left);
+    const expandsDown =
+      spaceBelow > SPACE_BELOW_NEEDED_TO_AUTOMATICALLY_EXPAND_DOWN
+        ||
+      (
+        Math.max(spaceBelow, spaceAbove) >= MINIMUM_HEIGHT
+          ? spaceBelow >= spaceAbove
+          : spaceBelowInViewPort >= spaceAboveInViewPort
+      );
+    const top = mobileMode ? 0 : (expandsDown ? (anchorElTopInContainer + anchorElRect.height) : null);
+    const bottom = mobileMode ? 0 : (expandsDown ? null : (anchorElBottomInContainer + anchorElRect.height));
+    const left = mobileMode
+      ? 0
+      :
+        Math.min(
+          Math.max(
+            (anchorElLeftInContainer + anchorElRect.width/2) - width/2,
+            containerElScroll.x + margin
+          ),
+          containerEl.scrollWidth - margin - width
+        );
+    const maxHeight = mobileMode ? '100%' : Math.max((expandsDown ? spaceBelow : spaceAbove) - margin, MINIMUM_HEIGHT);
+    const initialHeight = mobileMode ? '100%' : Math.min(INITIAL_HEIGHT, maxHeight);
+    const position = mobileMode ? 'fixed' : 'absolute';
+    const zIndex = options.zIndex != null ? options.zIndex : DEFAULT_Z_INDEX;
 
     return {
       top,
@@ -91,6 +157,7 @@
       width,
       maxHeight,
       initialHeight,
+      position,
       zIndex,
       visibility: `visible`,
     };
