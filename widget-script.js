@@ -10,17 +10,17 @@
   const DEFAULT_MARGIN = 10;
   const DEFAULT_Z_INDEX = 100;
 
-  // // development
-  // const widgetDomain = '*';
-  // const widgetUrl = `http://localhost:3000/index.html`;
+  // development
+  const widgetDomain = '*';
+  const widgetUrl = `http://localhost:3000/index.html`;
   
-  // staging
-  const widgetDomain = 'https://s3.amazonaws.com';
-  const widgetUrl = `${widgetDomain}/staging.cdn.bibletags.org/widget/{{LANG}}/index.html`;
+  // // staging
+  // const widgetDomain = 'https://cdn.staging.bibletags.org';
+  // const widgetUrl = `${widgetDomain}/widget/build/index.html`;
   
   // // production
   // const widgetDomain = 'https://cdn.bibletags.org';
-  // const widgetUrl = `${widgetDomain}/widget/{{LANG}}/index.html`;
+  // const widgetUrl = `${widgetDomain}/widget/build/index.html`;
 
 
   let onDeckInstance;
@@ -40,14 +40,17 @@
     let uiLanguageCode
     try {
       uiLanguageCode = options.uiLanguageCode
-        || localStorage.getItem(`uiLang-${options.versions && (options.versions[0] || {}).versionCode}`)
-        || localStorage.getItem(`uiLang`)  // latest language code used
-        || 'eng'  // unknown; widget will redirect to correct language if necessary
+        || settings.uiLanguageCode
+        || localStorage.getItem(`bibleTags-uiLang-${options.versions && (options.versions[0] || {}).versionCode}`)
+        || localStorage.getItem(`bibleTags-uiLang`)  // latest language code used
+        || 'eng'  // presently unknown
     } catch(e) {
       uiLanguageCode = 'eng';
     }
     return uiLanguageCode;
   };
+
+  // TODO: implement setLatestUILanguageCode({ uiLanguageCode, version })
   
   const getMobileMode = () => Math.min(w.innerWidth, w.innerHeight) < 500;
   
@@ -190,7 +193,7 @@
 
     // create iframe with widget
     const iframeEl = newEl('iframe', {
-      src: widgetUrl.replace('{{LANG}}', uiLanguageCode),
+      src: widgetUrl,
       style: `
         position: absolute;
         top: 0;

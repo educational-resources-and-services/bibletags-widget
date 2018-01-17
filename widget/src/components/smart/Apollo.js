@@ -9,7 +9,9 @@ import lzutf8 from 'lzutf8'
 
 import { onFinish } from './AfterwareLink'
 
-const URI = process.env.NODE_ENV === 'development' ? "http://localhost:3001/graphql/" : "https://api.bibletags.org/graphql/"
+const dev = process.env.NODE_ENV === 'development'
+const staging = process.env.NODE_ENV === 'staging'
+const URI = dev ? "http://localhost:3001/graphql/" : (staging ? "https://api.staging.bibletags.org/graphql/" : "https://api.bibletags.org/graphql/")
 const MAX_CACHE_KEYS = 500
 
 const batchHttpLink = new BatchHttpLink({ uri: URI })

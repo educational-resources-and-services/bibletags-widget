@@ -1,17 +1,27 @@
 import React from 'react'
 // import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import { setUpI18n } from './utils/i18n.js'
+import styled from 'styled-components'
+import { setup, ready, updateHeight } from './utils/postMessage.js'
 
 import Measure from 'react-measure'
-import { setup, ready, updateHeight } from './utils/postMessage.js'
+import { CircularProgress } from 'material-ui/Progress';
 
 import Apollo, { restoreCache } from './components/smart/Apollo'
 import CompareView from './components/views/CompareView'
+import Bar from './components/basic/Bar'
 
 require('dotenv').config()
+
+const CircularProgressCont = styled.div`
+  text-align: center;
+  padding: 20px 0 25px;
+`
 
 class App extends React.Component {
 
   state = {
+    languageReady: false,
     options: null,
   }
 
@@ -24,24 +34,36 @@ class App extends React.Component {
     window.removeEventListener('message', this.postMessageListener)
   }
 
+  getLanguageSetup = async () => {
+    await setUpI18n()
+    this.setState({ languageReady: true })
+  }
+
   postMessageListener = event => {
     const { data, source, origin } = event
     const { settings, options } = data.payload || {}
 
-    // record origin in ga
+    // TODO: record origin in ga
     
     if(source !== window.parent) return
 
+    const { uiLanguageCode, maxHeight } = options
+
     switch(data.action) {
+      case 'setup':
+        this.getLanguageSetup({ uiLanguageCode })
+        break
+
       case 'preload':
         console.log('preload', data)
+        this.getLanguageSetup({ uiLanguageCode })
         restoreCache()
         break
 
       case 'show':
         if(this.readyStatus >= 1) break   // only single show call allowed
 
-        const { maxHeight } = options
+        this.getLanguageSetup({ uiLanguageCode })
 
         setup({
           origin: process.env.NODE_ENV === 'development' ? '*' : origin,
@@ -71,7 +93,7 @@ class App extends React.Component {
   onResize = contentRect => updateHeight(contentRect.bounds.height)
 
   render() {
-    const { options } = this.state
+    const { options, languageReady } = this.state
 
     return (
       <Apollo>
@@ -83,11 +105,21 @@ class App extends React.Component {
             {({ measureRef }) =>
               <div ref={this.setRefEl}>
                 <div ref={measureRef}>
-                  <CompareView
-                    options={options}
-                    style={{ position: 'relative' }}
-                    show={true}
-                  />
+                  {languageReady
+                    ?
+                      <CompareView
+                        options={options}
+                        style={{ position: 'relative' }}
+                        show={true}
+                      />
+                    :
+                      <div>
+                        <Bar />
+                        <CircularProgressCont>
+                          <CircularProgress />
+                        </CircularProgressCont>
+                      </div>
+                  }
                 </div>
               </div>
             }
