@@ -44,6 +44,7 @@
   - build with `create-react-app`
   - stand-alone
   - makes api calls to graphql backend
+  - caches ui language data (for non-English) in localStorage
   - caches scripture data in localStorage (mutations as well in the future when made completed offline-enabled)
   - offline-enabled, however offline text storage yet-to-be-determined
 * graphql backend
@@ -51,7 +52,6 @@
 * db
   - aws rds
 * BibleTags.org
-  - build with next.js; same basic build as scf
   - makes api calls to graphql backend
 * data hub
   - aws s3
