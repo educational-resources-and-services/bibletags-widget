@@ -23,10 +23,31 @@
 */
 
 let translations = {}
-let language = 'eng'
+let uiLanguageCode = 'eng'
 
-export const setUpI18n = async uiLanguageCode => {
-  language = uiLanguageCode
+export const determineUILanguageCode = ({ settings, options }) => {
+  let uiLanguageCode
+  try {
+    uiLanguageCode = options.uiLanguageCode
+      || settings.uiLanguageCode
+      || localStorage.getItem(`bibleTags-uiLang-${options.versions && (options.versions[0] || {}).versionCode}`)
+      || localStorage.getItem(`bibleTags-uiLang`)  // latest language code used
+      || 'eng'  // presently unknown
+  } catch(e) {
+    uiLanguageCode = 'eng'
+  }
+  return uiLanguageCode
+}
+
+// TODO: implement saveLatestUILanguageCode({ uiLanguageCode, version })
+// I need a postMessage sent back from the widget to set bibleTags-uiLang-[versionCode]
+
+
+
+export const setUpI18n = async uiLangCode => {
+  uiLanguageCode = uiLangCode
+
+  await new Promise(resolve => setTimeout(resolve, 5000))
 
   /*
     To get proper ui language (if not english):
@@ -51,7 +72,7 @@ export const setUpI18n = async uiLanguageCode => {
   */
 }
 
-export const getLanguage = () => language
+export const getUILanguageCode = () => uiLanguageCode
 
 const i18n = (str, swaps={}, desc="") => 
   (

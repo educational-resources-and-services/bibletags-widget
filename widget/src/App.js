@@ -1,6 +1,6 @@
 import React from 'react'
 // import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import { setUpI18n } from './utils/i18n.js'
+import { determineUILanguageCode, setUpI18n } from './utils/i18n.js'
 import styled from 'styled-components'
 import { setup, ready, updateHeight } from './utils/postMessage.js'
 
@@ -11,7 +11,7 @@ import Apollo, { restoreCache } from './components/smart/Apollo'
 import CompareView from './components/views/CompareView'
 import Bar from './components/basic/Bar'
 
-const dev = !!location.href.match(/localhost/)
+const dev = !!window.location.href.match(/localhost/)
 
 const CircularProgressCont = styled.div`
   text-align: center;
@@ -21,7 +21,7 @@ const CircularProgressCont = styled.div`
 class App extends React.Component {
 
   state = {
-    languageReady: false,
+    uiLanguageCode: "eng",
     options: null,
   }
 
@@ -34,9 +34,14 @@ class App extends React.Component {
     window.removeEventListener('message', this.postMessageListener)
   }
 
-  getLanguageSetup = async () => {
-    await setUpI18n()
-    this.setState({ languageReady: true })
+  setupLanguage = async ({ settings, options }) => {
+    const uiLanguageCode = determineUILanguageCode({ settings, options })
+
+    if(uiLanguageCode === this.state.uiLanguageCode) return 
+
+    this.setState({ uiLanguageCode: null })
+    await setUpI18n(uiLanguageCode)
+    this.setState({ uiLanguageCode })
   }
 
   postMessageListener = event => {
@@ -47,23 +52,23 @@ class App extends React.Component {
     
     if(source !== window.parent) return
 
-    const { uiLanguageCode, maxHeight } = options
+    const { maxHeight } = options
 
     switch(data.action) {
       case 'setup':
-        this.getLanguageSetup({ uiLanguageCode })
+        this.setupLanguage({ settings, options })
         break
 
       case 'preload':
         console.log('preload', data)
-        this.getLanguageSetup({ uiLanguageCode })
+        this.setupLanguage({ settings, options })
         restoreCache()
         break
 
       case 'show':
         if(this.readyStatus >= 1) break   // only single show call allowed
 
-        this.getLanguageSetup({ uiLanguageCode })
+        this.setupLanguage({ settings, options })
 
         setup({
           origin: dev ? '*' : origin,
@@ -93,7 +98,7 @@ class App extends React.Component {
   onResize = contentRect => updateHeight(contentRect.bounds.height)
 
   render() {
-    const { options, languageReady } = this.state
+    const { options, uiLanguageCode } = this.state
 
     return (
       <Apollo>
@@ -105,7 +110,7 @@ class App extends React.Component {
             {({ measureRef }) =>
               <div ref={this.setRefEl}>
                 <div ref={measureRef}>
-                  {languageReady
+                  {uiLanguageCode !== null
                     ?
                       <CompareView
                         options={options}

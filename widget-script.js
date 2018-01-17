@@ -36,22 +36,6 @@
     return el;
   };
 
-  const getUiLanguageCode = options => {
-    let uiLanguageCode
-    try {
-      uiLanguageCode = options.uiLanguageCode
-        || settings.uiLanguageCode
-        || localStorage.getItem(`bibleTags-uiLang-${options.versions && (options.versions[0] || {}).versionCode}`)
-        || localStorage.getItem(`bibleTags-uiLang`)  // latest language code used
-        || 'eng'  // presently unknown
-    } catch(e) {
-      uiLanguageCode = 'eng';
-    }
-    return uiLanguageCode;
-  };
-
-  // TODO: implement setLatestUILanguageCode({ uiLanguageCode, version })
-  
   const getMobileMode = () => Math.min(w.innerWidth, w.innerHeight) < 500;
   
   const getContainerEl = options => ((!getMobileMode() && options.containerEl) || d.body);
@@ -173,8 +157,6 @@
   };
 
   const getInstanceTemplate = options => {
-
-    const uiLanguageCode = getUiLanguageCode(options);
 
     // create widget container
     const widgetEl = newEl('div');

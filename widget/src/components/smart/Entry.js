@@ -16,7 +16,7 @@ import EntryDetails from '../basic/EntryDetails'
 import EntryHits from '../basic/EntryHits'
 import EntrySimilar from '../basic/EntrySimilar'
 import { getDataVar, getStrongs } from '../../utils/helperFunctions.js'
-import { getLanguage } from '../../utils/i18n.js'
+import { getUILanguageCode } from '../../utils/i18n.js'
 
 import definitionQuery from '../../data/queries/definition'
 
@@ -126,7 +126,7 @@ const definitionQueryOptions = {
   skip: ({ wordInfo }) => !getStrongs(wordInfo),
   options: ({ wordInfo }) => ({
     variables: {
-      id: `${getStrongs(wordInfo)}-${getLanguage()}`,
+      id: `${getStrongs(wordInfo)}-${getUILanguageCode()}`,
     },
   }),
 }

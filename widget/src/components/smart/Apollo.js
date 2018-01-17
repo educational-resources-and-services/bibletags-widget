@@ -9,8 +9,8 @@ import lzutf8 from 'lzutf8'
 
 import { onFinish } from './AfterwareLink'
 
-const dev = !!location.href.match(/localhost/)
-const staging = !!location.href.match(/staging/)
+const dev = !!window.location.href.match(/localhost/)
+const staging = !!window.location.href.match(/staging/)
 const URI = dev ? "http://localhost:3001/graphql/" : (staging ? "https://api.staging.bibletags.org/graphql/" : "https://api.bibletags.org/graphql/")
 const MAX_CACHE_KEYS = 500
 
