@@ -54,11 +54,14 @@
   const getContainerEl = options => ((!getMobileMode() && options.containerEl) || d.body);
   
   const hideWidgetEl = widgetEl => {
-    widgetEl.style.top = 0;
-    widgetEl.style.left = 0;
-    widgetEl.style.width = `1px`;
-    widgetEl.style.height = `1px`;
-    widgetEl.style.visibility = `hidden`;
+    const widgetElStyle = widgetEl.style;
+    widgetElStyle.position = 'absolute';
+    widgetElStyle.overflow = 'hidden';
+    widgetElStyle.top = 0;
+    widgetElStyle.left = 0;
+    widgetElStyle.width = `1px`;
+    widgetElStyle.height = `1px`;
+    widgetElStyle.visibility = `hidden`;
   };
 
   const setWidgetElStyle = ({ widgetEl, style, iframeEl }) => {
@@ -143,10 +146,13 @@
           ),
           containerElInnerWidth + containerEl.scrollLeft - Math.max(containerElRect.right - containerElBorderAndScrollRight - d.body.clientWidth, 0) - margin - width
         );
-    const maxHeight = mobileMode ? '100%' : Math.max((expandsDown ? spaceBelow : spaceAbove) - margin, MINIMUM_HEIGHT);
-    const height = mobileMode ? '100%' : Math.min(INITIAL_HEIGHT, maxHeight);  // initial height
+    const maxHeight = mobileMode ? '100vh' : Math.max((expandsDown ? spaceBelow : spaceAbove) - margin, MINIMUM_HEIGHT);
+    const height = mobileMode ? '100vh' : Math.min(INITIAL_HEIGHT, maxHeight);  // initial height
     const position = mobileMode ? 'fixed' : 'absolute';
     const zIndex = options.zIndex != null ? options.zIndex : DEFAULT_Z_INDEX;
+    const border = mobileMode ? '' : '1px solid #333';
+    const borderRadius = mobileMode ? 0 : 3;
+    const visibility = 'visible';
 
     return {
       top,
@@ -157,7 +163,9 @@
       height,
       position,
       zIndex,
-      visibility: `visible`,
+      border,
+      borderRadius,
+      visibility,
     };
   };
 
@@ -166,14 +174,7 @@
     const uiLanguageCode = getUiLanguageCode(options);
 
     // create widget container
-    const widgetEl = newEl('div', {
-      style: `
-        position: absolute;
-        border: 1px solid #333;
-        border-radius: 3px;
-        overflow: hidden;
-      `,
-    });
+    const widgetEl = newEl('div');
 
     hideWidgetEl(widgetEl);
     
