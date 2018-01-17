@@ -6,4 +6,6 @@
 # misc
 .DS_Store
 .env
-widget-script-builds
+widget-script-builds/
+build/
+buildAll/

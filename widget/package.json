@@ -2,7 +2,7 @@
   "name": "widget",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://bibletags.org",
+  "homepage": "https://s3.amazonaws.com/staging.cdn.bibletags.org/widget/eng",
   "dependencies": {
     "apollo-client-preset": "1.0.4",
     "apollo-link-batch-http": "1.0.4",

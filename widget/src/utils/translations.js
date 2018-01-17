@@ -8,9 +8,11 @@ When `npm run buildAll` is executed, the following happens:
   * This file is temporarily renamed
   * For each language with ui language data (except for English)
     - a file is created with the ui language data (per the example below) at this file's original URI
+    - the package.json homepage is updated to have the correct language code
     - `npm run build` is executed
     - the contents of the build directory is renamed to buildAll/widget/${languageCode}
   * This file is restored
+  * the package.json homepage is reverted to /eng at the end
   * `npm run build` is executed
   * For each language without ui language data (including English)
     - the build directory is copied to buildAll/widget/${languageCode}
