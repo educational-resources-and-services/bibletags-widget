@@ -62,25 +62,16 @@
   };
 
   const setWidgetElStyle = ({ widgetEl, style, iframeEl }) => {
-    const { top, bottom, left, width, height, initialHeight, position, zIndex, visibility } = style
-
-    const formVal = val => typeof val === 'number' ? val : `${val}px`
     
-    if(top) {
-      widgetEl.style.top = `${top}px`;
-    } else {
-      widgetEl.style.top = `auto`;
-      widgetEl.style.bottom = `${bottom}px`;
+    const formVal = val => typeof val === 'number' ? `${val}px` : (val == null ? `auto` : val);
+
+    for(let attr in style) {
+      widgetEl.style[attr] = formVal(style[attr]);
     }
-    widgetEl.style.left = `${left}px`;
-    widgetEl.style.width = formVal(width);
-    widgetEl.style.height = formVal(height || initialHeight);
-    widgetEl.style.position = position;
-    widgetEl.style.zIndex = zIndex;
-    widgetEl.style.visibility = visibility;
 
     iframeEl.style.width = `100%`;
     iframeEl.style.height = `100%`;
+
   };
 
   const getWidgetElStyle = ({ options }) => {
@@ -153,7 +144,7 @@
           containerElInnerWidth + containerEl.scrollLeft - Math.max(containerElRect.right - containerElBorderAndScrollRight - d.body.clientWidth, 0) - margin - width
         );
     const maxHeight = mobileMode ? '100%' : Math.max((expandsDown ? spaceBelow : spaceAbove) - margin, MINIMUM_HEIGHT);
-    const initialHeight = mobileMode ? '100%' : Math.min(INITIAL_HEIGHT, maxHeight);
+    const height = mobileMode ? '100%' : Math.min(INITIAL_HEIGHT, maxHeight);  // initial height
     const position = mobileMode ? 'fixed' : 'absolute';
     const zIndex = options.zIndex != null ? options.zIndex : DEFAULT_Z_INDEX;
 
@@ -163,7 +154,7 @@
       left,
       width,
       maxHeight,
-      initialHeight,
+      height,
       position,
       zIndex,
       visibility: `visible`,
