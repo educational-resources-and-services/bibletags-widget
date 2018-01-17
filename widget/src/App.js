@@ -48,10 +48,10 @@ class App extends React.Component {
     const { data, source, origin } = event
     const { settings, options } = data.payload || {}
 
-    // TODO: record origin in ga
-    
     if(source !== window.parent) return
 
+    // TODO: record origin in ga
+    
     const { maxHeight } = options
 
     switch(data.action) {
@@ -70,11 +70,7 @@ class App extends React.Component {
 
         this.setupLanguage({ settings, options })
 
-        setup({
-          origin: dev ? '*' : origin,
-          source,
-          maxHeight,
-        })
+        setup({ maxHeight })
 
         restoreCache()
 

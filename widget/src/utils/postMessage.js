@@ -1,36 +1,26 @@
-let settings = {}
+const settings = {}
 
-export const setup = sttngs => settings = sttngs
+export const setup = sttngs => Object.assign(settings, sttngs)
 
 export const ready = () => {
-  const { origin, source } = settings
-  
-  if(!source) return
-
-  source.postMessage({
+  window.parent.postMessage({
     action: 'ready',
-  }, origin)
+  }, '*')
 }
 
 export const updateHeight = height => {
-  const { origin, source, maxHeight=99999999 } = settings
+  const { maxHeight=99999999 } = settings
 
-  if(!source) return
-
-  source.postMessage({
+  window.parent.postMessage({
     action: 'updateHeight',
     payload: {
       height: Math.min(maxHeight, height),
     },
-  }, origin)
+  }, '*')
 }
 
 export const close = () => {
-  const { origin, source } = settings
-  
-  if(!source) return
-
-  source.postMessage({
+  window.parent.postMessage({
     action: 'close',
-  }, origin)
+  }, '*')
 }
