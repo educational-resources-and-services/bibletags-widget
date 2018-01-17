@@ -1,6 +1,6 @@
-!((d) => {
+!((d, w) => {
   
-  if(window.bibleTagsWidget) return;
+  if(w.bibleTagsWidget) return;
 
   // constants
   const INITIAL_HEIGHT = 250;
@@ -10,13 +10,13 @@
   const DEFAULT_MARGIN = 10;
   const DEFAULT_Z_INDEX = 100;
 
-  // development
-  const widgetDomain = '*';
-  const widgetUrl = `http://localhost:3000/index.html`;
+  // // development
+  // const widgetDomain = '*';
+  // const widgetUrl = `http://localhost:3000/index.html`;
   
-  // // staging
-  // const widgetDomain = 'https://s3.amazonaws.com';
-  // const widgetUrl = `${widgetDomain}/staging.cdn.bibletags.org/widget/{{LANG}}/index.html`;
+  // staging
+  const widgetDomain = 'https://s3.amazonaws.com';
+  const widgetUrl = `${widgetDomain}/staging.cdn.bibletags.org/widget/{{LANG}}/index.html`;
   
   // // production
   // const widgetDomain = 'https://cdn.bibletags.org';
@@ -49,7 +49,7 @@
     return uiLanguageCode;
   };
   
-  const getMobileMode = () => Math.min(window.innerWidth, window.innerHeight) < 500;
+  const getMobileMode = () => Math.min(w.innerWidth, w.innerHeight) < 500;
   
   const getContainerEl = options => ((!getMobileMode() && options.containerEl) || d.body);
   
@@ -235,7 +235,7 @@
     if(!instances[id]) return;
     const { widgetEl, iframeElEvent } = instances[id];
     widgetEl.remove();
-    window.removeEventListener('message', iframeElEvent) ;         
+    w.removeEventListener('message', iframeElEvent) ;         
     delete instances[id];
   };
 
@@ -243,9 +243,9 @@
   styleEl.innerHTML = '';  // add styles in here
   d.head.appendChild(styleEl);
 
-  window.addEventListener('load', () => addOnDeckInstance({}));
+  w.addEventListener('load', () => addOnDeckInstance({}));
   
-  window.bibleTagsWidget = {
+  w.bibleTagsWidget = {
 
     setup: (options={}) => {
       settings = options || {};
@@ -283,11 +283,11 @@
       const close = () => {
         if(!widgetEl) return;
         widgetEl.remove();
-        window.removeEventListener('message', iframeElEvent);
+        w.removeEventListener('message', iframeElEvent);
         widgetEl = iframeEl = null;
       }
 
-      window.addEventListener('message', iframeElEvent);
+      w.addEventListener('message', iframeElEvent);
 
       d.body.appendChild(widgetEl);
       
@@ -369,7 +369,7 @@
         containerEl.appendChild(widgetEl);
       }
 
-      window.addEventListener('message', iframeElEvent)
+      w.addEventListener('message', iframeElEvent)
 
       if(iframeEl.loaded) {
         sendShowPostMessage();
@@ -400,4 +400,4 @@
 
   };
 
-})(document);
+})(document, window);

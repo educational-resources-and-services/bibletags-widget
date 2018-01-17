@@ -2,8 +2,9 @@
   "name": "bibletags-widget",
   "version": "1.0.0",
   "description": "",
-  "main": "deployScript.js",
+  "main": "widget-script.js",
   "scripts": {
+    "deploy": "node deployScript.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
