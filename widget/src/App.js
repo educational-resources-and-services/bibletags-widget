@@ -11,7 +11,7 @@ import Apollo, { restoreCache } from './components/smart/Apollo'
 import CompareView from './components/views/CompareView'
 import Bar from './components/basic/Bar'
 
-require('dotenv').config()
+const dev = !!location.href.match(/localhost/)
 
 const CircularProgressCont = styled.div`
   text-align: center;
@@ -66,7 +66,7 @@ class App extends React.Component {
         this.getLanguageSetup({ uiLanguageCode })
 
         setup({
-          origin: process.env.NODE_ENV === 'development' ? '*' : origin,
+          origin: dev ? '*' : origin,
           source,
           maxHeight,
         })
