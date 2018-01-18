@@ -3,3 +3,12 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+
+@font-face {
+  font-family: EzraSILSRW;
+  src: url(SILEOTSR.woff);
+}
+
+.hebrewFont {
+  font-family: EzraSILSRW, sans-serif;
+}

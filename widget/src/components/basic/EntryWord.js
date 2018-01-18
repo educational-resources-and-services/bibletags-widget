@@ -50,7 +50,7 @@ class EntryWord extends React.Component {
 
     return (
       <WordLine>
-        <Lemma>{lemma}</Lemma>
+        <Lemma className="hebrewFont">{lemma}</Lemma>
         <span> </span>
         <Pronounciation>{vocal}</Pronounciation>
         <span> </span>

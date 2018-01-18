@@ -31,6 +31,7 @@ class ParallelText extends React.Component {
 
     return (
       <Verse
+        className="hebrewFont"
         style={{
           ...(lang === 'he' ? { direction: 'rtl' } : {}),
           ...style,
