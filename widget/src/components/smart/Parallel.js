@@ -60,8 +60,9 @@ class Parallel extends React.Component {
                       const thisWNum = wNum++
                       const WordSpan = wordNum === thisWNum ? SelectedWord : Word
 
-                      const mainPartIdx = getMainWordPartIndex(piece.parts)
-                      const morphParts = (piece.attributes['x-morph'] || "").substr(1).split('/')
+                      const morph = piece.attributes['x-morph']
+                      const morphParts = morph && morph.substr(1).split('/')
+                      const mainPartIdx = getMainWordPartIndex(morphParts)
 
                       return (
                         <WordSpan

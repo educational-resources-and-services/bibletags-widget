@@ -290,7 +290,7 @@ const grammarColors = {
   Ti: "#D68945",
 }
 
-export const getGrammarColor = ({ isPrefixOrSuffix, morphPart }) => (
+export const getGrammarColor = ({ isPrefixOrSuffix, morphPart="" }) => (
   (isPrefixOrSuffix && (grammarColors[morphPart.substr(0,2)] || grammarColors[morphPart.substr(0,1)])) || ""  
 )
 
@@ -371,7 +371,7 @@ const getHebrewMorphPartDisplayInfo = ({ lang, morphPart, isPrefixOrSuffix }) =>
 
 export const getGreekMorphPartDisplayInfo = ({ morphPart, isPrefixOrSuffix }) => {
   return {
-    str: i18n("parsing unavailable"),
+    str: "",
     color: "black",
   }
 }
@@ -409,6 +409,6 @@ export const usfmToJSON = usfm => {
   })
 }
 
-export const getMainWordPartIndex = wordParts => (wordParts.length - (wordParts[wordParts.length - 1].match(/^S/) ? 2 : 1))
+export const getMainWordPartIndex = wordParts => (wordParts ? (wordParts.length - (wordParts[wordParts.length - 1].match(/^S/) ? 2 : 1)) : null)
 
 export const getStrongs = wordInfo => (wordInfo ? (wordInfo.attributes.strong || '').replace(/[a-z]:/g, '') : '')

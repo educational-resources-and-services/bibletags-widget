@@ -21,7 +21,9 @@ const Plus = styled.span`
 
 class Parsing extends React.Component {
   render() {
-    const { morph } = this.props 
+    let { morph } = this.props 
+
+    if(!morph) return null
 
     const lang = morph.substr(0,1)
     const morphParts = morph.substr(1).split('/')
