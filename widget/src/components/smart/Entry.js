@@ -65,9 +65,11 @@ class Entry extends React.Component {
 
     return (
       <div>
-        <Parsing
-          morph={wordInfo.attributes['x-morph']}
-        />
+        {wordInfo && 
+          <Parsing
+            morph={wordInfo.attributes['x-morph']}
+          />
+        }
         {definition && definition.id.split('-')[0] === getStrongs(wordInfo)
           ?
             <EntrySections>

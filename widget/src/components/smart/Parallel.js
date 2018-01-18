@@ -37,9 +37,9 @@ const CircularProgressCont = styled.div`
 class Parallel extends React.Component {
 
   render() {
-    const { verses, wordIndex, updateWordIndex } = this.props 
+    const { verses, wordNum, updateWordNum } = this.props 
 
-    let wIndex = 1
+    let wNum = 1
 
     return (
       <ParallelContainer>
@@ -52,13 +52,13 @@ class Parallel extends React.Component {
                 />
                 <ParallelText
                   lang="he"
-                  style={ wordIndex !== null ? { color: '#CCC' } : null }
+                  style={ wordNum !== null ? { color: '#CCC' } : null }
                 >
                   {verse.pieces.map((piece, idx) => {
 
                     if(piece.parts) {
-                      const thisWIndex = wIndex++
-                      const WordSpan = wordIndex === thisWIndex ? SelectedWord : Word
+                      const thisWNum = wNum++
+                      const WordSpan = wordNum === thisWNum ? SelectedWord : Word
 
                       const mainPartIdx = getMainWordPartIndex(piece.parts)
                       const morphParts = (piece.attributes['x-morph'] || "").substr(1).split('/')
@@ -66,13 +66,13 @@ class Parallel extends React.Component {
                       return (
                         <WordSpan
                           key={idx}
-                          onClick={updateWordIndex.bind(this, thisWIndex)}
+                          onClick={updateWordNum.bind(this, thisWNum)}
                         >
                           {
                             piece.parts.map((wordPart, wpIndex) => {
 
                               const isPrefixOrSuffix = wpIndex !== mainPartIdx
-                              const color = wordIndex === thisWIndex && getGrammarColor({ isPrefixOrSuffix, morphPart: morphParts[wpIndex] })
+                              const color = wordNum === thisWNum && getGrammarColor({ isPrefixOrSuffix, morphPart: morphParts[wpIndex] })
 
                               return (
                                 <span

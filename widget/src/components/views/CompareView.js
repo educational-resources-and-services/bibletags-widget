@@ -127,22 +127,52 @@ class CompareView extends React.PureComponent {
   state = {
     showSearchView: false,
     mode: 'separate',
-    wordIndex: null,
+    wordNum: null,
   }
 
-  closeWord = () => this.setState({ wordIndex: null })
+  componentWillReceiveProps(nextProps) {
+    const { options } = nextProps
+    const { verse } = getDataVar(nextProps)
+    const oldData = getDataVar(nextProps)
+    let { wordNum } = this.state
+
+    const hasNewOptions = options && options !== this.props.options
+
+    if(hasNewOptions) {
+      // TODO: work with more than 1 version
+      const firstVersionObj = options && options.versions && options.versions[0]
+      const defaultWordNum = firstVersionObj && parseInt(firstVersionObj.wordNum, 10)
+
+      if(defaultWordNum) {
+        this.setState({ wordNum: defaultWordNum })
+        wordNum = defaultWordNum
+      }
+    }
+
+    if(verse && wordNum) {
+      const versePieces = verse && usfmToJSON(verse.usfm)
+      const numWords = versePieces.filter(verseWord => verseWord.parts).length
+
+      if(wordNum < 1 || wordNum > numWords) {
+        this.setState({ wordNum: null })
+      }
+
+    }
+  }
+
+  closeWord = () => this.setState({ wordNum: null })
 
   hideSearchView = () => this.setState({ showSearchView: false })
   
-  updateWordIndex = wordIndex => {
+  updateWordNum = wordNum => {
     restoreCache()
-    this.setState({ wordIndex })
+    this.setState({ wordNum })
   }
 
   render() {
     const { options, show, back, style } = this.props 
     const { verse } = getDataVar(this.props)
-    const { showSearchView, mode, wordIndex } = this.state
+    const { showSearchView, mode, wordNum } = this.state
 
     const firstVersionObj = options && options.versions && options.versions[0]
     const verseMisallignmentInfo = false
@@ -154,10 +184,10 @@ class CompareView extends React.PureComponent {
     const versePieces = verse && usfmToJSON(verse.usfm)
 
     let wordInfo = null
-    if(versePieces && wordIndex !== null) {
-      let wIdx = 1
+    if(versePieces && wordNum !== null) {
+      let wNum = 1
       versePieces.some(verseWord => {
-        if(verseWord.parts && wordIndex === wIdx++) {
+        if(verseWord.parts && wordNum === wNum++) {
           wordInfo = verseWord
           return true
         }
@@ -210,10 +240,10 @@ class CompareView extends React.PureComponent {
         </Bar>
         <Parallel
           verses={verses}  // TODO
-          wordIndex={wordIndex}
-          updateWordIndex={this.updateWordIndex}
+          wordNum={wordNum}
+          updateWordNum={this.updateWordNum}
         />
-        {wordIndex !== null &&
+        {wordNum !== null &&
           <Entry
             wordInfo={wordInfo}
             closeWord={this.closeWord}
