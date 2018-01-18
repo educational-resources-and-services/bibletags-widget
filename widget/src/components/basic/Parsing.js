@@ -15,7 +15,7 @@ const ParsingPart = styled.span`
 
 const Plus = styled.span`
   display: inline-block;
-  color: "black";
+  color: black;
   margin: 0 3px;
 `
 
