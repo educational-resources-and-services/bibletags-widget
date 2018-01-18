@@ -136,7 +136,7 @@
     const maxHeight = mobileMode ? '100vh' : Math.max((expandsDown ? spaceBelow : spaceAbove) - margin, MINIMUM_HEIGHT);
     const height = mobileMode ? '100vh' : Math.min(INITIAL_HEIGHT, maxHeight);  // initial height
     const position = mobileMode ? 'fixed' : 'absolute';
-    const zIndex = options.zIndex != null ? options.zIndex : DEFAULT_Z_INDEX;
+    const zIndex = (options.zIndex != null ? options.zIndex : DEFAULT_Z_INDEX) + '';  // if it is not a string, "px" will get appended
     const border = mobileMode ? '' : '1px solid #333';
     const borderRadius = mobileMode ? 0 : 3;
     const visibility = 'visible';
