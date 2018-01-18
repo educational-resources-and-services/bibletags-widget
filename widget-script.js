@@ -201,8 +201,10 @@
   };
 
   const makeRelativeIfStatic = el => {
-    if(el && (el.style.position === 'static' || el.style.position === '')) {
-      el.style.position = 'relative';
+    const elComputedStyle = el && getComputedStyle(el);
+
+    if(el && elComputedStyle.position === 'static') {
+      el.style.setProperty('position', 'relative', 'important');
     }
   };
 
