@@ -10,7 +10,7 @@ import CompareView from '../views/CompareView'
 
 const Verse = styled.div`
   font-size: 20px;
-  line-height: 1.4;
+  line-height: 1.5;
   padding: 15px 15px 0;
 `
 
