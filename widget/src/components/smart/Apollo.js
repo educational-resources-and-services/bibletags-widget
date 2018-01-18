@@ -3,7 +3,8 @@ import React from 'react'
 import { ApolloProvider } from 'react-apollo'
 import { ApolloClient } from 'apollo-client'
 import { BatchHttpLink } from "apollo-link-batch-http"
-import { ApolloLink, from } from 'apollo-link'
+import { from } from 'apollo-link'
+// import { ApolloLink, from } from 'apollo-link'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import lzutf8 from 'lzutf8'
 
@@ -19,7 +20,7 @@ const cache = new InMemoryCache()
 let lastCacheUpdate = -1
 
 const getCacheFromLocalStorage = () => {
-  if(lastCacheUpdate === parseInt(localStorage.getItem('apolloCacheLastUpdateTime') || 0)) {
+  if(lastCacheUpdate === parseInt(localStorage.getItem('apolloCacheLastUpdateTime') || 0, 10)) {
     // this widget instance was the last to update the cache, so no need to get it
     return null
   }
@@ -33,7 +34,7 @@ export const restoreCache = () => {
     const localStorageCacheObj = getCacheFromLocalStorage()
     if(localStorageCacheObj) {
       cache.restore(localStorageCacheObj)
-      lastCacheUpdate = parseInt(localStorage.getItem('apolloCacheLastUpdateTime') || 0)
+      lastCacheUpdate = parseInt(localStorage.getItem('apolloCacheLastUpdateTime') || 0, 10)
       console.log('cache restored')
     } else {
       // cache up-to-date or no cache available in localstorage
@@ -54,7 +55,7 @@ export const saveCache = () => {
       ...localStorageCacheObj.ROOT_QUERY,
       ...cacheObj.ROOT_QUERY,
     }
-    let cacheIndex = parseInt(localStorage.getItem('apolloCacheIndex') || 1)
+    let cacheIndex = parseInt(localStorage.getItem('apolloCacheIndex') || 1, 10)
 
     for(let key in cacheObj) {
       const cacheValue = cacheObj[key]

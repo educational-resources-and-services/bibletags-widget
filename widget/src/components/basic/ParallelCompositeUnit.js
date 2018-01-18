@@ -1,7 +1,7 @@
 import React from 'react'
-import styled from 'styled-components'
+// import styled from 'styled-components'
 
-import ParallelCompositeUnitLine from './ParallelCompositeUnitLine'
+// import ParallelCompositeUnitLine from './ParallelCompositeUnitLine'
 
 // const StyledSomething = styled.div`
 //   height: 3px;
@@ -9,7 +9,7 @@ import ParallelCompositeUnitLine from './ParallelCompositeUnitLine'
 
 class ParallelCompositeUnit extends React.Component {
   render() {
-    const { something } = this.props 
+    // const { something } = this.props 
 
     return (
       <div />

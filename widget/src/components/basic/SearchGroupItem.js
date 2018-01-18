@@ -1,6 +1,6 @@
 import React from 'react'
-import i18n from '../../utils/i18n.js'
-import styled from 'styled-components'
+// import i18n from '../../utils/i18n.js'
+// import styled from 'styled-components'
 
 // const StyledSomething = styled.div`
 //   height: 3px;
@@ -8,7 +8,7 @@ import styled from 'styled-components'
 
 class SearchGroupItem extends React.Component {
   render() {
-    const { something } = this.props 
+    // const { something } = this.props 
 
     return (
       <div />

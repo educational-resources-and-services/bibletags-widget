@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import Logo from './Logo'
+// import Logo from './Logo'
 import Transition from 'react-transition-group/Transition'
 
 const duration = 200
@@ -38,7 +38,7 @@ class View extends React.Component {
             ...style,
             ...transitionStyles[transitionState],
           }}>
-            {transitionState!='exited' && children}
+            {transitionState !== 'exited' && children}
           </ViewCont>
         )}
       </Transition>

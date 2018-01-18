@@ -1,20 +1,18 @@
 import React from 'react'
-import i18n from '../../utils/i18n.js'
+// import i18n from '../../utils/i18n.js'
 import styled from 'styled-components'
 import { graphql, compose } from 'react-apollo'
 
-import Icon from 'material-ui/Icon'
 import IconButton from 'material-ui/IconButton'
 import ArrowDropUpIcon from 'material-ui-icons/ArrowDropUp'
 import { CircularProgress } from 'material-ui/Progress';
 
-import Morph from '../basic/Morph'
 import Parsing from '../basic/Parsing'
 import EntrySection from '../basic/EntrySection'
 import EntryWord from '../basic/EntryWord'
 import EntryDetails from '../basic/EntryDetails'
-import EntryHits from '../basic/EntryHits'
-import EntrySimilar from '../basic/EntrySimilar'
+// import EntryHits from '../basic/EntryHits'
+// import EntrySimilar from '../basic/EntrySimilar'
 import { getDataVar, getStrongs } from '../../utils/helperFunctions.js'
 import { getUILanguageCode } from '../../utils/i18n.js'
 

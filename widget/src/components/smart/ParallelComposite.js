@@ -1,10 +1,10 @@
 import React from 'react'
-import i18n from '../../utils/i18n.js'
-import styled from 'styled-components'
-import { graphql, compose } from 'react-apollo'
+// import i18n from '../../utils/i18n.js'
+// import styled from 'styled-components'
+// import { graphql, compose } from 'react-apollo'
 
-import ParallelCompositeUnit from '../basic/ParallelCompositeUnit'
-import CompareView from '../views/CompareView'
+// import ParallelCompositeUnit from '../basic/ParallelCompositeUnit'
+// import CompareView from '../views/CompareView'
 
 // import createCourse from '../../data/mutations/createCourse'
 
@@ -24,8 +24,8 @@ class ParallelComposite extends React.Component {
   // }
 
   render() {
-    const { something1 } = this.props 
-    const { something2 } = this.state 
+    // const { something1 } = this.props 
+    // const { something2 } = this.state 
 
     return (
       <div />
@@ -34,6 +34,4 @@ class ParallelComposite extends React.Component {
 
 }
 
-export default compose(
-  // graphql(createCourseAdmin, { name: 'createCourseAdmin' }),
-)(ParallelComposite)
+export default ParallelComposite

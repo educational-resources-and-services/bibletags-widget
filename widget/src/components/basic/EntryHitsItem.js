@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
+// import styled from 'styled-components'
 
 // const StyledSomething = styled.div`
 //   height: 3px;
@@ -7,7 +7,7 @@ import styled from 'styled-components'
 
 class EntryHitsItem extends React.Component {
   render() {
-    const { something } = this.props 
+    // const { something } = this.props 
 
     return (
       <div />

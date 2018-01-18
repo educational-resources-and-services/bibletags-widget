@@ -2,9 +2,8 @@ import React from 'react'
 import i18n from '../../utils/i18n.js'
 import styled from 'styled-components'
 
-import Icon from 'material-ui/Icon'
-import IconButton from 'material-ui/IconButton'
-import LibraryBooksIcon from 'material-ui-icons/LibraryBooks'
+// import IconButton from 'material-ui/IconButton'
+// import LibraryBooksIcon from 'material-ui-icons/LibraryBooks'
 
 import { posTerms } from '../../utils/helperFunctions.js'
 
@@ -24,10 +23,10 @@ const PartOfSpeech = styled.div`
   display: inline-block;
 `
 
-const IconButtonStyled = styled(IconButton)`
-  margin: -100px 0 !important;
-  vertical-align: middle;
-`
+// const IconButtonStyled = styled(IconButton)`
+//   margin: -100px 0 !important;
+//   vertical-align: middle;
+// `
 
 class EntryWord extends React.Component {
   render() {

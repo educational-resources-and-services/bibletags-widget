@@ -1,10 +1,9 @@
 import React from 'react'
-import i18n from '../../utils/i18n.js'
+// import i18n from '../../utils/i18n.js'
 import styled from 'styled-components'
-import { graphql, compose } from 'react-apollo'
 
-import Word from '../basic/Word'
-import CompareView from '../views/CompareView'
+// import Word from '../basic/Word'
+// import CompareView from '../views/CompareView'
 
 // import createCourse from '../../data/mutations/createCourse'
 
@@ -27,7 +26,7 @@ class ParallelText extends React.Component {
 
   render() {
     const { children, lang, style } = this.props 
-    const { something2 } = this.state 
+    // const { something2 } = this.state 
 
     return (
       <Verse
@@ -44,6 +43,4 @@ class ParallelText extends React.Component {
 
 }
 
-export default compose(
-  // graphql(createCourseAdmin, { name: 'createCourseAdmin' }),
-)(ParallelText)
+export default ParallelText

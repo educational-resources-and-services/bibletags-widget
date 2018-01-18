@@ -1,7 +1,7 @@
 import React from 'react'
-import styled from 'styled-components'
+// import styled from 'styled-components'
 
-import WordPart from './WordPart'
+// import WordPart from './WordPart'
 
 // const StyledSomething = styled.div`
 //   height: 3px;
@@ -9,7 +9,7 @@ import WordPart from './WordPart'
 
 class Word extends React.Component {
   render() {
-    const { something } = this.props 
+    // const { something } = this.props 
 
     return (
       <div />

@@ -1,7 +1,6 @@
 // code modified from https://github.com/apollographql/apollo-link/blob/master/packages/apollo-link-error/src/index.ts
 
-import { ApolloLink, Observable, Operation } from 'apollo-link'
-import { GraphQLError, ExecutionResult } from 'graphql'
+import { ApolloLink, Observable } from 'apollo-link'
 
 export const onFinish = handler => {
   return new ApolloLink((operation, forward) => {

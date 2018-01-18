@@ -2,7 +2,6 @@ import React from 'react'
 import { close } from '../../utils/postMessage.js'
 import styled from 'styled-components'
 
-import Icon from 'material-ui/Icon'
 import IconButton from 'material-ui/IconButton'
 import ArrowBackIcon from 'material-ui-icons/ArrowBack'
 import CloseIcon from 'material-ui-icons/Close'
@@ -28,7 +27,8 @@ const Title = styled.div`
 class Bar extends React.Component {
 
   render() {
-    const { back, title, subtitle, children } = this.props 
+    const { back, title, children } = this.props 
+    // const { back, title, subtitle, children } = this.props 
 
     return (
       <BarCont>

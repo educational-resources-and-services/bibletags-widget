@@ -1,12 +1,11 @@
 import React from 'react'
-import i18n from '../../utils/i18n.js'
+// import i18n from '../../utils/i18n.js'
 import styled from 'styled-components'
-import { graphql, compose } from 'react-apollo'
 
 import { CircularProgress } from 'material-ui/Progress';
 
 import ParallelText from './ParallelText'
-import ParallelComposite from './ParallelComposite'
+// import ParallelComposite from './ParallelComposite'
 import ParallelHeader from '../basic/ParallelHeader'
 import { getVersionStr, getMainWordPartIndex, getGrammarColor } from '../../utils/helperFunctions.js'
 
@@ -109,6 +108,4 @@ class Parallel extends React.Component {
 
 }
 
-export default compose(
-  // graphql(createCourseAdmin, { name: 'createCourseAdmin' }),
-)(Parallel)
+export default Parallel

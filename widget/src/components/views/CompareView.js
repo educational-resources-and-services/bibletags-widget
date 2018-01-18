@@ -1,13 +1,13 @@
 import React from 'react'
-import i18n from '../../utils/i18n.js'
-import styled from 'styled-components'
+// import i18n from '../../utils/i18n.js'
+// import styled from 'styled-components'
 import { graphql, compose } from 'react-apollo'
 import { restoreCache } from '../smart/Apollo'
 
 import View from '../basic/View'
 import Bar from '../basic/Bar'
-import SwitchButtons from '../basic/SwitchButtons'
-import SwitchButton from '../basic/SwitchButton'
+// import SwitchButtons from '../basic/SwitchButtons'
+// import SwitchButton from '../basic/SwitchButton'
 import Parallel from '../smart/Parallel'
 import Entry from '../smart/Entry'
 import SearchView from './SearchView'
@@ -28,99 +28,99 @@ import verseQuery from '../../data/queries/verse'
 //   `.replace(/\s+/g, ' ')
 // }
 
-const tagSet = {
-  id: '01001001-esv',
-  tags: [
-    {
-      o: ["|1|1"],
-      t: [1]
-    },
-    {
-      o: ["|1|2"],
-      t: [3]
-    },
-    {
-      o: ["|2"],
-      t: [5]
-    },
-    {
-      o: ["|3"],
-      t: [4]
-    },
-    {
-      o: ["|5|1"],
-      t: [6]
-    },
-    {
-      o: ["|5|2"],
-      t: [6]
-    },
-    {
-      o: ["|6|1"],
-      t: [8]
-    },
-    {
-      o: ["|7|1"],
-      t: [9]
-    },
-    {
-      o: ["|7|2"],
-      t: [10]
-    },
-  ]
-}
+// const tagSet = {
+//   id: '01001001-esv',
+//   tags: [
+//     {
+//       o: ["|1|1"],
+//       t: [1]
+//     },
+//     {
+//       o: ["|1|2"],
+//       t: [3]
+//     },
+//     {
+//       o: ["|2"],
+//       t: [5]
+//     },
+//     {
+//       o: ["|3"],
+//       t: [4]
+//     },
+//     {
+//       o: ["|5|1"],
+//       t: [6]
+//     },
+//     {
+//       o: ["|5|2"],
+//       t: [6]
+//     },
+//     {
+//       o: ["|6|1"],
+//       t: [8]
+//     },
+//     {
+//       o: ["|7|1"],
+//       t: [9]
+//     },
+//     {
+//       o: ["|7|2"],
+//       t: [10]
+//     },
+//   ]
+// }
 
-const word = {
-  id: 'H234-eng',
-  lemma: 'אַזְכָּרָה',
-  lemmaUnique: true,
-  vocal: 'ʼazkârâh',
-  hits: 7,
-  gloss: 'reminder',
-  pos: ['N'],
-  syn: [],
-  rel: [{"lemma":"זָכַר","strongs":"G2142","hits":232,"gloss":"remember"}],
-  lxx: [{"w":"ἀρχῇ","lemma":"ἀρχή","strongs":"G746","hits":236,"bhpHits":55}],
-  lxxHits: [],
-}
+// const word = {
+//   id: 'H234-eng',
+//   lemma: 'אַזְכָּרָה',
+//   lemmaUnique: true,
+//   vocal: 'ʼazkârâh',
+//   hits: 7,
+//   gloss: 'reminder',
+//   pos: ['N'],
+//   syn: [],
+//   rel: [{"lemma":"זָכַר","strongs":"G2142","hits":232,"gloss":"remember"}],
+//   lxx: [{"w":"ἀρχῇ","lemma":"ἀρχή","strongs":"G746","hits":236,"bhpHits":55}],
+//   lxxHits: [],
+// }
 
-const translations = {
-  id: 'H234-esv',
-  tr: [{"son":299,"sons":56}],
-}
+// const translations = {
+//   id: 'H234-esv',
+//   tr: [{"son":299,"sons":56}],
+// }
 
-const lexEntry = {
-  id: 'H234-eng',
-  usfm: 'About the word...',
-}
+// const lexEntry = {
+//   id: 'H234-eng',
+//   usfm: 'About the word...',
+// }
 
 
-const DoubleLine = styled.div`
-  width: 20px;
-  height: 4px;
-  border: 1px solid black;
-  border-width: 1px 0;
-  .depressed & {
-    border-color: white;
-  }
-`
+// const DoubleLine = styled.div`
+//   width: 20px;
+//   height: 4px;
+//   border: 1px solid black;
+//   border-width: 1px 0;
+//   .depressed & {
+//     border-color: white;
+//   }
+// `
 
-const SwitchButtonText = styled.div`
-  display: block;
-  font-size: 9px;
-  line-height: 1;
-  margin-bottom: 3px;
-`
+// const SwitchButtonText = styled.div`
+//   display: block;
+//   font-size: 9px;
+//   line-height: 1;
+//   margin-bottom: 3px;
+// `
 
-const DashedLine = styled.div`
-  display: block;
-  width: 100%;
-  height: 1px;
-  border-top: 1px dashed black;
-  .depressed & {
-    border-color: white;
-  }
-`
+// const DashedLine = styled.div`
+//   display: block;
+//   width: 100%;
+//   height: 1px;
+//   border-top: 1px dashed black;
+//   .depressed & {
+//     border-color: white;
+//   }
+// `
 
 class CompareView extends React.PureComponent {
 
@@ -133,7 +133,6 @@ class CompareView extends React.PureComponent {
   componentWillReceiveProps(nextProps) {
     const { options } = nextProps
     const { verse } = getDataVar(nextProps)
-    const oldData = getDataVar(nextProps)
     let { wordNum } = this.state
 
     const hasNewOptions = options && options !== this.props.options
@@ -172,7 +171,8 @@ class CompareView extends React.PureComponent {
   render() {
     const { options, show, back, style } = this.props 
     const { verse } = getDataVar(this.props)
-    const { showSearchView, mode, wordNum } = this.state
+    const { showSearchView, wordNum } = this.state
+    // const { showSearchView, mode, wordNum } = this.state
 
     const firstVersionObj = options && options.versions && options.versions[0]
     const verseMisallignmentInfo = false
@@ -191,6 +191,7 @@ class CompareView extends React.PureComponent {
           wordInfo = verseWord
           return true
         }
+        return false
       })
     }
 

@@ -11,7 +11,7 @@ import Apollo, { restoreCache } from './components/smart/Apollo'
 import CompareView from './components/views/CompareView'
 import Bar from './components/basic/Bar'
 
-const dev = !!window.location.href.match(/localhost/)
+// const dev = !!window.location.href.match(/localhost/)
 
 const CircularProgressCont = styled.div`
   text-align: center;
@@ -45,7 +45,8 @@ class App extends React.Component {
   }
 
   postMessageListener = event => {
-    const { data, source, origin } = event
+    const { data, source } = event
+    // const { data, source, origin } = event
     const { settings, options } = data.payload || {}
 
     if(source !== window.parent) return

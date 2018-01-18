@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
+// import styled from 'styled-components'
 
 import EntrySimilarItem from './EntrySimilarItem'
 
@@ -9,7 +9,7 @@ import EntrySimilarItem from './EntrySimilarItem'
 
 class EntrySimilar extends React.Component {
   render() {
-    const { something } = this.props 
+    // const { something } = this.props 
 
     return (
       <div />
