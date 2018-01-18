@@ -139,6 +139,7 @@
     const zIndex = (options.zIndex != null ? options.zIndex : DEFAULT_Z_INDEX) + '';  // if it is not a string, "px" will get appended
     const border = mobileMode ? '' : '1px solid #333';
     const borderRadius = mobileMode ? 0 : 3;
+    const boxShadow = mobileMode ? '' : '0 2px 8px rgba(0,0,0,.2)';
     const visibility = 'visible';
 
     return {
@@ -152,6 +153,7 @@
       zIndex,
       border,
       borderRadius,
+      boxShadow,
       visibility,
     };
   };
