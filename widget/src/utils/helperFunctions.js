@@ -69,13 +69,26 @@ export const getBibleBookName = bookid => {
     i18nBook("Deuteronomy"),
     i18nBook("Joshua"),
     i18nBook("Judges"),
+    i18nBook("Ruth"),
     i18nBook("1 Samuel"),
     i18nBook("2 Samuel"),
     i18nBook("1 Kings"),
     i18nBook("2 Kings"),
+    i18nBook("1 Chronicles"),
+    i18nBook("2 Chronicles"),
+    i18nBook("Ezra"),
+    i18nBook("Nehemiah"),
+    i18nBook("Esther"),
+    i18nBook("Job"),
+    i18nBook("Psalms"),
+    i18nBook("Proverbs"),
+    i18nBook("Ecclesiastes"),
+    i18nBook("Song of Songs"),
     i18nBook("Isaiah"),
     i18nBook("Jeremiah"),
+    i18nBook("Lamentations"),
     i18nBook("Ezekiel"),
+    i18nBook("Daniel"),
     i18nBook("Hosea"),
     i18nBook("Joel"),
     i18nBook("Amos"),
@@ -88,19 +101,6 @@ export const getBibleBookName = bookid => {
     i18nBook("Haggai"),
     i18nBook("Zechariah"),
     i18nBook("Malachi"),
-    i18nBook("Psalms"),
-    i18nBook("Proverbs"),
-    i18nBook("Job"),
-    i18nBook("Song of Songs"),
-    i18nBook("Ruth"),
-    i18nBook("Lamentations"),
-    i18nBook("Ecclesiastes"),
-    i18nBook("Esther"),
-    i18nBook("Daniel"),
-    i18nBook("Ezra"),
-    i18nBook("Nehemiah"),
-    i18nBook("1 Chronicles"),
-    i18nBook("2 Chronicles"),
     i18nBook("Matthew"),
     i18nBook("Mark"),
     i18nBook("Luke"),
@@ -265,16 +265,16 @@ const grammarTerms = {
   },
   aspect: {
     p: i18nGrammar("perfect"),
-    q: i18nGrammar("sequential perfect"),
+    q: i18nGrammar("sequential-perfect"),
     i: i18nGrammar("imperfect"),
-    w: i18nGrammar("sequential imperfect"),
+    w: i18nGrammar("sequential-imperfect"),
     h: i18nGrammar("cohortative"),
     j: i18nGrammar("jussive"),
     v: i18nGrammar("imperative"),
-    r: i18nGrammar("participle active"),
-    s: i18nGrammar("participle passive"),
-    a: i18nGrammar("infinitive absolute"),
-    c: i18nGrammar("infinitive construct"),
+    r: i18nGrammar("participle"),
+    s: i18nGrammar("passive-participle"),
+    a: i18nGrammar("infinitive-absolute"),
+    c: i18nGrammar("infinitive-construct"),
   },
 }
 
@@ -339,6 +339,7 @@ const getHebrewMorphPartDisplayInfo = ({ lang, morphPart, isPrefixOrSuffix }) =>
     case 'S':
       pushTerm({ morphStrs, term: grammarTerms.suffixType[morphPartLetters[1]] })
       if(morphPartLetters[1] === 'p') {
+        pushPersonGenderNumber({ morphStrs, morphPartLetters: morphPartLetters.slice(2,5) })
         pushTerm({ morphStrs, term: i18nGrammar("suffix") })
       }
       break
@@ -352,7 +353,7 @@ const getHebrewMorphPartDisplayInfo = ({ lang, morphPart, isPrefixOrSuffix }) =>
       if(['r','s'].includes(morphPartLetters[2])) {
         pushGenderNumberState({ morphStrs, morphPartLetters: morphPartLetters.slice(3) })
       } else if(['a','c'].includes(morphPartLetters[2])) {
-        pushTerm({ morphStrs, term: grammarTerms.state[morphPartLetters[2]] })
+        pushTerm({ morphStrs, term: grammarTerms.aspect[morphPartLetters[2]] })
       } else {
         pushTerm({ morphStrs, term: grammarTerms.aspect[morphPartLetters[2]] })
         pushPersonGenderNumber({ morphStrs, morphPartLetters: morphPartLetters.slice(3) })
