@@ -7,7 +7,7 @@ import { CircularProgress } from 'material-ui/Progress';
 import ParallelText from './ParallelText'
 // import ParallelComposite from './ParallelComposite'
 import ParallelHeader from '../basic/ParallelHeader'
-import { getVersionStr, getMainWordPartIndex, getGrammarColor } from '../../utils/helperFunctions.js'
+import { getVersionStr, getMainWordPartIndex, getGrammarColor, getIsEntirelyPrefixAndSuffix } from '../../utils/helperFunctions.js'
 
 // import createCourse from '../../data/mutations/createCourse'
 
@@ -59,6 +59,7 @@ class Parallel extends React.Component {
                       const thisWNum = wNum++
                       const WordSpan = wordNum === thisWNum ? SelectedWord : Word
 
+                      const isEntirelyPrefixAndSuffix = getIsEntirelyPrefixAndSuffix(piece)
                       const morph = piece.attributes['x-morph']
                       const morphParts = morph && morph.substr(1).split('/')
                       const mainPartIdx = getMainWordPartIndex(morphParts)
@@ -71,7 +72,7 @@ class Parallel extends React.Component {
                           {
                             piece.parts.map((wordPart, wpIndex) => {
 
-                              const isPrefixOrSuffix = wpIndex !== mainPartIdx
+                              const isPrefixOrSuffix = isEntirelyPrefixAndSuffix || wpIndex !== mainPartIdx
                               const color = wordNum === thisWNum && getGrammarColor({ isPrefixOrSuffix, morphPart: morphParts[wpIndex] })
 
                               return (

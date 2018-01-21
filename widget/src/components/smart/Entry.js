@@ -13,7 +13,7 @@ import EntryWord from '../basic/EntryWord'
 import EntryDetails from '../basic/EntryDetails'
 // import EntryHits from '../basic/EntryHits'
 // import EntrySimilar from '../basic/EntrySimilar'
-import { getDataVar, getStrongs } from '../../utils/helperFunctions.js'
+import { getDataVar, getStrongs, getIsEntirelyPrefixAndSuffix } from '../../utils/helperFunctions.js'
 import { getUILanguageCode } from '../../utils/i18n.js'
 
 import definitionQuery from '../../data/queries/definition'
@@ -61,59 +61,65 @@ class Entry extends React.Component {
     const { wordInfo, closeWord } = this.props 
     const { definition } = getDataVar(this.props)
 
+    const isEntirelyPrefixAndSuffix = getIsEntirelyPrefixAndSuffix(wordInfo)
+
     return (
       <div>
         {wordInfo && 
           <Parsing
+            isEntirelyPrefixAndSuffix={isEntirelyPrefixAndSuffix}
             morph={wordInfo.attributes['x-morph']}
           />
         }
-        {definition && definition.id.split('-')[0] === getStrongs(wordInfo)
-          ?
-            <EntrySections>
-              <IconContainer>
-                <IconButtonStyled
-                  aria-label="Minimize"
-                  onTouchTap={closeWord}
-                >
-                  <ArrowDropUpIcon />
-                </IconButtonStyled>
-              </IconContainer>
-              <LeftSide>
-                <EntrySection bg="#BBB">
-                  <EntryWord
-                    id={definition.id}
-                    lemma={definition.lemma}
-                    vocal={definition.vocal}
-                    hits={definition.hits}
-                  />
-                  <EntryDetails
-                    gloss={definition.gloss}
-                    pos={definition.pos}
-                  />
-                </EntrySection>
-                {/* <EntrySection bg="#EEE" style={{ flex: 1, paddingBottom: 45 }}>
-                  <EntrySimilar />
-                </EntrySection> */}
-              </LeftSide>
-              {/* <EntrySection  bg="#DDD">
-                <EntryHits />
-              </EntrySection> */}
-            </EntrySections>
-          :
-            <div>
-              <IconContainer>
-                <IconButtonStyled
-                  aria-label="Minimize"
-                  onTouchTap={closeWord}
-                >
-                  <ArrowDropUpIcon />
-                </IconButtonStyled>
-              </IconContainer>
-              <CircularProgressCont>
-                <CircularProgress />
-              </CircularProgressCont>
-            </div>
+        {!isEntirelyPrefixAndSuffix &&
+          (
+            definition && definition.id.split('-')[0] === getStrongs(wordInfo)
+              ?
+                <EntrySections>
+                  <IconContainer>
+                    <IconButtonStyled
+                      aria-label="Minimize"
+                      onTouchTap={closeWord}
+                    >
+                      <ArrowDropUpIcon />
+                    </IconButtonStyled>
+                  </IconContainer>
+                  <LeftSide>
+                    <EntrySection bg="#BBB">
+                      <EntryWord
+                        id={definition.id}
+                        lemma={definition.lemma}
+                        vocal={definition.vocal}
+                        hits={definition.hits}
+                      />
+                      <EntryDetails
+                        gloss={definition.gloss}
+                        pos={definition.pos}
+                      />
+                    </EntrySection>
+                    {/* <EntrySection bg="#EEE" style={{ flex: 1, paddingBottom: 45 }}>
+                      <EntrySimilar />
+                    </EntrySection> */}
+                  </LeftSide>
+                  {/* <EntrySection  bg="#DDD">
+                    <EntryHits />
+                  </EntrySection> */}
+                </EntrySections>
+              :
+                <div>
+                  <IconContainer>
+                    <IconButtonStyled
+                      aria-label="Minimize"
+                      onTouchTap={closeWord}
+                    >
+                      <ArrowDropUpIcon />
+                    </IconButtonStyled>
+                  </IconContainer>
+                  <CircularProgressCont>
+                    <CircularProgress />
+                  </CircularProgressCont>
+                </div>
+          )
         }
       </div>
     )

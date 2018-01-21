@@ -21,7 +21,7 @@ const Plus = styled.span`
 
 class Parsing extends React.Component {
   render() {
-    let { morph } = this.props 
+    let { morph, isEntirelyPrefixAndSuffix } = this.props 
 
     if(!morph) return null
 
@@ -33,7 +33,7 @@ class Parsing extends React.Component {
       <ParsingContainer>
         {morphParts.map((morphPart, idx) => {
 
-          const isPrefixOrSuffix = idx !== mainPartIdx
+          const isPrefixOrSuffix = isEntirelyPrefixAndSuffix || idx !== mainPartIdx
           const { str, color } = getMorphPartDisplayInfo({ lang, morphPart, isPrefixOrSuffix })
 
           return (
