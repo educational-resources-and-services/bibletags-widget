@@ -61,7 +61,7 @@ class Parallel extends React.Component {
 
                       const isEntirelyPrefixAndSuffix = getIsEntirelyPrefixAndSuffix(piece)
                       const morph = piece.attributes['x-morph']
-                      const morphParts = morph && morph.substr(1).split('/')
+                      const morphParts = (morph && morph.substr(1).split('/')) || [""]
                       const mainPartIdx = getMainWordPartIndex(morphParts)
 
                       return (
