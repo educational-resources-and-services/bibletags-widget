@@ -351,6 +351,7 @@ const getHebrewMorphPartDisplayInfo = ({ lang, morphPart, isPrefixOrSuffix }) =>
     case 'V':
       pushTerm({ morphStrs, term: grammarTerms[`stem${lang}`][morphPartLetters[1]] })
       if(['r','s'].includes(morphPartLetters[2])) {
+        pushTerm({ morphStrs, term: grammarTerms.aspect[morphPartLetters[2]] })
         pushGenderNumberState({ morphStrs, morphPartLetters: morphPartLetters.slice(3) })
       } else if(['a','c'].includes(morphPartLetters[2])) {
         pushTerm({ morphStrs, term: grammarTerms.aspect[morphPartLetters[2]] })
