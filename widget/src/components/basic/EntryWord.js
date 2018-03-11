@@ -44,8 +44,9 @@ class EntryWord extends React.Component {
   render() {
     const { id, lemma, vocal, hits } = this.props
 
-    let strongs = id.split('-')[0]
-    strongs = strongs.substr(0,1) + parseInt(strongs.substr(1), 10)
+    const strongs = id
+      .split('-')[0]  // get rid of -eng or the like
+      .replace(/^H0+/, 'H')  // get rid of leading zeros
 
     return (
       <WordLine>
