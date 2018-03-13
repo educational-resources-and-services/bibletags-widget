@@ -308,13 +308,14 @@ const pushPersonGenderNumber = ({ morphStrs, morphPartLetters }) => {
   pushTerm({ morphStrs, term: grammarTerms.number[morphPartLetters[2]] })
 }
 
-const getHebrewMorphPartDisplayInfo = ({ lang, morphPart, isPrefixOrSuffix }) => {
+const getHebrewMorphPartDisplayInfo = ({ lang, morphPart, isPrefixOrSuffix, wordIsMultiPart }) => {
 
   const morphPartLetters = morphPart.split("")
   const morphStrs = []
   const color = getGrammarColor({ isPrefixOrSuffix, morphPart })
 
-  isPrefixOrSuffix && pushTerm({ morphStrs, term: grammarTerms.pos[morphPartLetters[0]] })
+  // prevent empty parsing before or after +
+  wordIsMultiPart && pushTerm({ morphStrs, term: grammarTerms.pos[morphPartLetters[0]] })
 
   switch(morphPartLetters[0]) {
     case 'A':
@@ -378,8 +379,8 @@ export const getGreekMorphPartDisplayInfo = ({ morphPart, isPrefixOrSuffix }) =>
   }
 }
 
-export const getMorphPartDisplayInfo = ({ lang, morphPart, isPrefixOrSuffix }) => {
-  return ['H','A'].includes(lang) ? getHebrewMorphPartDisplayInfo({ lang, morphPart, isPrefixOrSuffix }) : getGreekMorphPartDisplayInfo({ morphPart, isPrefixOrSuffix })
+export const getMorphPartDisplayInfo = ({ lang, morphPart, isPrefixOrSuffix, wordIsMultiPart }) => {
+  return ['H','A'].includes(lang) ? getHebrewMorphPartDisplayInfo({ lang, morphPart, isPrefixOrSuffix, wordIsMultiPart }) : getGreekMorphPartDisplayInfo({ morphPart, isPrefixOrSuffix })
 }
 
 export const usfmToJSON = usfm => {

@@ -34,7 +34,8 @@ class Parsing extends React.Component {
         {morphParts.map((morphPart, idx) => {
 
           const isPrefixOrSuffix = isEntirelyPrefixAndSuffix || idx !== mainPartIdx
-          const { str, color } = getMorphPartDisplayInfo({ lang, morphPart, isPrefixOrSuffix })
+          const wordIsMultiPart = morphParts.length > 1
+          const { str, color } = getMorphPartDisplayInfo({ lang, morphPart, isPrefixOrSuffix, wordIsMultiPart })
 
           return (
             <ParsingPart
