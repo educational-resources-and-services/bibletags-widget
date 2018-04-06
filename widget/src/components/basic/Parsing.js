@@ -10,7 +10,7 @@ const ParsingContainer = styled.div`
 `
 
 const ParsingPart = styled.span`
-  display: inline-block;
+  /* display: inline-block; */
 `
 
 const Plus = styled.span`
