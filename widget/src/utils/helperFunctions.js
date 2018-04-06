@@ -149,6 +149,7 @@ const grammarTerms = {
     // since others are shown in the Entry component
     C: posTerms.C,
     R: posTerms.R,
+    D: posTerms.D,
   },
   person: {
     1: i18nGrammar("1st"),
