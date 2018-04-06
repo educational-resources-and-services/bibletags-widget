@@ -66,6 +66,16 @@ function registerValidSW(swUrl) {
           }
         };
       };
+      // force an update attempt at least once / hour
+      try {
+        const lastUpdate = parseInt(localStorage.getItem('service-worker-last-update'), 10)
+        if(lastUpdate && Date.now() - lastUpdate > 60 * 60 * 1000) {
+          localStorage.setItem('service-worker-last-update', Date.now())
+          registration.update();
+        }
+      } catch(e) {
+        console.log('Service worker force update failed.', e);
+      }
     })
     .catch(error => {
       console.error('Error during service worker registration:', error);
