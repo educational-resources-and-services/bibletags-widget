@@ -18,13 +18,11 @@ const ParallelContainer = styled.div`
 const ParallelGroup = styled.div`
 `
 
-const Word = styled.div`
-  display: inline-block;
+const Word = styled.span`
   cursor: pointer;
 `
 
-const SelectedWord = styled.div`
-  display: inline-block;
+const SelectedWord = styled.span`
   color: black;
 `
 
