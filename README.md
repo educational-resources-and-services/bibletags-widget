@@ -10,7 +10,9 @@
     is extended strongs clearly defined?
     - https://www.academia.edu/35220175/Linking_Lexical_Resources_for_Biblical_Greek
     - https://git.door43.org/Door43/UGNT/src/tw_occurrences/57-TIT.usfm#L19
-    - BHP => UGNT fits James - talk to Alan
+    - BHP => UGNT fits James - talk to Alan Bunning
+      Alan Bunning hopes to have the computer generated BHP successor by the summer.
+      His manuscript types: (1) full books (2) snippets (3) quoted by church fathers (4) foreign languages
 * explore using localstorage with apollo (for preloading and caching scripture data) - this likely better than redux-persist since otherwise an already loaded widget will not updated info when a different widget gets more data
   - I want:
     * sharing of data between iframe instances
