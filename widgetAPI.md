@@ -2,7 +2,7 @@
 
 ## Functions
 
-### <a id="setup" name="setup"></a>`setup`
+### <a id="setUp" name="setUp"></a>`setUp`
 
 - Typically called once. However, this function may be called multiple times to update options, or not at all if there are no options to set.
 
@@ -22,8 +22,7 @@ userId: String
 ```
 
 - **Not yet implemented**
-- any identifier unique to hosting app/domain
-- used with `appId` to uniquely identify a user
+- any identifier unique to the `appId`
 
 ```javascript
 theme: String
@@ -42,7 +41,7 @@ offlineEnabled: Boolean
 containerEls: HTMLElement
 ```
 
-- the first time the [show](#show) function is called with a `containerEl` not included here, rendering of the widget will be slow.
+- *recommended* since the first time the [show](#show) function is called with a `containerEl` not included here, rendering of the widget will be slow.
 - up to 10
 - container elements with the css value of `position: static` will be changed to `position: relative`
 
@@ -63,7 +62,7 @@ Null
 #### Examples
 
 ```javascript
-window.bibleTagsWidget.setup({
+window.bibleTagsWidget.setUp({
 	userId: "3766",
 	containerEls: [
 		document.getElementById('div1'),
@@ -72,7 +71,7 @@ window.bibleTagsWidget.setup({
 })
 ```
 ```javascript
-window.bibleTagsWidget.setup({
+window.bibleTagsWidget.setUp({
 	apiId: "https://biblearc.com",
 	userId: "3766",
 	theme: "dark",
@@ -111,19 +110,26 @@ includeLXX: Boolean
 #### Return value
 
 ```javascript
-Number  // the widgetInstanceId which can be used to hide this specific instance of the widget
+Number  // the widgetInstanceId which can be used with the `hide` function
 ```
 
 #### Examples
 
 ```javascript
 window.bibleTagsWidget.preload({
-	versions: [{
-		versionCode: "esv",
-		bookId: 1,
-		chapter: 1,
-	}],
-	uiLanguageCode: "spa",  // Spanish
+	versions: [
+		{
+			versionCode: "esv",
+			bookId: 1,
+			chapter: 1,
+		},
+		{
+			versionCode: "nasb",
+			bookId: 1,
+			chapter: 1,
+		},
+	],
+	includeLXX: true,
 })
 ```
 
@@ -131,7 +137,36 @@ window.bibleTagsWidget.preload({
 
 #### Parameters
 
-`xxx`: String
+```javascript
+versions: [{
+	versionCode: String,
+	content: String,
+	usfm: String,  // usfm 3 format; allows for inline styles and notes
+	bookId: Number,  // must be an integer between 1-66 (kjv ordering)
+	chapter: Number,  // must be an integer between 1-150
+	verse: Number,  // must be an integer between 0-176; use 0 for psalm headings
+	wordNum: Number,  // only first version with this key set will be taken into account
+}]
+```
+
+- **Not yet implemented**
+- Will retrieve verse(s) corresponding to the first version as versification can change between versions. If subsequent versions do not properly correspond, they will get ignored. Hence, it is highly recommended that the [getCorrespondingVerseLocations](#getCorrespondingVerseLocations) function is used before calling this function on multiple versions.
+
+```javascript
+includeLXX: Boolean
+```
+
+- **Not yet implemented**
+
+```javascript
+includeLXX: Boolean
+```
+
+- **Not yet implemented**
+
+```javascript
+includeLXX: Boolean
+```
 
 - **Not yet implemented**
 
@@ -255,3 +290,25 @@ Null
 // Hides widget instance matching the id, or all widget instances
 // if this parameter is not provided.
 hide(widgetInstanceId)
+
+
+### <a id="getCorrespondingVerseLocations" name="getCorrespondingVerseLocations"></a>`getCorrespondingVerseLocations `
+
+#### Parameters
+
+`xxx`: String
+
+- **Not yet implemented**
+
+#### Return value
+
+```javascript
+Null
+```
+
+#### Examples
+
+```javascript
+```
+```javascript
+```
