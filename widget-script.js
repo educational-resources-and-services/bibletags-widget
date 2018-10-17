@@ -23,7 +23,7 @@
   // const widgetUrl = `${widgetDomain}/widget/build/index.html`;
 
 
-  let onDeckInstance;
+  let onDeckInstances = [];
   const instances = {};
   let settings = {};
   let idIndex = 1;
@@ -158,7 +158,7 @@
     };
   };
 
-  const getInstanceTemplate = options => {
+  const getInstanceTemplate = () => {
 
     // create widget container
     const widgetEl = newEl('div');
@@ -166,7 +166,7 @@
     hideWidgetEl(widgetEl);
     
     // create widget arrow element
-    const arrowEl = options.anchorEl && newEl('div', {
+    const arrowEl = newEl('div', {
       style: `
         position: absolute;
         width: 16px;
@@ -210,14 +210,23 @@
     }
   };
 
-  const addOnDeckInstance = options => {
-    if(onDeckInstance) return;
+  const loadOnDeckInstances = () => {
+    const onDeckInstanceContainers = onDeckInstances.map(onDeckInstance => onDeckInstance.widgetEl.parentNode);
 
-    const containerEl = getContainerEl(options);
+    // no more than 10 containers
+    (settings.containerEls instanceof Array
+      ? settings.containerEls
+      : [d.body]
+    ).slice(0,10).forEach(containerEl => {
 
-    onDeckInstance = getInstanceTemplate(options);
-    makeRelativeIfStatic(containerEl);
-    containerEl.appendChild(onDeckInstance.widgetEl);
+      if(onDeckInstanceContainers.includes(containerEl)) return;
+  
+      const onDeckInstance = getInstanceTemplate();
+  
+      onDeckInstances.push(onDeckInstance);
+      makeRelativeIfStatic(containerEl);
+      containerEl.appendChild(onDeckInstance.widgetEl);
+    })
   };
 
   const destroyInstance = id => {
@@ -232,17 +241,18 @@
   styleEl.innerHTML = '';  // add styles in here
   d.head.appendChild(styleEl);
 
-  w.addEventListener('load', () => addOnDeckInstance({}));
+  w.addEventListener('load', loadOnDeckInstances);
   
   w.bibleTagsWidget = {
 
     setup: (options={}) => {
       settings = options || {};
+      loadOnDeckInstances();
     },
 
     preload: (options={}) => {
 
-      let { widgetEl, iframeEl } = getInstanceTemplate(options);
+      let { widgetEl, iframeEl } = getInstanceTemplate();
 
       // postMessage the options upon iframe load 
       iframeEl.onload = () => {
@@ -291,9 +301,24 @@
       const style = getWidgetElStyle({ options });
       const containerEl = getContainerEl(options);
 
-      const { widgetEl, iframeEl } = onDeckInstance || getInstanceTemplate(options);
-      if(onDeckInstance && onDeckInstance.widgetEl === widgetEl) {
-        onDeckInstance = null;
+      const { widgetEl, iframeEl, arrowEl } = (() => {
+        for(let idx=0; idx<onDeckInstances.length; idx++) {
+          if(onDeckInstances[idx].widgetEl.parentNode === containerEl) {
+            return onDeckInstances.splice(idx, 1)[0];
+          }
+        }
+        if(onDeckInstances.length > 0) {
+          return onDeckInstances.splice(0, 1)[0];
+        }
+        return getInstanceTemplate();
+      })();
+
+      if(!(settings.containerEls instanceof Array)) {
+        settings.containerEls = [ containerEl ]
+      } else {
+        // make sure it is the first in the list of containerEls
+        settings.containerEls = settings.containerEls.filter(el => el !== containerEl);
+        settings.containerEls.unshift(containerEl);
       }
 
       iframeEl.style.width = `${style.width}px`;
@@ -358,6 +383,10 @@
         containerEl.appendChild(widgetEl);
       }
 
+      if(!options.anchorEl || getMobileMode()) {
+        arrowEl.remove();
+      }
+      
       w.addEventListener('message', iframeElEvent)
 
       if(iframeEl.loaded) {
@@ -372,7 +401,7 @@
       };
       
       // the timeout prevents this code from slowing down the initial resize of instance we are now showing
-      setTimeout(() => addOnDeckInstance(options), 500);
+      setTimeout(loadOnDeckInstances, 500);
 
       return id;
       

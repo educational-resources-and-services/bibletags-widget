@@ -6,18 +6,26 @@
     <!-- <script src="https://cdn.staging.bibletags.org/widget/widget-script-1516264744804.js"></script> -->
     <!-- <script src="https://cdn.bibletags.org/widget/widget-script-v0.js"></script> -->
     <script>
+      window.setup = function() {
+        window.bibleTagsWidget.setup({
+          containerEls: [
+            document.getElementById('div1'),
+            document.getElementById('div2')
+          ]
+        })
+      }
       window.show1 = function() {
         window.lastWidgetId = window.bibleTagsWidget.show({
           versions: [{
             versionCode: 'oshb',
             // content: 'In the beginning, God created the heavens and the earth.',
             // usfm: string,  // allows for inline styles and notes
-            bookId: 19,  // 1-66 (kjv ordering)
-            chapter: 131,  // 1-150
-            verse: 1,  // 0-176; 0 for psalm headings
-            wordNum: 12,
+            bookId: 21,  // 1-66 (kjv ordering)
+            chapter: 5,  // 1-150
+            verse: 5,  // 0-176; 0 for psalm headings
+            wordNum: 2,
           }],
-          containerEl: document.getElementById('hey'),
+          containerEl: document.getElementById('div1'),
           anchorEl: document.getElementById("show1"),
           // uiLanguageCode: "eng",
         })
@@ -25,14 +33,15 @@
     </script>
   </head>
   <body style="margin: 30px; padding: 100px 2315px 1315px 100px; border: 25px solid red; border-width: 20px 23px 26px 29px;">
-    <div id='hey' style="margin: 22px; max-height: 500px; max-width: 500px; min-height: 500px; min-width: 500px; border: 15px solid black; border-width: 10px 13px 16px 19px; overflow: auto; padding: 41px;">
+    <div id='div1' style="margin: 22px; max-height: 500px; max-width: 500px; min-height: 500px; min-width: 500px; border: 15px solid black; border-width: 10px 13px 16px 19px; overflow: auto; padding: 41px;">
       <div style="margin: 12px; padding: 300px 1400px 1400px 300px;">
-        <button onClick="window.bibleTagsWidget.setup({one: 1, two: 2})">Setup</button>
+        <button onClick="window.setup()">Setup</button>
         <button onClick="window.bibleTagsWidget.preload({one: 1, two: 2})">Preload</button>
         <button onClick="window.show1()" id="show1">Show Genesis 1:1</button>
         <button onClick="window.bibleTagsWidget.hide(window.lastWidgetId)">Hide last showed</button>
         <button onClick="window.bibleTagsWidget.hide()">Hide all</button>
       </div>
     </div>
+    <div id='div2'></div>
   </body>
 </html>
