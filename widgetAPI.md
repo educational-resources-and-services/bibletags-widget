@@ -18,32 +18,47 @@ appId: String
 - used with `userId` to uniquely identify a user
 
 ```javascript
-`userId`: String
+userId: String
 ```
 
 - **Not yet implemented**
 - any identifier unique to hosting app/domain
 - used with `appId` to uniquely identify a user
 
-`theme`: String
+```javascript
+theme: String
+```
 
 - **Not yet implemented**
 
-`offlineEnabled`: Boolean
+```javascript
+offlineEnabled: Boolean
+```
 
 - **Not yet implemented**
 - *default: false*
 
-`containerEls`: HTMLElement
+```javascript
+containerEls: HTMLElement
+```
 
 - the first time the [show](#show) function is called with a `containerEl` not included here, rendering of the widget will be slow.
 - up to 10
 - container elements with the css value of `position: static` will be changed to `position: relative`
 
-`uiLanguageCode`: String
+```javascript
+uiLanguageCode: String
+```
 
 - *default: eng (English)*
 - Can be overridden in the [show](#show) function.
+- [Language codes](https://www.loc.gov/standards/iso639-2/php/code_list.php)
+
+#### Return value
+
+```javascript
+Null
+```
 
 #### Examples
 
@@ -77,32 +92,40 @@ window.bibleTagsWidget.setup({
 ```javascript
 `versions`: [{
 	versionCode: String,
-	bookId: int,  // 1-66
-	chapter: int,  // 1-150
-	verse: int,  // 0-176; if absent, entire chapter will be retrieved
+	bookId: Number,  // must be an integer between 1-66
+	chapter: Number,  // must be an integer between 1-150
+	verse: Number,  // must be an integer between 0-176; if absent, the entire chapter will be retrieved
 }]
 ```
 
-- **Not yet implemented**
+- **Required**
 
-`includeLXX`: Boolean
+```javascript
+includeLXX: Boolean
+```
 
 - **Not yet implemented**
+- *default: false*
 - only works with OT passages
+
+#### Return value
+
+```javascript
+Number  // the widgetInstanceId which can be used to hide this specific instance of the widget
+```
 
 #### Examples
 
 ```javascript
-```
-```javascript
-```
-
-* preload: function({
-	versions: ,
-	includeLXX: boolean,  // 
+window.bibleTagsWidget.preload({
+	versions: [{
+		versionCode: "esv",
+		bookId: 1,
+		chapter: 1,
+	}],
+	uiLanguageCode: "spa",  // Spanish
 })
-// Function returns an id for the 
-// purpose of hiding this specific instance of the widget.
+```
 
 ### <a id="show" name="show"></a>`show`
 
@@ -111,6 +134,12 @@ window.bibleTagsWidget.setup({
 `xxx`: String
 
 - **Not yet implemented**
+
+#### Return value
+
+```javascript
+Null
+```
 
 #### Examples
 
@@ -209,6 +238,12 @@ window.bibleTagsWidget.setup({
 
 - **Not yet implemented**
 
+#### Return value
+
+```javascript
+Null
+```
+
 #### Examples
 
 ```javascript
@@ -219,4 +254,4 @@ window.bibleTagsWidget.setup({
 
 // Hides widget instance matching the id, or all widget instances
 // if this parameter is not provided.
-hide(id)
+hide(widgetInstanceId)
