@@ -8,14 +8,18 @@
 
 #### Parameters
 
-`appId`: string
+```javascript
+appId: String
+```
 
 - **Not yet implemented**
 - *default: [domain of website utilizing the widget]*
 - a unique identifier for the app
 - used with `userId` to uniquely identify a user
 
+```javascript
 `userId`: String
+```
 
 - **Not yet implemented**
 - any identifier unique to hosting app/domain
@@ -42,7 +46,8 @@
 - Can be overridden in the [show](#show) function.
 
 #### Examples
-```
+
+```javascript
 window.bibleTagsWidget.setup({
 	userId: "3766",
 	containerEls: [
@@ -51,7 +56,7 @@ window.bibleTagsWidget.setup({
 	],
 })
 ```
-```
+```javascript
 window.bibleTagsWidget.setup({
 	apiId: "https://biblearc.com",
 	userId: "3766",
@@ -65,28 +70,64 @@ window.bibleTagsWidget.setup({
 })
 ```
 
+### <a id="preload" name="preload"></a>`preload`
+
+#### Parameters
+
+```javascript
+`versions`: [{
+	versionCode: String,
+	bookId: int,  // 1-66
+	chapter: int,  // 1-150
+	verse: int,  // 0-176; if absent, entire chapter will be retrieved
+}]
+```
+
+- **Not yet implemented**
+
+`includeLXX`: Boolean
+
+- **Not yet implemented**
+- only works with OT passages
+
+#### Examples
+
+```javascript
+```
+```javascript
+```
+
 * preload: function({
-	versions: [{
-		versionCode: string,
-		bookId: int,  // 1-66
-		chapter: int,  // 1-150
-		verse: int,  // 0-176; if absent, entire chapter will be retrieved
-	}],
-	includeLXX: boolean,  // only works with OT passages
+	versions: ,
+	includeLXX: boolean,  // 
 })
 // Function returns an id for the 
 // purpose of hiding this specific instance of the widget.
 
 ### <a id="show" name="show"></a>`show`
 
+#### Parameters
+
+`xxx`: String
+
+- **Not yet implemented**
+
+#### Examples
+
+```javascript
+```
+```javascript
+```
+
+
 	// Will retrieve verse(s) corresponding to the first version
 	// since versification can change between versions. If 
 	// subsequent versions do not properly correspond, they 
 	// will get ignored.
 	versions: [{
-		versionCode: string,
-		content: string,
-		usfm: string,  // allows for inline styles and notes
+		versionCode: String,
+		content: String,
+		usfm: String,  // allows for inline styles and notes
 		bookId: int,  // 1-66 (kjv ordering)
 		chapter: int,  // 1-150
 		verse: int,  // 0-176; 0 for psalm headings
@@ -105,28 +146,28 @@ window.bibleTagsWidget.setup({
 	hideVerse: boolean,  // only works when showing a single text
 	hideOriginal: boolean,  // default: false
 	includeLXX: boolean,  // only works with OT passages
-	uiLanguageCode: string,  // defaults to first version language
+	uiLanguageCode: String,  // defaults to first version language
 	addlOptions: [{
-		label: string,
+		label: String,
 		callback: function(),
 	}],
 	fetchVerseCallback: function({
 		// required for searchInline and usfm with vs refs to work
-		versionCode: string,
+		versionCode: String,
 		bookId: int,
 		chapter: int,
 		verse: int,
 		contentCallback: function({
-			content: string,
+			content: String,
 			notes: [{
-				content: string,
+				content: String,
 			}],
 		}),
 	}),
 	jumpToLocationCallback: function({
 		// if present, jump-to-location option presented to user
 		// for search results, cross-references, etc
-		versionCode: string,
+		versionCode: String,
 		bookId: int,
 		chapter: int,
 		verse: int,
@@ -155,8 +196,27 @@ window.bibleTagsWidget.setup({
 		// language word connected to the requested wordNum.
 	}),
 }): int
+
 // *basic inline style = small-caps, italics, bold
 // (i, b, em, strong tags also allowed)
+
+
+### <a id="hide" name="hide"></a>`hide`
+
+#### Parameters
+
+`xxx`: String
+
+- **Not yet implemented**
+
+#### Examples
+
+```javascript
+```
+```javascript
+```
+
+
 // Hides widget instance matching the id, or all widget instances
 // if this parameter is not provided.
 hide(id)
