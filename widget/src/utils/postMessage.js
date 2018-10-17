@@ -1,6 +1,6 @@
 const settings = {}
 
-export const setup = sttngs => Object.assign(settings, sttngs)
+export const setUp = sttngs => Object.assign(settings, sttngs)
 
 export const ready = () => {
   window.parent.postMessage({

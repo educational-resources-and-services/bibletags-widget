@@ -2,7 +2,7 @@ import React from 'react'
 // import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import { determineUILanguageCode, setUpI18n } from './utils/i18n.js'
 import styled from 'styled-components'
-import { setup, ready, updateHeight } from './utils/postMessage.js'
+import { setUp, ready, updateHeight } from './utils/postMessage.js'
 
 import Measure from 'react-measure'
 import { CircularProgress } from 'material-ui/Progress';
@@ -34,7 +34,7 @@ class App extends React.Component {
     window.removeEventListener('message', this.postMessageListener)
   }
 
-  setupLanguage = async ({ settings, options }) => {
+  setUpLanguage = async ({ settings, options }) => {
     const uiLanguageCode = determineUILanguageCode({ settings, options })
 
     if(uiLanguageCode === this.state.uiLanguageCode) return 
@@ -56,22 +56,22 @@ class App extends React.Component {
     const { maxHeight } = options
 
     switch(data.action) {
-      case 'setup':
-        this.setupLanguage({ settings, options })
+      case 'setUp':
+        this.setUpLanguage({ settings, options })
         break
 
       case 'preload':
         console.log('preload', data)
-        this.setupLanguage({ settings, options })
+        this.setUpLanguage({ settings, options })
         restoreCache()
         break
 
       case 'show':
         if(this.readyStatus >= 1) break   // only single show call allowed
 
-        this.setupLanguage({ settings, options })
+        this.setUpLanguage({ settings, options })
 
-        setup({ maxHeight })
+        setUp({ maxHeight })
 
         restoreCache()
 
@@ -133,29 +133,3 @@ class App extends React.Component {
 }
 
 export default App
-
-
-/*
-
-** Versification mapping for versions will be in the widget. If I make this smart, then we are talking 1k-2k.
-
-// talk to unfolding word about how they do versification
-https://crosswire.org/wiki/Survey_of_versification_schemes_in_French_Bibles#Canons_proposals_for_The_Sword_Project
-https://crosswire.org/wiki/Alternate_Versification
-https://github.com/openscriptures/BibleOrgSys/tree/master/DataFiles/VersificationSystems
-[
-  {
-    versions: ['esv','nasb','kjv',...],
-    notVersions: ['udi',...],
-    mappings: {
-      "0211030":"0212001",
-      "0212001-":-1,
-      "0512001-512002":"512001",
-      "0522005":"0522005-0522006",
-      ...
-    }
-  },
-  ...
-]
-
-*/

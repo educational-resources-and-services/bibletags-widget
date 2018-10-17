@@ -214,10 +214,10 @@
     const onDeckInstanceContainers = onDeckInstances.map(onDeckInstance => onDeckInstance.widgetEl.parentNode);
 
     // no more than 10 containers
-    (settings.containerEls instanceof Array
-      ? settings.containerEls
-      : [d.body]
-    ).slice(0,10).forEach(containerEl => {
+    [
+      ...(settings.containerEls instanceof Array ? settings.containerEls : []),
+      d.body,
+    ].slice(0,10).forEach(containerEl => {
 
       if(onDeckInstanceContainers.includes(containerEl)) return;
   
@@ -245,7 +245,7 @@
   
   w.bibleTagsWidget = {
 
-    setup: (options={}) => {
+    setUp: (options={}) => {
       settings = options || {};
       loadOnDeckInstances();
     },
