@@ -137,11 +137,23 @@ window.bibleTagsWidget.preload({
 			versionCode: "esv",
 			bookId: 1,
 			chapter: 1,
+			verse: 1,
 		},
+	],
+})
+```
+```javascript
+window.bibleTagsWidget.preload({
+	versions: [
 		{
-			versionCode: "nasb",
+			versionCode: "esv",
 			bookId: 1,
 			chapter: 1,
+		},
+		{
+			versionCode: "esv",
+			bookId: 1,
+			chapter: 2,
 		},
 	],
 	includeLXX: true,
@@ -166,6 +178,7 @@ versions!: [{
 
 - **Not yet implemented**
 - Will retrieve verse(s) corresponding to the first version as versification can change between versions. If subsequent versions do not properly correspond, they will get ignored. Hence, it is highly recommended that the [getCorrespondingVerseLocations](#getCorrespondingVerseLocations) function is used before calling this function on multiple versions.
+- The first version may only contain a single verse. However, there are times when subsequent versions require multiple verses to cover the same content present in this single verse of the first version (due to versification descrepencies). In such cases, the additional verses (in full) can simply be added on to the `versions` array. See the final example in the examples section below.
 - `wordNum` will only be taken into account in the first version which it is found within.
 - To only display the original language version, `versions` should contain a single object with the `versionCode` set to one of the original language versions (`uhb` or `bhp`), and `plaintext` and `usfm` left out.
 - For each version (except for one of the original language versions), either `plaintext` or `usfm` must be provided.
@@ -401,6 +414,34 @@ window.bibleTagsWidget.show({
 	}
 })
 ```
+```javascript
+window.bibleTagsWidget.show({
+	versions: [
+		{
+			versionCode: "esv",
+			plaintext: "For he chose us in him before the creation of the world to be holy and blameless in his sight. In love",
+			bookId: 49,
+			chapter: 1,
+			verse: 4,
+		},
+		{
+			versionCode: "exb",
+			plaintext: "That is, in Christ, he chose us before the world was made so that we would be his holy people—people without blame before him.",
+			bookId: 49,
+			chapter: 1,
+			verse: 4,
+		},
+		{
+			versionCode: "exb",
+			plaintext: "Because of his love, God had already decided to make us his own children through Jesus Christ. That was what he wanted and what pleased him,",
+			bookId: 49,
+			chapter: 1,
+			verse: 5,
+		},
+	],
+})
+```
+
 
 ### <a id="hide" name="hide"></a>`hide`
 
@@ -534,12 +575,3 @@ window.bibleTagsWidget.splitPlainTextVerseIntoWords({
 ```javascript
 USFM example needed
 ```
-
-
-
-Sending multiple verses for the secondary+ versions
-
-
-
-Specific USFM style allowed?
-Examples of USFM
