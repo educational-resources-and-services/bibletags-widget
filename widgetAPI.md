@@ -10,10 +10,19 @@ General notes:
 - `wordNum`-like parameters must be >= 1, representing the word number in the verse as split by `splitPlainTextVerseIntoWords`.
 - Verse content (i.e. `plaintext` or `usfm`) sent to the [show](#show) function or `fetchVerseCallback`'s `contentCallback` will have its word count checked against the word count of the current tagging of this verse. If there is inconsistency, original language tagging will not be available while the inconsistency awaits review.
 
+### Installation
 
-## Functions
+Include `<script src="https://cdn.bibletags.org/widget/widget-script-v0.js" async></script>` within the `head` tag of your HTML.
 
-### <a id="setUp" name="setUp"></a>`setUp`
+
+### Usage
+
+Call the [show](#show) function to display a text.
+
+
+### Functions
+
+## <a id="setUp" name="setUp"></a>`setUp`
 
 - Typically called once. However, this function may be called multiple times to update options, or not at all if there are no options to set.
 
@@ -96,7 +105,7 @@ window.bibleTagsWidget.setUp({
 })
 ```
 
-### <a id="preload" name="preload"></a>`preload`
+## <a id="preload" name="preload"></a>`preload`
 
 Useful for having original language data prefetched from the server.
 
@@ -159,7 +168,7 @@ window.bibleTagsWidget.preload({
 })
 ```
 
-### <a id="show" name="show"></a>`show`
+## <a id="show" name="show"></a>`show`
 
 #### Parameters
 
@@ -439,7 +448,7 @@ window.bibleTagsWidget.show({
 ```
 
 
-### <a id="hide" name="hide"></a>`hide`
+## <a id="hide" name="hide"></a>`hide`
 
 #### Parameters
 
@@ -468,7 +477,7 @@ window.bibleTagsWidget.hide()
 ```
 
 
-### <a id="getCorrespondingVerseLocations" name="getCorrespondingVerseLocations"></a>`getCorrespondingVerseLocations `
+## <a id="getCorrespondingVerseLocations" name="getCorrespondingVerseLocations"></a>`getCorrespondingVerseLocations `
 
 #### Parameters
 
@@ -526,7 +535,7 @@ window.bibleTagsWidget.getCorrespondingVerseLocations({
 ```
 
 
-### <a id="splitPlainTextVerseIntoWords" name="splitPlainTextVerseIntoWords"></a>`splitPlainTextVerseIntoWords`
+## <a id="splitPlainTextVerseIntoWords" name="splitPlainTextVerseIntoWords"></a>`splitPlainTextVerseIntoWords`
 
 This function allows the embedding site/app to split verses into words in a manner consistent with Bible Tags.
 
