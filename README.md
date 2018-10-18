@@ -109,15 +109,14 @@ Note:
   * deploys to static files
   * lives on a cdn
   * makes graphql queries and mutations to `bibletags-data`
-  * will work offline
-  * caches ui language data (for non-English) in localStorage
-  * caches scripture data in localStorage (mutations as well in the future when made completed offline-enabled)
+  * to work offline
 * [bibletags-data](https://github.com/educational-resources-and-services/bibletags-data)
   * receives graphql requests
   * build with express
 * mysql db
   * live on aws rds
 * [BibleTags.org](https://bibletags.org)
+  * present the vision and how-to of the Bible Tags project
   * makes api calls to `bibletags-data`
   * contains a data hub with files in cdn (or aws s3)
 * react native app template
@@ -202,21 +201,24 @@ Note: While embedding sites/apps providing USFM for verse content can distinguis
 
 ### Offline
 
-* explore using localstorage with apollo (for preloading and caching scripture data) - this likely better than redux-persist since otherwise an already loaded widget will not updated info when a different widget gets more data
-  * I want:
-    * sharing of data between iframe instances
-    * cache
-    * ability to have offline source
-  * options
-    * use apollo link middleware to first check in localstorge before going to the network; sometimes go to the network anyway, depending on the request (eg. tagSet, hits, etc - things that can change with user data input), or else have stuff expire?
-      // https://www.apollographql.com/docs/react/basics/network-layer.html
-      // https://www.apollographql.com/docs/link/composition.html
-      // https://github.com/apollographql/apollo-link/issues/158
-* Download the original language texts
-  * offline-enabled, however offline text storage yet-to-be-determined
-* NEED TO DO MUTATIONS
-* [ what else? ]
-* Is the widget-script already able to load offline?
+Current functionality:
+
+* Caches ui language data (for non-English) in localStorage.
+* Caches scripture data in localStorage.
+* Being in localStorage, cached data is shared between iframe instances.
+
+Needs implementation:
+
+* Convert test.html to be an offline app so that proper offline testing can be done.
+* Note: The widget must be run off a build to work offline. (See the [widget README](widget/README.md) for more information.)
+* Mutations will need to be cached as well so as to make tagging offline-enabled.
+* Check that the current setup includes apollo link middleware to first check localStorge before going to the network. However, sometimes go to the network anyways if it is a request that can change with user data input (eg. tagSet, etc).
+* Reference:
+  * https://www.apollographql.com/docs/react/basics/network-layer.html
+  * https://www.apollographql.com/docs/link/composition.html
+  * https://github.com/apollographql/apollo-link/issues/158
+* Enable downloading of full original language texts for use offline
+  * offline text storage yet-to-be-determined
 
 
 ### Updates
