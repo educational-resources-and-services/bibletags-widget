@@ -43,7 +43,7 @@ For more information on this project, see the [Bible Tags website](https://bible
 
 ## Report a bug / request a feature
 
-* Use this repositorie's [Issues](https://github.com/educational-resources-and-services/bibletags-widget/issues). Please first check if your bug report / feature request already exists.
+* Use this repository's [Issues](https://github.com/educational-resources-and-services/bibletags-widget/issues). Please first check if your bug report / feature request already exists before submitting a new issue.
 * For bug reports, please provide a clear description of the problem and step-by-step explanation of how to reproduce it.
 * For feature requests, please first get to the know the project via the [Design](#design) section below and review the roadmap above to make sure the desired feature is inline with the direction this project is heading.
 
