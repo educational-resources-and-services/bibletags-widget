@@ -13,9 +13,9 @@ appId: String
 ```
 
 - **Not yet implemented**
-- *default: [domain of website utilizing the widget]*
-- a unique identifier for the app
-- used with `userId` to uniquely identify a user
+- Default: [domain of website utilizing the widget]
+- A unique identifier for the app.
+- Used with `userId` to uniquely identify a user.
 
 ```javascript
 userId: String
@@ -35,28 +35,28 @@ offlineEnabled: Boolean
 ```
 
 - **Not yet implemented**
-- *default: false*
+- Default: false
 
 ```javascript
-containerEls: HTMLElement
+containerEls: [HTMLElement]
 ```
 
-- *recommended* since the first time the [show](#show) function is called with a `containerEl` not included here, rendering of the widget will be slow.
-- up to 10
-- container elements with the css value of `position: static` will be changed to `position: relative`
+- **Recommended** since the first time the [show](#show) function is called with a `containerEl` not included here, rendering of the widget will be slow.
+- An array of up to 10 HTMLElements.
+- Container elements with the css value of `position: static` will be changed to `position: relative`.
 
 ```javascript
 uiLanguageCode: String
 ```
 
-- *default: eng (English)*
+- Default: eng (English)
 - Can be overridden in the [show](#show) function.
 - [Language codes](https://www.loc.gov/standards/iso639-2/php/code_list.php)
 
 #### Return value
 
 ```javascript
-Null
+null
 ```
 
 #### Examples
@@ -89,7 +89,7 @@ window.bibleTagsWidget.setUp({
 #### Parameters
 
 ```javascript
-`versions`: [{
+versions: [{
 	versionCode: String,
 	bookId: Number,  // must be an integer between 1-66
 	chapter: Number,  // must be an integer between 1-150
@@ -97,20 +97,18 @@ window.bibleTagsWidget.setUp({
 }]
 ```
 
-- **Required**
-
 ```javascript
 includeLXX: Boolean
 ```
 
 - **Not yet implemented**
-- *default: false*
+- Default: false
 - only works with OT passages
 
 #### Return value
 
 ```javascript
-Number  // the widgetInstanceId which can be used with the `hide` function
+null
 ```
 
 #### Examples
@@ -140,8 +138,8 @@ window.bibleTagsWidget.preload({
 ```javascript
 versions: [{
 	versionCode: String,
-	content: String,
-	usfm: String,  // usfm 3 format; allows for inline styles and notes
+	plaintext: String,
+	usfm: String,  // USFM 3 format; allows for inline styles and notes
 	bookId: Number,  // must be an integer between 1-66 (kjv ordering)
 	chapter: Number,  // must be an integer between 1-150
 	verse: Number,  // must be an integer between 0-176; use 0 for psalm headings
@@ -151,164 +149,345 @@ versions: [{
 
 - **Not yet implemented**
 - Will retrieve verse(s) corresponding to the first version as versification can change between versions. If subsequent versions do not properly correspond, they will get ignored. Hence, it is highly recommended that the [getCorrespondingVerseLocations](#getCorrespondingVerseLocations) function is used before calling this function on multiple versions.
+- [USFM specification](https://ubsicap.github.io/usfm/)
+- Valid inline styles within USFM: small-caps, italics and bold.
+- For each version (except for one of the original language versions), either `plaintext` or `usfm` must be provided.
+
+```javascript
+anchorEl: HTMLElement
+```
+
+- typically a descendant of `containerEl`
+
+```javascript
+containerEl: HTMLElement
+```
+
+- Default: the body tag
+- If the container element has the css value of `position: static`, it will be changed to `position: relative`.
+
+```javascript
+containerElTargetScroll: {
+	x: int,
+	y: int,
+}
+```
+
+- **Not yet implemented**
+- The target scroll position, if animating.
+
+```javascript
+margin: Number
+```
+
+- **Not yet implemented**
+- Default: 10
+
+```javascript
+zIndex: Number
+```
+
+- **Not yet implemented**
+- Default: 100
+
+```javascript
+hideVerse: Boolean
+```
+
+- **Not yet implemented**
+- Default: false
+- Only works with a single version.
+
+```javascript
+hideOriginal: Boolean
+```
+
+- **Not yet implemented**
+- Default: false
 
 ```javascript
 includeLXX: Boolean
 ```
 
 - **Not yet implemented**
+- Default: false
+- Only works with OT passages.
 
 ```javascript
-includeLXX: Boolean
+uiLanguageCode: String
 ```
 
 - **Not yet implemented**
+- Default: language set in [setUp](#setUp) function or else the language of the first version
 
 ```javascript
-includeLXX: Boolean
+addlOptions: [{
+	label: String,
+	callback: Function(),
+}]
 ```
 
 - **Not yet implemented**
+- For each additional option provided here, the `label` is listed in the main options menu. If selected by the user, the callback function is executed.
+
+```javascript
+fetchVerseCallback: Function({
+	versionCode: String,
+	bookId: Number,  // will be an integer between 1-66 (kjv ordering)
+	chapter: Number,  // will be an integer between 1-150
+	verse: Number,  // will be an integer between 0-176; will use 0 for psalm headings
+	contentCallback: Function({
+		plaintext: String,
+		usfm: String,  // USFM 3 format; allows for inline styles and notes
+	}),
+}),
+```
+
+What about passages listed in USFM (and not just single verses) ???
+
+- **Not yet implemented**
+- Required for search (unless `searchData` is provided) and for USFM verse content containing other verse references to work properly. The provided `fetchVerseCallback` function must call `contentCallback` with either the `plaintext` or `usfm` verse content.
+- [USFM specification](https://ubsicap.github.io/usfm/)
+
+```javascript
+jumpToLocation: {
+	includeOptionForBasePassage: Boolean,  // Default: true
+	callback: Function({
+		versionCode: String,
+		bookId: Number,  // will be an integer between 1-66 (kjv ordering)
+		chapter: Number,  // will be an integer between 1-150
+		verse: Number,  // will be an integer between 0-176; will use 0 for psalm headings
+	}),
+}
+```
+
+- **Not yet implemented**
+- If present, a `Jump to location` option will be presented to user when viewing verses in inline search results or through USFM verse references.
+- If `includeOptionForBasePassage` is true, then this option will likewise be available in the main options menu.
+
+```javascript
+searchData: {
+	maxResults: Number,  // must be an integer between 1-500; default: 100
+	callback: Function({
+		searchString: String,
+		totalNumResults: Number,
+		results: {
+			[versionCode]: [{
+				bookId: Number,
+				chapter: Number,
+				verse: Number,
+				wordNums: [[Number]],
+			}],
+		},
+	}),
+}
+```
+
+- **Not yet implemented**
+- When provided, the `callback` is called instead of an inline search being presented.
+- `wordNums` is an array of word number sets, each of which corresponds to an original language hit.
+
+```javascript
+infoCallback: function({
+	connectedWordNums: [Number],
+})
+```
+
+- **Not yet implemented**
+- Only relevant if `wordNum` was provided.
+- `connectedWordNums` will contain an array of all the word numbers in the translation associated the relevant original language word. This is important since the `wordNum` provided might only be part of the translation of this original language word, while the website/app using this widget might want to highlight all relevant translation words.
+- Eg. Genesis 1:1 ESV is sent to the [show](#show) function with `wordNum` set to 3. This is the word "beginning" which is one of two words translated from בְּרֵאשִׁית - the other being "In." Hence, `{ connectedWordNums: [1,3] }` is sent to the `infoCallback` function so that the embedding site/app can highlight both "In" and "beginning."
 
 #### Return value
 
 ```javascript
-Null
+Number  // the widgetInstanceId which can be used with the `hide` function
 ```
 
 #### Examples
 
 ```javascript
+window.bibleTagsWidget.show({
+	versions: [{
+		versionCode: "esv",
+		plaintext: "In the beginning, God created the heavens and the earth.",
+		bookId: 1,
+		chapter: 1,
+		verse: 1,
+	}],
+	anchorEl: theHTMLElementWhichTheWidgetShouldBeAdjacentTo,
+})
 ```
 ```javascript
-```
-
-
-	// Will retrieve verse(s) corresponding to the first version
-	// since versification can change between versions. If 
-	// subsequent versions do not properly correspond, they 
-	// will get ignored.
+window.bibleTagsWidget.show({
 	versions: [{
-		versionCode: String,
-		content: String,
-		usfm: String,  // allows for inline styles and notes
-		bookId: int,  // 1-66 (kjv ordering)
-		chapter: int,  // 1-150
-		verse: int,  // 0-176; 0 for psalm headings
-		wordNum: int,  // only first version with this set taken into acct
+		versionCode: "esv",
+		plaintext: "In the beginning, God created the heavens and the earth.",
+		bookId: 1,
+		chapter: 1,
+		verse: 1,
+		wordNum: 3,
 	}],
-	anchorEl: HTMLElement,  // typically a descendant of containerEl
-	containerEl: HTMLElement,
-		// default: body tag; will be given relative position if static
+	anchorEl: theHTMLElementWhichTheWidgetShouldBeAdjacentTo,
+	containerEl: theHTMLElementInWhichTheWidgetShouldScroll,
 	containerElTargetScroll: {
-		// provide target scroll position if animating
-		x: int,
-		y: int,
-	},
-	margin: int,  // default: 10
-	zIndex: int,  // default: 100
-	hideVerse: boolean,  // only works when showing a single text
-	hideOriginal: boolean,  // default: false
-	includeLXX: boolean,  // only works with OT passages
-	uiLanguageCode: String,  // defaults to first version language
+		x: 0,
+		y: 320,
+	}
+	margin: 20,
+	zIndex: 50,
+	hideVerse: true,
+	hideOriginal: true,
 	addlOptions: [{
-		label: String,
-		callback: function(),
+		label: "Change default text",
+		callback: () => {
+			// Open settings dialog.
+		},
 	}],
-	fetchVerseCallback: function({
-		// required for searchInline and usfm with vs refs to work
-		versionCode: String,
-		bookId: int,
-		chapter: int,
-		verse: int,
-		contentCallback: function({
-			content: String,
-			notes: [{
-				content: String,
-			}],
-		}),
-	}),
-	jumpToLocationCallback: function({
-		// if present, jump-to-location option presented to user
-		// for search results, cross-references, etc
-		versionCode: String,
-		bookId: int,
-		chapter: int,
-		verse: int,
-	}),
-	searchInline: {
-		resultsPerPage: int,
+	fetchVerseCallback: ({
+		versionCode,
+		bookId,
+		chapter,
+		verse,
+		contentCallback,
+	}) => {
+		// Get the content for the requested verse and put it in a variabled named `plaintext`.
+		contentCallback({ plaintext });
 	},
+	jumpToLocation: {
+		includeOptionForBasePassage: false,
+		callback: ({
+			versionCode,
+			bookId,
+			chapter,
+			verse,
+		}) => {
+			// Jump to the requested location.
+		},
+	}
 	searchData: {
-		maxResults: int,
-		callback: function({
-			totalNumResults: int,
-			results: {
-				[versionCode]: [{
-					bookId: int,
-					chapter: int,
-					verse: int,
-					wordNums: [[int]],
-				}],
-			},
-		}),
-	},
-	infoCallback: function({
-		connectedWords: [int],
-		// If wordNum was provided, this will contain an 
-		// array of all the wordNums associated with the original
-		// language word connected to the requested wordNum.
-	}),
-}): int
-
-// *basic inline style = small-caps, italics, bold
-// (i, b, em, strong tags also allowed)
-
+		maxResults: 50,
+		callback: ({
+			searchString,
+			totalNumResults,
+			results,
+		}) => {
+			// Display the search results however I like.
+		},
+	}
+	infoCallback: ({
+		connectedWordNums,
+	}) => {
+		// Highlight all words in the `connectedWordNums` array.
+	}
+})
+```
 
 ### <a id="hide" name="hide"></a>`hide`
 
 #### Parameters
 
-`xxx`: String
+```javascript
+widgetInstanceId: Number
+```
 
-- **Not yet implemented**
+- The `widgetInstanceId` for each widget is the return value of the [show](#show) function.
+- If this parameter is not provided, all widgets are hidden.
 
 #### Return value
 
 ```javascript
-Null
+null
 ```
 
 #### Examples
 
 ```javascript
+window.bibleTagsWidget.hide({
+	widgetInstanceId: 12,
+})
 ```
 ```javascript
+window.bibleTagsWidget.hide()
 ```
-
-
-// Hides widget instance matching the id, or all widget instances
-// if this parameter is not provided.
-hide(widgetInstanceId)
 
 
 ### <a id="getCorrespondingVerseLocations" name="getCorrespondingVerseLocations"></a>`getCorrespondingVerseLocations `
 
 #### Parameters
 
-`xxx`: String
+```javascript
+baseVersion: {
+	versionCode: String,
+	bookId: Number,  // must be an integer between 1-66 (kjv ordering)
+	chapter: Number,  // must be an integer between 1-150
+	verse: Number,  // must be an integer between 0-176; use 0 for psalm headings
+}
+```
 
-- **Not yet implemented**
+```javascript
+lookupVersions: [String]
+```
 
 #### Return value
 
 ```javascript
-Null
+{
+	[lookupversionCode1]: [{
+		bookId: Number,  // must be an integer between 1-66 (kjv ordering)
+		chapter: Number,  // must be an integer between 1-150
+		verse: Number,  // must be an integer between 0-176; use 0 for psalm headings
+	}],
+	...
+}
 ```
 
 #### Examples
 
 ```javascript
+window.bibleTagsWidget.getCorrespondingVerseLocations({
+	baseVersion: {
+		versionCode: "esv",
+		bookId: 1,
+		chapter: 1,
+		verse: 1,
+	},
+	lookupVersions: ["nasb", "niv"],
+})
+// Returns
+// {
+// 	nasb: [{
+// 		bookId: 1,
+// 		chapter: 1,
+// 		verse: 1,
+// 	}],
+// 	niv: [{
+// 		bookId: 1,
+// 		chapter: 1,
+// 		verse: 1,
+// 	}],
+// }
 ```
 ```javascript
 ```
+
+Go through and italicize optional parameters (and add a note about this)
+
+collect following comments to single place
+
+	bookId: Number,  // will be an integer between 1-66 (kjv ordering)
+	chapter: Number,  // will be an integer between 1-150
+	verse: Number,  // will be an integer between 0-176; will use 0 for psalm headings
+	contentCallback: Function({
+		plaintext: String,
+		usfm: String,  // USFM 3 format; allows for inline styles and notes
+
+I need a function that splits text into words for them (so it is consistent with how we do it)
+
+All Number's are integers
+
+All parameters are passing via object
+
+appId will be shown to user
+
+Sending multiple verses for the secondary+ versions
