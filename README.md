@@ -131,18 +131,20 @@ Note:
 
 * Hebrew Bible
   * [UHB](https://git.door43.org/unfoldingWord/uhb)
-  * License: 
+  * License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
   * Description: WLC text with lemmas and parsings from Unfolding Word
 * Greek New Testament
   * [UGNT](https://git.door43.org/unfoldingWord/UGNT)
-  * License: 
+  * License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
   * Compiled by Alan Bunning via the [Center for New Testament Restoration](https://greekcntr.org)
     * Alan is working on the non-prototype computer generated version
     * Alan's manuscript types: (1) full books (2) snippets (3) quoted by church fathers (4) foreign languages
       * #1 and #2 currently considered in the `BHP`.
 * Septuagint
-  * [LXX]()
-  * License: Public Domain
+  * [LXX](http://ccat.sas.upenn.edu/gopher/text/religion/biblical/lxxmorph/)
+  * License: [Commercial use requires prior written consent](http://ccat.sas.upenn.edu/gopher/text/religion/biblical/lxxvar/0-readme.txt)
+  * This [BHS-LXX parallel](http://ccat.sas.upenn.edu/gopher/text/religion/biblical/parallel/) is perfect for deriving both verse alignment and LXX tags.
+  * Open Scripture's [GreekResources](https://github.com/openscriptures/GreekResources) will likely also be helpful.
 
 
 ### Versification
@@ -229,3 +231,6 @@ Needs implementation:
 
 ## LICENSE
 
+
+
+tagging data?
