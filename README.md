@@ -13,7 +13,6 @@ For more information on this project, see the [Bible Tags website](https://bible
 
 * Have test.html flipped via query string
 * Have widget-script endpoint changed via something in the npm script
-* Make API md file (version specific) and move google doc info to there (eventually to be an HTML file at bibletags.org)
 * Update packages?
 * Get fast open going for Biblearc
 * Think well about where to indicate version history for different pieces (data, widget, widget-script) and what is updated when, etc
@@ -24,9 +23,12 @@ For more information on this project, see the [Bible Tags website](https://bible
 * Do first beta release for different pieces (data, widget, widget-script) thinking well about where to indicate version history
 * Get Greek working
 * Get basic tagging functionality working
+* Get usfm working, and add examples to the API docs
 * Make sure widget-script includes all API aspects it needs to so as to not require foreseeable changes.
 * Indicate in API which pieces are not yet implemented
 * Make public
+* Get marketing site working
+* Make API docs an HTML file at bibletags.org
 * Get full UI working for tagging
 
   Possible established Bible search languages to use: json-ld, named attributes, url-query
