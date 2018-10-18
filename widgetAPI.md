@@ -1,4 +1,4 @@
-# Widget API
+# Bible Tags Widget API
 
 ### Installation
 
