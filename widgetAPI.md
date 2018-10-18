@@ -10,7 +10,7 @@ Include `<script src="https://cdn.bibletags.org/widget/widget-script-v0.js" asyn
 Call the [show](#show) function to display a text.
 
 
-# Functions
+### Functions
 
 General notes:
 
