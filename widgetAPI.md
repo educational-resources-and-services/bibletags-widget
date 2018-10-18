@@ -24,7 +24,7 @@ appId: String
 ```
 
 - **Not yet implemented**
-- Default: [domain of website utilizing the widget]
+- *Default: [domain of embedding website]*
 - A unique identifier for the app.
 - Used with `userId` to uniquely identify a user.
 - This value will be displayed to the end user in login management.
@@ -47,7 +47,7 @@ offlineEnabled: Boolean
 ```
 
 - **Not yet implemented**
-- Default: false
+- *Default: false*
 
 ```javascript
 containerEls: [HTMLElement]
@@ -61,7 +61,7 @@ containerEls: [HTMLElement]
 uiLanguageCode: String
 ```
 
-- Default: eng (English)
+- *Default: eng (English)*
 - Can be overridden in the [show](#show) function.
 - [Language codes](https://www.loc.gov/standards/iso639-2/php/code_list.php)
 
@@ -118,7 +118,7 @@ includeLXX: Boolean
 ```
 
 - **Not yet implemented**
-- Default: false
+- *Default: false*
 - only works with OT passages
 
 #### Return value
@@ -192,7 +192,7 @@ anchorEl: HTMLElement
 containerEl: HTMLElement
 ```
 
-- Default: the body tag
+- *Default: [the body tag]*
 - If the container element has the css value of `position: static`, it will be changed to `position: relative`.
 
 ```javascript
@@ -210,21 +210,21 @@ margin: Number
 ```
 
 - **Not yet implemented**
-- Default: 10
+- *Default: 10*
 
 ```javascript
 zIndex: Number
 ```
 
 - **Not yet implemented**
-- Default: 100
+- *Default: 100*
 
 ```javascript
 hideVerse: Boolean
 ```
 
 - **Not yet implemented**
-- Default: false
+- *Default: false*
 - Only works with a single version.
 
 ```javascript
@@ -232,14 +232,14 @@ hideOriginal: Boolean
 ```
 
 - **Not yet implemented**
-- Default: false
+- *Default: false*
 
 ```javascript
 includeLXX: Boolean
 ```
 
 - **Not yet implemented**
-- Default: false
+- *Default: false*
 - Only works with OT passages.
 
 ```javascript
@@ -247,7 +247,7 @@ uiLanguageCode: String
 ```
 
 - **Not yet implemented**
-- Default: language set in [setUp](#setUp) function or else the language of the first version
+- *Default: [language set in [setUp](#setUp) function, or else the language of the first version]*
 
 ```javascript
 addlOptions: [{
@@ -280,7 +280,7 @@ What about passages listed in USFM (and not just single verses) ???
 
 ```javascript
 jumpToLocation: {
-	includeOptionForBasePassage: Boolean,  // Default: true
+	includeOptionForBasePassage: Boolean,
 	callback!: Function({
 		versionCode: String,
 		bookId: Number,
@@ -291,7 +291,7 @@ jumpToLocation: {
 ```
 
 - **Not yet implemented**
-- `includeOptionForBasePassage` default: true
+- `includeOptionForBasePassage` - *Default: true*
 - If present, a `Jump to location` option will be presented to user when viewing verses in inline search results or through USFM verse references.
 - If `includeOptionForBasePassage` is true, then this option will likewise be available in the main options menu.
 
@@ -314,7 +314,7 @@ searchData: {
 ```
 
 - **Not yet implemented**
-- If provided, `maxResults` must be an integer between 1-500. Default: 100
+- If provided, `maxResults` must be an integer between 1-500. *Default: 100*
 - When provided, the `callback` is called instead of an inline search being presented.
 - `wordNums` is an array of word number sets, each of which corresponds to an original language hit.
 
@@ -326,7 +326,7 @@ infoCallback: function({
 
 - **Not yet implemented**
 - Only relevant if `wordNum` was provided.
-- `connectedWordNums` will contain an array of all the word numbers in the translation associated the relevant original language word. This is important since the `wordNum` provided might only be part of the translation of this original language word, while the website/app using this widget might want to highlight all relevant translation words.
+- `connectedWordNums` will contain an array of all the word numbers in the translation associated the relevant original language word. This is important since the `wordNum` provided might only be part of the translation of this original language word, while the embedding website/app might want to highlight all relevant translation words.
 - Eg. Genesis 1:1 ESV is sent to the [show](#show) function with `wordNum` set to 3. This is the word "beginning" which is one of two words translated from בְּרֵאשִׁית - the other being "In." Hence, `{ connectedWordNums: [1,3] }` is sent to the `infoCallback` function so that the embedding site/app can highlight both "In" and "beginning."
 
 #### Return value
