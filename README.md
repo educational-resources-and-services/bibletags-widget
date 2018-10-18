@@ -37,9 +37,6 @@ For more information on this project, see the [Bible Tags website](https://bible
     * https://www.academia.edu/35220175/Linking_Lexical_Resources_for_Biblical_Greek
     * https://git.door43.org/Door43/UGNT/src/tw_occurrences/57-TIT.usfm#L19
 * Themes
-* Offline
-  * Download the original language texts
-  * [ what else? ]
 * set up thayers and bdb (as temp lexicon entry until I get English parsing data)
 * Make sure widget-script includes all API aspects it needs to so as to not require foreseeable changes.
 * Indicate in API which pieces are and are not yet implemented
@@ -53,73 +50,78 @@ For more information on this project, see the [Bible Tags website](https://bible
 
 Post-launch:
 
+* Offline
 * containerElTargetScroll
 * Examine mock ups and docs to see what remain of initial design
 * Make React module
 * React Native apps
+* Biblearc ref tagger
+* Ability to edit and verify parsings
 
 
 ## Report a bug / request a feature
 
 * Use this repository's [Issues](https://github.com/educational-resources-and-services/bibletags-widget/issues). Please first check if your bug report / feature request already exists before submitting a new issue.
 * For bug reports, please provide a clear description of the problem and step-by-step explanation of how to reproduce it.
-* For feature requests, please first get to the know the project via the [Design](#design) section below and review the roadmap above to make sure the desired feature is inline with the direction this project is heading.
+* For feature requests, please first get to the know the project via the [Design](#design) section below and review the [Roadmap](#roadmap) above to make sure the desired feature is inline with the direction this project is heading.
 
 
 ## Contributing
 
-* Get to know the project
-* Submit pull requests to fix bugs and implement features within the roadmap
-* Please follow the following code styling guidelines
-  * 
+* Get to know the project via the [Design](#design) section below and the [Roadmap](#roadmap) above.
+* Submit pull requests to fix bugs from [Issues](https://github.com/educational-resources-and-services/bibletags-widget/issues) and implement features that fall within the Roadmap. You would be wise to examine the [active branches](https://github.com/educational-resources-and-services/bibletags-widget/branches/active) so as to avoid taking up a feature that someone else is already actively working on.
+* Please take note of the present coding style and do your best to write new code that accords with it.
 
 
 ## Installation
 
 * `bibletags-data` (backend)
-  * Clone the [bibletags-data repository](https://github.com/educational-resources-and-services/bibletags-data) locally.
+  * Clone the [bibletags-data](https://github.com/educational-resources-and-services/bibletags-data) repository.
   * Run `npm run setup` in the base directory of this repository.
 * `bibletags-widget`
-  * Clone this repository locally.
+  * Clone this repository.
 
 
 ## Development
 
-* Run `npm start` from the base directory of the [bibletags-data repository](https://github.com/educational-resources-and-services/bibletags-data) in one terminal window.
+* Run `npm start` from the base directory of the [bibletags-data](https://github.com/educational-resources-and-services/bibletags-data) repository in one terminal window.
 * Run `npm start` in the `widget` directory of this repository in different terminal window.
 * Open `test.html` in your browser.
 
-Change to test.html or widget-script requires a refresh
-Change to widget gets automatically hot loaded
-Change to widget-data requires local server restart (control-c to kill the process and `npm start`)
+Note:
+
+* Changes to test.html or widget-script require you refresh your browser.
+* Changes to the widget get automatically hot loaded.
+* Changes to widget-data require you restart the server.
 
 ## Design
 
 ### Project components
 
 * `widget-script`
-  * launches the widget in iframes (postMessage communication)
-  * no dependencies
-  * uglified
-  * lives on cdn
+  * launches the widget in iframes using postMessage for communication
+  * contains no dependencies
+  * uglified upon deployment
+  * lives on a cdn
   * rarely changes
 * the widget
   * build with `create-react-app`
-  * stand-alone
-  * makes api calls to graphql backend
+  * deploys to static files
+  * lives on a cdn
+  * makes graphql queries and mutations to `bibletags-data`
+  * will work offline
   * caches ui language data (for non-English) in localStorage
   * caches scripture data in localStorage (mutations as well in the future when made completed offline-enabled)
-  * offline-enabled, however offline text storage yet-to-be-determined
-* graphql backend
+* [bibletags-data](https://github.com/educational-resources-and-services/bibletags-data)
+  * receives graphql requests
   * build with express
-* db
-  * aws rds
-* BibleTags.org
-  * makes api calls to graphql backend
-* data hub
-  * aws s3
-* app templates
-  * build in react native
+* mysql db
+  * live on aws rds
+* [BibleTags.org](https://bibletags.org)
+  * makes api calls to `bibletags-data`
+  * contains a data hub with files in cdn (or aws s3)
+* react native app template
+  * built with [expo](https://expo.io/)
   * super simple to deploy an app:
     * retrieve permission + data for one or more translations
     * set config settings (language, versions, colors, app name, logo, etc)
@@ -157,6 +159,11 @@ Change to widget-data requires local server restart (control-c to kill the proce
       // https://www.apollographql.com/docs/react/basics/network-layer.html
       // https://www.apollographql.com/docs/link/composition.html
       // https://github.com/apollographql/apollo-link/issues/158
+* Download the original language texts
+  * offline-enabled, however offline text storage yet-to-be-determined
+* NEED TO DO MUTATIONS
+* [ what else? ]
+* Is the widget-script already able to load offline?
 
 
 ### Handling different languages and translations
