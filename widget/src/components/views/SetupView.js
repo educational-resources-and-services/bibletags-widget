@@ -7,7 +7,7 @@ import View from '../basic/View'
 import Bar from '../basic/Bar'
 import SwitchButtons from '../basic/SwitchButtons'
 import SwitchButton from '../basic/SwitchButton'
-import Button from 'material-ui/Button'
+import Button from '@material-ui/core/Button'
 
 // import createCourse from '../../data/mutations/createCourse'
 
@@ -42,7 +42,7 @@ class SetupView extends React.PureComponent {
         </Bar>
         <div>
           <Button raised
-            onTouchTap={() => {}}
+            onClick={() => {}}
           >Submit translations</Button>
         </div>
       </View>

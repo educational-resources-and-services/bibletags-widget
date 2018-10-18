@@ -3,9 +3,9 @@ import React from 'react'
 import styled from 'styled-components'
 import { graphql, compose } from 'react-apollo'
 
-import IconButton from 'material-ui/IconButton'
-import ArrowDropUpIcon from 'material-ui-icons/ArrowDropUp'
-import { CircularProgress } from 'material-ui/Progress';
+import IconButton from '@material-ui/core/IconButton'
+import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 import Parsing from '../basic/Parsing'
 import EntrySection from '../basic/EntrySection'
@@ -29,23 +29,6 @@ const LeftSide = styled.div`
   flex-direction: column;
 `
 
-const IconContainer = styled.div`
-  position: absolute;
-  width: 100%;
-  z-index: 1;
-  text-align: center;
-`
-
-const IconButtonStyled = styled(IconButton)`
-  position: absolute !important;
-  width: 24px !important;
-  height: 24px !important;
-  top: -10px !important;
-  margin-left: -12px !important;
-  background-color: #333 !important;
-  color: white !important;
-`
-
 const CircularProgressCont = styled.div`
   text-align: center;
   background: #BBB;
@@ -58,7 +41,7 @@ class Entry extends React.Component {
   }
 
   render() {
-    const { wordInfo, closeWord } = this.props 
+    const { wordInfo } = this.props 
     const { definition } = getDataVar(this.props)
 
     const isEntirelyPrefixAndSuffix = getIsEntirelyPrefixAndSuffix(wordInfo)
@@ -76,14 +59,6 @@ class Entry extends React.Component {
             definition && definition.id.split('-')[0] === getStrongs(wordInfo)
               ?
                 <EntrySections>
-                  <IconContainer>
-                    <IconButtonStyled
-                      aria-label="Minimize"
-                      onTouchTap={closeWord}
-                    >
-                      <ArrowDropUpIcon />
-                    </IconButtonStyled>
-                  </IconContainer>
                   <LeftSide>
                     <EntrySection bg="#BBB">
                       <EntryWord
@@ -107,14 +82,6 @@ class Entry extends React.Component {
                 </EntrySections>
               :
                 <div>
-                  <IconContainer>
-                    <IconButtonStyled
-                      aria-label="Minimize"
-                      onTouchTap={closeWord}
-                    >
-                      <ArrowDropUpIcon />
-                    </IconButtonStyled>
-                  </IconContainer>
                   <CircularProgressCont>
                     <CircularProgress />
                   </CircularProgressCont>

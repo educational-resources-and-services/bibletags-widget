@@ -2,9 +2,9 @@ import React from 'react'
 import { close } from '../../utils/postMessage.js'
 import styled from 'styled-components'
 
-import IconButton from 'material-ui/IconButton'
-import ArrowBackIcon from 'material-ui-icons/ArrowBack'
-import CloseIcon from 'material-ui-icons/Close'
+import IconButton from '@material-ui/core/IconButton'
+import ArrowBackIcon from '@material-ui/icons/ArrowBack'
+import CloseIcon from '@material-ui/icons/Close'
 
 const BarCont = styled.div`
   width: 100%;
@@ -36,7 +36,7 @@ class Bar extends React.Component {
           ? (
             <IconButton
               aria-label="Back"
-              onTouchTap={back}
+              onClick={back}
             >
               <ArrowBackIcon />
             </IconButton>
@@ -49,7 +49,7 @@ class Bar extends React.Component {
         {children}
         <IconButton
           aria-label="Close"
-          onTouchTap={close}
+          onClick={close}
         >
           <CloseIcon />
         </IconButton>

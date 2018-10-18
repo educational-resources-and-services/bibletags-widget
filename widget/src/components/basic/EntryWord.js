@@ -2,8 +2,8 @@ import React from 'react'
 import i18n from '../../utils/i18n.js'
 import styled from 'styled-components'
 
-// import IconButton from 'material-ui/IconButton'
-// import SearchIcon from 'material-ui-icons/Search'
+// import IconButton from '@material-ui/core/IconButton'
+// import SearchIcon from '@material-ui/icons/Search'
 
 const WordLine = styled.div`
   padding-right: 40px;
@@ -59,7 +59,7 @@ class EntryWord extends React.Component {
         <Hits>{i18n("{{hits}}x", { hits })}</Hits>
         {/* <IconButtonStyled
           aria-label="Search"
-          onTouchTap={() => {}}
+          onClick={() => {}}
         >
           <SearchIcon />
         </IconButtonStyled> */}

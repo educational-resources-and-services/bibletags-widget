@@ -2,8 +2,8 @@ import React from 'react'
 import i18n from '../../utils/i18n.js'
 import styled from 'styled-components'
 
-// import IconButton from 'material-ui/IconButton'
-// import LibraryBooksIcon from 'material-ui-icons/LibraryBooks'
+// import IconButton from '@material-ui/core/IconButton'
+// import LibraryBooksIcon from '@material-ui/icons/LibraryBooks'
 
 import { posTerms } from '../../utils/helperFunctions.js'
 
@@ -39,7 +39,7 @@ class EntryWord extends React.Component {
         <PartOfSpeech>{pos.map(onePos => posTerms[onePos]).join(i18n(", ", {}, "list separator"))}</PartOfSpeech>
         {/* <IconButtonStyled
           aria-label="Lexicon"
-          onTouchTap={() => {}}
+          onClick={() => {}}
         >
           <LibraryBooksIcon />
         </IconButtonStyled> */}

@@ -7,7 +7,7 @@ import View from '../basic/View'
 import Bar from '../basic/Bar'
 import Parallel from '../smart/Parallel'
 import Entry from '../smart/Entry'
-import Button from 'material-ui/Button'
+import Button from '@material-ui/core/Button'
 
 // import createCourse from '../../data/mutations/createCourse'
 
@@ -34,7 +34,7 @@ class TagView extends React.PureComponent {
         <Entry />
         <div>
           <Button raised
-            onTouchTap={() => {}}
+            onClick={() => {}}
           >Submit tags</Button>
         </div>
       </View>

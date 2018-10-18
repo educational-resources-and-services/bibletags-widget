@@ -159,13 +159,16 @@ class CompareView extends React.PureComponent {
     }
   }
 
-  closeWord = () => this.setState({ wordNum: null })
-
   hideSearchView = () => this.setState({ showSearchView: false })
   
   updateWordNum = wordNum => {
-    restoreCache()
-    this.setState({ wordNum })
+    if(wordNum === this.state.wordNum) {
+      this.setState({ wordNum: null })
+      
+    } else {
+      restoreCache()
+      this.setState({ wordNum })
+    }
   }
 
   render() {
@@ -247,7 +250,6 @@ class CompareView extends React.PureComponent {
         {wordNum !== null &&
           <Entry
             wordInfo={wordInfo}
-            closeWord={this.closeWord}
           />
         }
         <SearchView

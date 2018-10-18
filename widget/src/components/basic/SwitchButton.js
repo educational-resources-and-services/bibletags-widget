@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import Button from 'material-ui/Button'
+import Button from '@material-ui/core/Button'
 
 const StyledButton = styled(Button)`
 
@@ -38,7 +38,7 @@ class SwitchButton extends React.Component {
       <StyledButton raised
         className={selected ? "depressed" : ""}
         disabled={disabled || selected ? true : false}
-        onTouchTap={makeSelected}
+        onClick={makeSelected}
       >
         {children}
       </StyledButton>

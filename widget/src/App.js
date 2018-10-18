@@ -1,11 +1,11 @@
 import React from 'react'
-// import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+// import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider'
 import { determineUILanguageCode, setUpI18n } from './utils/i18n.js'
 import styled from 'styled-components'
 import { setUp, ready, updateHeight } from './utils/postMessage.js'
 
 import Measure from 'react-measure'
-import { CircularProgress } from 'material-ui/Progress';
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 import Apollo, { restoreCache } from './components/smart/Apollo'
 import CompareView from './components/views/CompareView'
