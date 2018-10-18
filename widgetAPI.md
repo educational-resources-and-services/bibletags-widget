@@ -289,9 +289,8 @@ jumpToLocation: {
 ```
 
 - **Not yet implemented**
-- `includeOptionForBasePassage` - *Default: true*
-- If present, a `Jump to location` option will be presented to user when viewing verses in inline search results or through USFM verse references.
-- If `includeOptionForBasePassage` is true, then this option will likewise be available in the main options menu.
+- If present, a `Jump to location` option will be available to users when viewing search results or USFM cross references.
+- If `includeOptionForBasePassage` (*Default: true*) is true, then this option will likewise be available in the main options menu.
 
 ```javascript
 searchData: {
