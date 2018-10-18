@@ -2,7 +2,7 @@
 
 ## About
 
-*Original language Bible study for everyone.*
+*Original language Bible study for everyone, in every language.*
 
 Vision: That every Christian might have free access to the Bible tagged to the original Hebrew, Aramaic and Greek with parsing and lexical information—all in their own language.
 
@@ -11,7 +11,6 @@ For more information on this project, see the [Bible Tags website](https://bible
 
 ## Roadmap
 
-* Decide on GitHub issues or FreshDesk and add that info to the README
 * Get this README file fully set up
 * Do first beta release for different pieces (data, widget, widget-script) thinking well about where to indicate version history
 * Get Greek working
@@ -40,6 +39,43 @@ For more information on this project, see the [Bible Tags website](https://bible
 * set up search
 * set up cfs and notes
 * set up Greek
+
+
+## Report a bug / request a feature
+
+* Use this repositorie's [Issues](https://github.com/educational-resources-and-services/bibletags-widget/issues). Please first check if your bug report / feature request already exists.
+* For bug reports, please provide a clear description of the problem and step-by-step explanation of how to reproduce it.
+* For feature requests, please first get to the know the project via the [Design](#design) section below and review the roadmap above to make sure the desired feature is inline with the direction this project is heading.
+
+
+## Contributing
+
+* Get to know the project
+* Submit pull requests to fix bugs and implement features within the roadmap
+* Please follow the following code styling guidelines
+  * 
+
+
+## Installation
+
+* `bibletags-data` (backend)
+  * Clone the [bibletags-data repository](https://github.com/educational-resources-and-services/bibletags-data) locally.
+  * Run `npm run setup` in the base directory of this repository.
+* `bibletags-widget`
+  * Clone this repository locally.
+
+
+## Development
+
+* Run `npm start` from the base directory of the [bibletags-data repository](https://github.com/educational-resources-and-services/bibletags-data) in one terminal window.
+* Run `npm start` in the `widget` directory of this repository in different terminal window.
+* Open `test.html` in your browser.
+
+Change to test.html or widget-script requires a refresh
+Change to widget gets automatically hot loaded
+Change to widget-data requires local server restart (control-c to kill the process and `npm start`)
+
+## Design
 
 
 ### Project components
@@ -71,36 +107,6 @@ For more information on this project, see the [Bible Tags website](https://bible
     * retrieve permission + data for one or more translations
     * set config settings (language, versions, colors, app name, logo, etc)
     * ready to deploy to app stores
-
-
-## Contributing
-
-* Get to know the project
-* Submit pull requests to fix bug and inline with the roadmap
-* Please follow the following code styling guidelines
-  * 
-
-
-## Installation
-
-* `bibletags-data` (backend)
-  * Clone the [bibletags-data repository](https://github.com/educational-resources-and-services/bibletags-data) locally.
-  * Run `npm run setup` in the base directory of this repository.
-* `bibletags-widget`
-  * Clone this repository locally.
-
-
-## Development
-
-* Run `npm start` from the base directory of the [bibletags-data repository](https://github.com/educational-resources-and-services/bibletags-data) in one terminal window.
-* Run `npm start` in the `widget` directory of this repository in different terminal window.
-* Open `test.html` in your browser.
-
-Change to test.html or widget-script requires a refresh
-Change to widget gets automatically hot loaded
-Change to widget-data requires local server restart (control-c to kill the process and `npm start`)
-
-## Design
 
 
 ### Offline
@@ -157,7 +163,6 @@ How we propose to do it (mapping the translation to the original):
 ```
 
 Locations here are represented with (B)BCCCVVV where B or BB represents the bookId, CCC represents the chapter and VVV represents the verse. (Eg. "2011030" = Exodus 11:30.) When a dash is left open or begins the key, this means "...until the end of the chapter" or "from the beginning of the chapter until..." respectively. When a number is given for the value, then this number is added to the verse. A number following a colon indicates the word numbe. (Eg. "66001001:10-66001002": "66001002" means that Revelation 1:1 from the 10th word and through the end of verse 2 maps to verse 2 in the translation.)
-
 
 
 #### Word divisions
