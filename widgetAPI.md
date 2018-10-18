@@ -311,8 +311,8 @@ searchData: {
 ```
 
 - **Not yet implemented**
-- If provided, `maxResults` must be an integer between 1-500. *Default: 100*
-- When provided, the `callback` is called instead of an inline search being presented.
+- When provided, `callback` is called instead of inline search results being presented.
+- `maxResults` (*Default: 100*) should be an integer between 1-500. 
 - `wordNums` is an array of word number sets, each of which corresponds to an original language hit.
 
 ```javascript
