@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/AndyHubert/bibletags-widget#readme",
   "dependencies": {
-    "shelljs": "0.8.1",
-    "uglify-es": "3.2.1"
+    "shelljs": "0.8.2",
+    "uglify-es": "3.3.9"
   }
 }
