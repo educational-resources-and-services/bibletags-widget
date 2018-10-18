@@ -66,6 +66,11 @@ Post-launch:
 * For feature requests, please first get to the know the project via the [Design](#design) section below and review the [Roadmap](#roadmap) above to make sure the desired feature is inline with the direction this project is heading.
 
 
+## Importing existing data
+
+If you are aware of any open source word alignment data (what we call Bible tags) for a particular Bible translation, please [bring it to our attention](https://bibletags.org/contact) and we will gladly make use of it. Both full alignment data, as well as data which simply includes the Strongs number or lemma for each word in the translation, are useful.
+
+
 ## Contributing
 
 * Get to know the project via the [Design](#design) section below and the [Roadmap](#roadmap) above.
@@ -230,7 +235,3 @@ Needs implementation:
 
 
 ## LICENSE
-
-
-
-tagging data?
