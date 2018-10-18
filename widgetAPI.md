@@ -70,6 +70,7 @@ containerEls: [HTMLElement]
 uiLanguageCode: String
 ```
 
+- **Not yet implemented**
 - *Default: eng (English)*
 - Can be overridden in the [show](#show) function.
 - [Language codes](https://www.loc.gov/standards/iso639-2/php/code_list.php)
@@ -218,14 +219,12 @@ containerElTargetScroll: {
 margin: Number
 ```
 
-- **Not yet implemented**
 - *Default: 10*
 
 ```javascript
 zIndex: Number
 ```
 
-- **Not yet implemented**
 - *Default: 100*
 
 ```javascript
@@ -354,6 +353,7 @@ window.bibleTagsWidget.show({
 	}],
 	anchorEl: theHTMLElementWhichTheWidgetShouldBeAdjacentTo,
 })
+// Returns: 1
 ```
 ```javascript
 window.bibleTagsWidget.show({
@@ -418,6 +418,7 @@ window.bibleTagsWidget.show({
 		// Highlight all words in the `connectedWordNums` array.
 	}
 })
+// Returns: 2
 ```
 ```javascript
 window.bibleTagsWidget.show({
@@ -445,6 +446,7 @@ window.bibleTagsWidget.show({
 		},
 	],
 })
+// Returns: 3
 ```
 
 
@@ -478,6 +480,8 @@ window.bibleTagsWidget.hide()
 
 
 ## getCorrespondingVerseLocations()
+
+- **Not yet implemented**
 
 #### Parameters
 
@@ -535,9 +539,11 @@ window.bibleTagsWidget.getCorrespondingVerseLocations({
 ```
 
 
-## splitPlainTextVerseIntoWords
+## splitPlainTextVerseIntoWords()
 
 This function allows the embedding site/app to split verses into words in a manner consistent with Bible Tags.
+
+- **Not yet implemented**
 
 #### Parameters
 
