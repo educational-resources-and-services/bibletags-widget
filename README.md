@@ -11,34 +11,52 @@ For more information on this project, see the [Bible Tags website](https://bible
 
 ## Roadmap
 
-* Get this README file fully set up
-* Do first beta release for different pieces (data, widget, widget-script) thinking well about where to indicate version history
-* Get Greek working
+* getCorrespondingVerseLocations
+  * Look in graphql regarding this - I remember thinking through verse reference between the translation and original text quite a bit in setting this up.
+* splitPlainTextVerseIntoWords
+* Ability to send in English verse in plaintext
+* Send in multiple versions
+* Get Greek NT working
+* Get LXX working
+* infoCallback
+* Authentication
 * Get basic tagging functionality working
+* Get working for other languages
+* Test that uiLanguageCode works correctly
+* hideVerse
+* hideOriginal
+* addlOptions
 * Get usfm working, and add examples to the API docs
-* Make sure widget-script includes all API aspects it needs to so as to not require foreseeable changes.
-* Indicate in API which pieces are not yet implemented
-* Make public
-* Get working on Biblearc
-* Get marketing site working
-* Make API docs an HTML file at bibletags.org
-* Get full UI working for tagging
-
-  Possible established Bible search languages to use: json-ld, named attributes, url-query
-  Canonical identification of lemmas
+  * fetchVerseCallback
+* jumpToLocation
+* Search
+  * Inline + searchData
+  * Established Bible search languages to consider: json-ld, named attributes, url-query
+    * Use same search language that Biblearc 3.0 will employ
+  * Canonical identification of lemmas
     * https://www.academia.edu/35220175/Linking_Lexical_Resources_for_Biblical_Greek
     * https://git.door43.org/Door43/UGNT/src/tw_occurrences/57-TIT.usfm#L19
-  [BHP Greek text](https://git.door43.org/unfoldingWord/BHP) compiled by Alan Bunning via the [Center for New Testament Restoration](https://greekcntr.org)
-    * [Unfolding Word's version](https://git.door43.org/unfoldingWord/UGNT)
-    * Alan is working on the non-prototype computer generated version
-    * Alan's manuscript types: (1) full books (2) snippets (3) quoted by church fathers (4) foreign languages
-      * #1 and #2 currently considered in the `BHP`.
-
-* add ability to ondeck different containerEls, and have the script choose the appropriate ondeck instance
+* Themes
+* Offline
+  * Download the original language texts
+  * [ what else? ]
 * set up thayers and bdb (as temp lexicon entry until I get English parsing data)
-* set up search
-* set up cfs and notes
-* set up Greek
+* Make sure widget-script includes all API aspects it needs to so as to not require foreseeable changes.
+* Indicate in API which pieces are and are not yet implemented
+* Test all implemented aspects of the API
+* Do first beta releases
+* Get working on Biblearc
+* Get marketing site working (with ways to stay in contact/contribute/etc)
+* Make API docs an HTML file at bibletags.org
+* Make public
+* Email announcement
+
+Post-launch:
+
+* containerElTargetScroll
+* Examine mock ups and docs to see what remain of initial design
+* Make React module
+* React Native apps
 
 
 ## Report a bug / request a feature
@@ -77,7 +95,6 @@ Change to widget-data requires local server restart (control-c to kill the proce
 
 ## Design
 
-
 ### Project components
 
 * `widget-script`
@@ -107,6 +124,25 @@ Change to widget-data requires local server restart (control-c to kill the proce
     * retrieve permission + data for one or more translations
     * set config settings (language, versions, colors, app name, logo, etc)
     * ready to deploy to app stores
+
+
+### Original language texts
+
+* Hebrew Bible
+  * [UHB](https://git.door43.org/unfoldingWord/uhb)
+  * License: 
+  * Description: WLC text with lemmas and parsings from Unfolding Word
+* Greek New Testament
+  * [UGNT](https://git.door43.org/unfoldingWord/UGNT)
+  * License: 
+  * Compiled by Alan Bunning via the [Center for New Testament Restoration](https://greekcntr.org)
+    * Alan is working on the non-prototype computer generated version
+    * Alan's manuscript types: (1) full books (2) snippets (3) quoted by church fathers (4) foreign languages
+      * #1 and #2 currently considered in the `BHP`.
+* Septuagint
+  * [LXX]()
+  * License: Public Domain
+
 
 
 ### Offline
