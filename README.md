@@ -1,4 +1,4 @@
-# bibletags-widget
+# Bible Tags
 
 ## About
 
@@ -11,7 +11,6 @@ For more information on this project, see the [Bible Tags website](https://bible
 
 ## Roadmap
 
-* Think well about where to indicate version history for different pieces (data, widget, widget-script) and what is updated when, etc
 * Decide on GitHub issues or FreshDesk and add that info to the README
 * Get this README file fully set up
 * Do first beta release for different pieces (data, widget, widget-script) thinking well about where to indicate version history
