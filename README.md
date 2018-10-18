@@ -146,29 +146,7 @@ Note:
   * License: Public Domain
 
 
-
-### Offline
-
-* explore using localstorage with apollo (for preloading and caching scripture data) - this likely better than redux-persist since otherwise an already loaded widget will not updated info when a different widget gets more data
-  * I want:
-    * sharing of data between iframe instances
-    * cache
-    * ability to have offline source
-  * options
-    * use apollo link middleware to first check in localstorge before going to the network; sometimes go to the network anyway, depending on the request (eg. tagSet, hits, etc - things that can change with user data input), or else have stuff expire?
-      // https://www.apollographql.com/docs/react/basics/network-layer.html
-      // https://www.apollographql.com/docs/link/composition.html
-      // https://github.com/apollographql/apollo-link/issues/158
-* Download the original language texts
-  * offline-enabled, however offline text storage yet-to-be-determined
-* NEED TO DO MUTATIONS
-* [ what else? ]
-* Is the widget-script already able to load offline?
-
-
-### Handling different languages and translations
-
-#### Versification
+### Versification
 
 To line up verses between versions correctly, we will need to have exhaustive versification mapping. However, we also want versification mapping to be in the widget so that the graphql caching can work properly without an additional back-and-forth to the server. And if the exhaustive versification mapping is in the widget, it will need to be small. So this must be done smart, so as to keep it between 1k-2k in size.
 
@@ -203,7 +181,7 @@ How we propose to do it (mapping the translation to the original):
 ```
 
 
-#### Word divisions
+### Word divisions
 
 Most modern languages separate words with spaces, but there are some exceptions. See [here](https://en.wikipedia.org/wiki/Word_divider) and [here](https://linguistics.stackexchange.com/questions/6131/is-there-a-long-list-of-languages-whose-writing-systems-dont-use-spaces).
 
@@ -220,6 +198,25 @@ Known examples of languages without precise word dividers:
 * Lao translation may or may not use spaces.
 
 Note: While embedding sites/apps providing USFM for verse content can distinguish between words, this information cannot be replied upon since other embedding sites/apps may only provide plain text.
+
+
+### Offline
+
+* explore using localstorage with apollo (for preloading and caching scripture data) - this likely better than redux-persist since otherwise an already loaded widget will not updated info when a different widget gets more data
+  * I want:
+    * sharing of data between iframe instances
+    * cache
+    * ability to have offline source
+  * options
+    * use apollo link middleware to first check in localstorge before going to the network; sometimes go to the network anyway, depending on the request (eg. tagSet, hits, etc - things that can change with user data input), or else have stuff expire?
+      // https://www.apollographql.com/docs/react/basics/network-layer.html
+      // https://www.apollographql.com/docs/link/composition.html
+      // https://github.com/apollographql/apollo-link/issues/158
+* Download the original language texts
+  * offline-enabled, however offline text storage yet-to-be-determined
+* NEED TO DO MUTATIONS
+* [ what else? ]
+* Is the widget-script already able to load offline?
 
 
 ### Updates
