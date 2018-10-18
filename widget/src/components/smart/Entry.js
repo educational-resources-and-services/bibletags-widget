@@ -3,8 +3,6 @@ import React from 'react'
 import styled from 'styled-components'
 import { graphql, compose } from 'react-apollo'
 
-import IconButton from '@material-ui/core/IconButton'
-import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
 import Parsing from '../basic/Parsing'
