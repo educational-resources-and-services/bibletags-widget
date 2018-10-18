@@ -1,5 +1,10 @@
 # Widget API
 
+Note:
+
+- Parameters followed by ! are required.
+
+
 ## Functions
 
 ### <a id="setUp" name="setUp"></a>`setUp`
@@ -89,10 +94,10 @@ window.bibleTagsWidget.setUp({
 #### Parameters
 
 ```javascript
-versions: [{
-	versionCode: String,
-	bookId: Number,  // must be an integer between 1-66
-	chapter: Number,  // must be an integer between 1-150
+versions!: [{
+	versionCode!: String,
+	bookId!: Number,  // must be an integer between 1-66
+	chapter!: Number,  // must be an integer between 1-150
 	verse: Number,  // must be an integer between 0-176; if absent, the entire chapter will be retrieved
 }]
 ```
@@ -136,13 +141,13 @@ window.bibleTagsWidget.preload({
 #### Parameters
 
 ```javascript
-versions: [{
-	versionCode: String,
+versions!: [{
+	versionCode!: String,
 	plaintext: String,
 	usfm: String,  // USFM 3 format; allows for inline styles and notes
-	bookId: Number,  // must be an integer between 1-66 (kjv ordering)
-	chapter: Number,  // must be an integer between 1-150
-	verse: Number,  // must be an integer between 0-176; use 0 for psalm headings
+	bookId!: Number,  // must be an integer between 1-66 (kjv ordering)
+	chapter!: Number,  // must be an integer between 1-150
+	verse!: Number,  // must be an integer between 0-176; use 0 for psalm headings
 	wordNum: Number,  // only first version with this key set will be taken into account
 }]
 ```
@@ -151,6 +156,7 @@ versions: [{
 - Will retrieve verse(s) corresponding to the first version as versification can change between versions. If subsequent versions do not properly correspond, they will get ignored. Hence, it is highly recommended that the [getCorrespondingVerseLocations](#getCorrespondingVerseLocations) function is used before calling this function on multiple versions.
 - [USFM specification](https://ubsicap.github.io/usfm/)
 - Valid inline styles within USFM: small-caps, italics and bold.
+- To only display the original language version, `versions` should contain a single object with the `versionCode` set to one of the original language versions (`uhb` or `bhp`), and `plaintext` and `usfm` left out.
 - For each version (except for one of the original language versions), either `plaintext` or `usfm` must be provided.
 
 ```javascript
@@ -222,8 +228,8 @@ uiLanguageCode: String
 
 ```javascript
 addlOptions: [{
-	label: String,
-	callback: Function(),
+	label!: String,
+	callback!: Function(),
 }]
 ```
 
@@ -252,7 +258,7 @@ What about passages listed in USFM (and not just single verses) ???
 ```javascript
 jumpToLocation: {
 	includeOptionForBasePassage: Boolean,  // Default: true
-	callback: Function({
+	callback!: Function({
 		versionCode: String,
 		bookId: Number,  // will be an integer between 1-66 (kjv ordering)
 		chapter: Number,  // will be an integer between 1-150
@@ -268,7 +274,7 @@ jumpToLocation: {
 ```javascript
 searchData: {
 	maxResults: Number,  // must be an integer between 1-500; default: 100
-	callback: Function({
+	callback!: Function({
 		searchString: String,
 		totalNumResults: Number,
 		results: {
