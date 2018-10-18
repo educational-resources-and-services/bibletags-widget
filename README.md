@@ -11,11 +11,7 @@ For more information on this project, see the [Bible Tags website](https://bible
 
 ## Roadmap
 
-* Update packages?
-* Get fast open going for Biblearc
 * Think well about where to indicate version history for different pieces (data, widget, widget-script) and what is updated when, etc
-  * Do a GitHub release for the appropriate repo(s) each time I update the live scripts or backend.
-  * For websites making use of this widget, the widget itself and backend will automatically be updated. However, an update to widget-script requires they change the include (since this may involve a change in the API as well)
 * Decide on GitHub issues or FreshDesk and add that info to the README
 * Get this README file fully set up
 * Do first beta release for different pieces (data, widget, widget-script) thinking well about where to indicate version history
@@ -25,19 +21,20 @@ For more information on this project, see the [Bible Tags website](https://bible
 * Make sure widget-script includes all API aspects it needs to so as to not require foreseeable changes.
 * Indicate in API which pieces are not yet implemented
 * Make public
+* Get working on Biblearc
 * Get marketing site working
 * Make API docs an HTML file at bibletags.org
 * Get full UI working for tagging
 
   Possible established Bible search languages to use: json-ld, named attributes, url-query
   Canonical identification of lemmas
-    - https://www.academia.edu/35220175/Linking_Lexical_Resources_for_Biblical_Greek
-    - https://git.door43.org/Door43/UGNT/src/tw_occurrences/57-TIT.usfm#L19
+    * https://www.academia.edu/35220175/Linking_Lexical_Resources_for_Biblical_Greek
+    * https://git.door43.org/Door43/UGNT/src/tw_occurrences/57-TIT.usfm#L19
   [BHP Greek text](https://git.door43.org/unfoldingWord/BHP) compiled by Alan Bunning via the [Center for New Testament Restoration](https://greekcntr.org)
-    - [Unfolding Word's version](https://git.door43.org/unfoldingWord/UGNT)
-    - Alan is working on the non-prototype computer generated version
-    - Alan's manuscript types: (1) full books (2) snippets (3) quoted by church fathers (4) foreign languages
-      - #1 and #2 currently considered in the `BHP`.
+    * [Unfolding Word's version](https://git.door43.org/unfoldingWord/UGNT)
+    * Alan is working on the non-prototype computer generated version
+    * Alan's manuscript types: (1) full books (2) snippets (3) quoted by church fathers (4) foreign languages
+      * #1 and #2 currently considered in the `BHP`.
 
 * add ability to ondeck different containerEls, and have the script choose the appropriate ondeck instance
 * set up thayers and bdb (as temp lexicon entry until I get English parsing data)
@@ -49,32 +46,32 @@ For more information on this project, see the [Bible Tags website](https://bible
 ### Project components
 
 * `widget-script`
-  - launches the widget in iframes (postMessage communication)
-  - no dependencies
-  - uglified
-  - lives on cdn
-  - rarely changes
+  * launches the widget in iframes (postMessage communication)
+  * no dependencies
+  * uglified
+  * lives on cdn
+  * rarely changes
 * the widget
-  - build with `create-react-app`
-  - stand-alone
-  - makes api calls to graphql backend
-  - caches ui language data (for non-English) in localStorage
-  - caches scripture data in localStorage (mutations as well in the future when made completed offline-enabled)
-  - offline-enabled, however offline text storage yet-to-be-determined
+  * build with `create-react-app`
+  * stand-alone
+  * makes api calls to graphql backend
+  * caches ui language data (for non-English) in localStorage
+  * caches scripture data in localStorage (mutations as well in the future when made completed offline-enabled)
+  * offline-enabled, however offline text storage yet-to-be-determined
 * graphql backend
-  - build with express
+  * build with express
 * db
-  - aws rds
+  * aws rds
 * BibleTags.org
-  - makes api calls to graphql backend
+  * makes api calls to graphql backend
 * data hub
-  - aws s3
+  * aws s3
 * app templates
-  - build in react native
-  - super simple to deploy an app:
-    - retrieve permission + data for one or more translations
-    - set config settings (language, versions, colors, app name, logo, etc)
-    - ready to deploy to app stores
+  * build in react native
+  * super simple to deploy an app:
+    * retrieve permission + data for one or more translations
+    * set config settings (language, versions, colors, app name, logo, etc)
+    * ready to deploy to app stores
 
 
 ## Contributing
@@ -110,11 +107,11 @@ Change to widget-data requires local server restart (control-c to kill the proce
 ### Offline
 
 * explore using localstorage with apollo (for preloading and caching scripture data) - this likely better than redux-persist since otherwise an already loaded widget will not updated info when a different widget gets more data
-  - I want:
+  * I want:
     * sharing of data between iframe instances
     * cache
     * ability to have offline source
-  - options
+  * options
     * use apollo link middleware to first check in localstorge before going to the network; sometimes go to the network anyway, depending on the request (eg. tagSet, hits, etc - things that can change with user data input), or else have stuff expire?
       // https://www.apollographql.com/docs/react/basics/network-layer.html
       // https://www.apollographql.com/docs/link/composition.html
@@ -129,10 +126,10 @@ To line up verses between versions correctly, we will need to have exhaustive ve
 
 How others do it:
 
-- unfolding word?
-- https://crosswire.org/wiki/Survey_of_versification_schemes_in_French_Bibles#Canons_proposals_for_The_Sword_Project
-- https://crosswire.org/wiki/Alternate_Versification
-- https://github.com/openscriptures/BibleOrgSys/tree/master/DataFiles/VersificationSystems
+* unfolding word?
+* https://crosswire.org/wiki/Survey_of_versification_schemes_in_French_Bibles#Canons_proposals_for_The_Sword_Project
+* https://crosswire.org/wiki/Alternate_Versification
+* https://github.com/openscriptures/BibleOrgSys/tree/master/DataFiles/VersificationSystems
 
 How we propose to do it (mapping the translation to the original):
 
@@ -174,13 +171,19 @@ This will leave some languages without precise word dividers, resulting, at time
 
 Known examples of languages without precise word dividers:
 
-- Vietnamese and Tai Lü use spaces to divide by syllable.
-- Tibetan and Dzongkha use other marks to divide by syllable.
-- While most Chinese characters are a single word, some words are made up of more than one.
-- Japanese characters are each a single syllable.
-- Lao translation may or may not use spaces.
+* Vietnamese and Tai Lü use spaces to divide by syllable.
+* Tibetan and Dzongkha use other marks to divide by syllable.
+* While most Chinese characters are a single word, some words are made up of more than one.
+* Japanese characters are each a single syllable.
+* Lao translation may or may not use spaces.
 
 Note: While embedding sites/apps providing USFM for verse content can distinguish between words, this information cannot be replied upon since other embedding sites/apps may only provide plain text.
+
+
+### Updates
+
+* We create a GitHub release for [bibletags-data](https://github.com/educational-resources-and-services/bibletags-data) everytime we update the backend, and a release for [bibletags-widget](https://github.com/educational-resources-and-services/bibletags-widget) each time we update the live widget files. In both cases, embedding sites/apps need not make any changes.
+* When `widget-script` requires updating (rarely), embedding sites/apps must make this update manually. On this occasion there will likely also be breaking changes in the API. Such changes will be annotated here.
 
 
 ## LICENSE
