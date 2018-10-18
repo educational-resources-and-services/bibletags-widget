@@ -40,6 +40,7 @@ For more information on this project, see the [Bible Tags website](https://bible
 * set up thayers and bdb (as temp lexicon entry until I get English parsing data)
 * Make sure widget-script includes all API aspects it needs to so as to not require foreseeable changes.
 * Indicate in API which pieces are and are not yet implemented
+  * Examine mock ups and docs to see what remain of initial design and add them to the roadmap
 * Test all implemented aspects of the API
 * Do first beta releases
 * Get working on Biblearc
@@ -50,13 +51,12 @@ For more information on this project, see the [Bible Tags website](https://bible
 
 Post-launch:
 
+* Add in the ability to edit and verify parsings
+* Write an original language reference tagger using Biblearc
+* Make an npm module for using in a React app
 * Offline
+* Create the React Native template apps
 * containerElTargetScroll
-* Examine mock ups and docs to see what remain of initial design
-* Make React module
-* React Native apps
-* Biblearc ref tagger
-* Ability to edit and verify parsings
 
 
 ## Report a bug / request a feature
