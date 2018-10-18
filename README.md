@@ -180,6 +180,8 @@ Known examples of languages without precise word dividers:
 - Japanese characters are each a single syllable.
 - Lao translation may or may not use spaces.
 
+Note: While embedding sites/apps providing USFM for verse content can distinguish between words, this information cannot be replied upon since other embedding sites/apps may only provide plain text.
+
 
 ## LICENSE
 
