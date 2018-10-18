@@ -322,9 +322,9 @@ infoCallback: function({
 ```
 
 - **Not yet implemented**
-- Only relevant if `wordNum` was provided.
+- Only relevant if `wordNum` was provided in `versions`.
 - `connectedWordNums` will contain an array of all the word numbers in the translation associated the relevant original language word. This is important since the `wordNum` provided might only be part of the translation of this original language word, while the embedding website/app might want to highlight all relevant translation words.
-- Eg. Genesis 1:1 ESV is sent to the [show](#show) function with `wordNum` set to 3. This is the word "beginning" which is one of two words translated from בְּרֵאשִׁית - the other being "In." Hence, `{ connectedWordNums: [1,3] }` is sent to the `infoCallback` function so that the embedding site/app can highlight both "In" and "beginning."
+- Eg. Genesis 1:1 ESV is sent to the [show](#show) function with `wordNum` set to 3. This is the word "beginning" which is one of two words translated from בְּרֵאשִׁית—the other being "In." Hence, `{ connectedWordNums: [1,3] }` is sent to the `infoCallback` function so that the embedding site/app can highlight both "In" and "beginning."
 
 #### Return value
 
@@ -524,8 +524,6 @@ window.bibleTagsWidget.getCorrespondingVerseLocations({
 // 	}],
 // }
 ```
-```javascript
-```
 
 
 ### <a id="splitPlainTextVerseIntoWords" name="splitPlainTextVerseIntoWords"></a>`splitPlainTextVerseIntoWords`
@@ -567,7 +565,4 @@ window.bibleTagsWidget.splitPlainTextVerseIntoWords({
 // 	"the",
 // 	"earth",
 // ]
-```
-```javascript
-USFM example needed
 ```
