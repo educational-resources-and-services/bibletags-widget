@@ -10,18 +10,19 @@
   const DEFAULT_MARGIN = 10;
   const DEFAULT_Z_INDEX = 100;
 
-  // development
-  const widgetDomain = '*';
-  const widgetUrl = `http://localhost:3000/index.html`;
+  // set widget domain and url per the environment
+  let widgetDomain, widgetUrl
   
-  // // staging
-  // const widgetDomain = 'https://cdn.staging.bibletags.org';
-  // const widgetUrl = `${widgetDomain}/widget/build/index.html`;
-  
-  // // production
-  // const widgetDomain = 'https://cdn.bibletags.org';
-  // const widgetUrl = `${widgetDomain}/widget/build/index.html`;
-
+  if(typeof bibleTagsWidgetEnv === "undefined") {
+    widgetDomain = '*';
+    widgetUrl = `http://localhost:3000/index.html`;
+  } else if(bibleTagsWidgetEnv === 'staging') {
+    widgetDomain = 'https://cdn.staging.bibletags.org';
+    widgetUrl = `${widgetDomain}/widget/build/index.html`;
+  } else if(bibleTagsWidgetEnv === 'production') {
+    widgetDomain = 'https://cdn.bibletags.org';
+    widgetUrl = `${widgetDomain}/widget/build/index.html`;
+  }
 
   let onDeckInstances = [];
   const instances = {};

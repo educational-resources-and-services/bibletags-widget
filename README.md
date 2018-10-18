@@ -11,8 +11,6 @@ For more information on this project, see the [Bible Tags website](https://bible
 
 ## Roadmap
 
-* Have test.html flipped via query string
-* Have widget-script endpoint changed via something in the npm script
 * Update packages?
 * Get fast open going for Biblearc
 * Think well about where to indicate version history for different pieces (data, widget, widget-script) and what is updated when, etc
