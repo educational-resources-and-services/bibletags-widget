@@ -178,8 +178,8 @@ versions!: [{
 - **Not yet implemented**
 - Will retrieve verse(s) corresponding to the first version as versification can change between versions. If subsequent versions do not properly correspond, they will get ignored. Hence, it is highly recommended that the [getCorrespondingVerseLocations](#getCorrespondingVerseLocations) function is used before calling this function on multiple versions.
 - The first version may only contain a single verse. However, there are times when subsequent versions require multiple verses to cover the same content present in this single verse of the first version (due to versification descrepencies). In such cases, the additional verses (in full) should simply be added on to the `versions` array. See the final example in the examples section below.
-- `wordNum` will only be taken into account in the first version which it is found within.
-- To only display the original language version, `versions` should contain a single object with the `versionCode` set to one of the original language versions (`uhb` or `bhp`), and `plaintext` and `usfm` left out.
+- `wordNum` will only be taken into account in the first version within which it is found.
+- To only display the original language version, `versions` should contain a single object with the `versionCode` set to one of the original language versions (`uhb` or `bhp`), and `plaintext` and `usfm` should be left undefined.
 - For each version (except for one of the original language versions), either `plaintext` or `usfm` must be provided.
 
 ```javascript
@@ -257,7 +257,7 @@ addlOptions: [{
 ```
 
 - **Not yet implemented**
-- For each additional option provided here, the `label` is listed in the main options menu. If selected by the user, the callback function is executed.
+- For each additional option provided, the `label` is listed in the main options menu. If selected by the user, the callback function is executed.
 
 ```javascript
 fetchVerseCallback: Function({
@@ -272,11 +272,9 @@ fetchVerseCallback: Function({
 }),
 ```
 
-What about passages listed in USFM (and not just single verses) ???
-
 - **Not yet implemented**
-- Required for search (unless `searchData` is provided) and for USFM verse content containing other verse references to work properly. The provided `fetchVerseCallback` function must call `contentCallback` with either the `plaintext` or `usfm` verse content.
-- [USFM specification](https://ubsicap.github.io/usfm/)
+- Required for search (unless `searchData` is provided) and for USFM cross reference content.
+- The provided `fetchVerseCallback` function must call `contentCallback` with either the `plaintext` or `usfm` verse content.
 
 ```javascript
 jumpToLocation: {
