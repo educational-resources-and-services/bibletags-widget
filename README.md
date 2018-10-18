@@ -141,28 +141,23 @@ How we propose to do it (mapping the translation to the original):
 ```json
 [
   {
-    versions: ['esv','nasb','kjv',...],
-    mappings: {
+    "versions": ["esv", "nasb", "kjv"],
+    "mappings": {
       "2011030": "2012001",
       "2012001-": -1,
       "5012001-5012002": "5012001",
-      "5022005": "5022005-5022006",
-      ...
+      "5022005": "5022005-5022006"
     }
   },
   {
-    notVersions: ['udi',...],
-    mappings: {
+    "notVersions": ["udi"],
+    "mappings": {
       "65002015": 1,
-      "66001001:10-66001002": "66001002",
-      ...
+      "66001001:10-66001002": "66001002"
     }
-  },
-  ...
+  }
 ]
 ```
-
-Locations here are represented with (B)BCCCVVV where B or BB represents the bookId, CCC represents the chapter and VVV represents the verse. (Eg. "2011030" = Exodus 11:30.) When a dash is left open or begins the key, this means "...until the end of the chapter" or "from the beginning of the chapter until..." respectively. When a number is given for the value, then this number is added to the verse. A number following a colon indicates the word numbe. (Eg. "66001001:10-66001002": "66001002" means that Revelation 1:1 from the 10th word and through the end of verse 2 maps to verse 2 in the translation.)
 
 
 #### Word divisions
