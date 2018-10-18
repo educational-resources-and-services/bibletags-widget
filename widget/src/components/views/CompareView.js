@@ -161,7 +161,10 @@ class CompareView extends React.PureComponent {
 
   hideSearchView = () => this.setState({ showSearchView: false })
   
-  updateWordNum = wordNum => {
+  updateWordNum = ({ wordNum, force }) => {
+    // Do not count it as a click if they have selected text
+    if(!window.getSelection().isCollapsed && !force) return
+
     if(wordNum === this.state.wordNum) {
       this.setState({ wordNum: null })
       

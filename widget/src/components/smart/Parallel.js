@@ -65,7 +65,7 @@ class Parallel extends React.Component {
                       return (
                         <WordSpan
                           key={idx}
-                          onClick={updateWordNum.bind(this, thisWNum)}
+                          onClick={updateWordNum.bind(this, { wordNum: thisWNum })}
                         >
                           {
                             piece.parts.map((wordPart, wpIndex) => {
