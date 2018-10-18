@@ -1,8 +1,15 @@
 # Widget API
 
-Note:
+General note:
 
 - Parameters followed by ! are required.
+- The `bookId` parameters must contain an integer between 1-66 (kjv ordering)
+- The `chapter` parameters must contain an integer between 1-150
+- The `verse` parameters must contain an integer between 0-176 (where 0 is used for psalm headings)
+- The `usfm` parameters must contain USFM 3 format to allow for inline styles (small-caps, italics and bold) and notes.
+- [USFM specification](https://ubsicap.github.io/usfm/)
+- `wordNum`-like parameters must be >= 1, representing the word number in the verse as split by `splitPlainTextVerseIntoWords`.
+- Verse content (i.e. `plaintext` or `usfm`) sent to [show](#show) and `fetchVerseCallback`'s `contentCallback` will have its word count checked against the word count of current tagging to this verse. If there is inconsistency, original language tagging will not be available while the inconsistency awaits review.
 
 
 ## Functions
@@ -21,6 +28,7 @@ appId: String
 - Default: [domain of website utilizing the widget]
 - A unique identifier for the app.
 - Used with `userId` to uniquely identify a user.
+- This value will be displayed to the end user in login management.
 
 ```javascript
 userId: String
@@ -91,16 +99,20 @@ window.bibleTagsWidget.setUp({
 
 ### <a id="preload" name="preload"></a>`preload`
 
+Useful for having original language data prefetched from the server.
+
 #### Parameters
 
 ```javascript
 versions!: [{
 	versionCode!: String,
-	bookId!: Number,  // must be an integer between 1-66
-	chapter!: Number,  // must be an integer between 1-150
-	verse: Number,  // must be an integer between 0-176; if absent, the entire chapter will be retrieved
+	bookId!: Number,
+	chapter!: Number,
+	verse: Number,
 }]
 ```
+
+- To preload an entire chapter, leave `verse` undefined.
 
 ```javascript
 includeLXX: Boolean
@@ -144,18 +156,17 @@ window.bibleTagsWidget.preload({
 versions!: [{
 	versionCode!: String,
 	plaintext: String,
-	usfm: String,  // USFM 3 format; allows for inline styles and notes
-	bookId!: Number,  // must be an integer between 1-66 (kjv ordering)
-	chapter!: Number,  // must be an integer between 1-150
-	verse!: Number,  // must be an integer between 0-176; use 0 for psalm headings
-	wordNum: Number,  // only first version with this key set will be taken into account
+	usfm: String,
+	bookId!: Number,
+	chapter!: Number,
+	verse!: Number,
+	wordNum: Number,
 }]
 ```
 
 - **Not yet implemented**
 - Will retrieve verse(s) corresponding to the first version as versification can change between versions. If subsequent versions do not properly correspond, they will get ignored. Hence, it is highly recommended that the [getCorrespondingVerseLocations](#getCorrespondingVerseLocations) function is used before calling this function on multiple versions.
-- [USFM specification](https://ubsicap.github.io/usfm/)
-- Valid inline styles within USFM: small-caps, italics and bold.
+- `wordNum` will only be taken into account in the first version which it is found within.
 - To only display the original language version, `versions` should contain a single object with the `versionCode` set to one of the original language versions (`uhb` or `bhp`), and `plaintext` and `usfm` left out.
 - For each version (except for one of the original language versions), either `plaintext` or `usfm` must be provided.
 
@@ -239,12 +250,12 @@ addlOptions: [{
 ```javascript
 fetchVerseCallback: Function({
 	versionCode: String,
-	bookId: Number,  // will be an integer between 1-66 (kjv ordering)
-	chapter: Number,  // will be an integer between 1-150
-	verse: Number,  // will be an integer between 0-176; will use 0 for psalm headings
+	bookId: Number,
+	chapter: Number,
+	verse: Number,
 	contentCallback: Function({
 		plaintext: String,
-		usfm: String,  // USFM 3 format; allows for inline styles and notes
+		usfm: String,
 	}),
 }),
 ```
@@ -260,20 +271,21 @@ jumpToLocation: {
 	includeOptionForBasePassage: Boolean,  // Default: true
 	callback!: Function({
 		versionCode: String,
-		bookId: Number,  // will be an integer between 1-66 (kjv ordering)
-		chapter: Number,  // will be an integer between 1-150
-		verse: Number,  // will be an integer between 0-176; will use 0 for psalm headings
+		bookId: Number,
+		chapter: Number,
+		verse: Number,
 	}),
 }
 ```
 
 - **Not yet implemented**
+- `includeOptionForBasePassage` default: true
 - If present, a `Jump to location` option will be presented to user when viewing verses in inline search results or through USFM verse references.
 - If `includeOptionForBasePassage` is true, then this option will likewise be available in the main options menu.
 
 ```javascript
 searchData: {
-	maxResults: Number,  // must be an integer between 1-500; default: 100
+	maxResults: Number,
 	callback!: Function({
 		searchString: String,
 		totalNumResults: Number,
@@ -290,6 +302,7 @@ searchData: {
 ```
 
 - **Not yet implemented**
+- If provided, `maxResults` must be an integer between 1-500. Default: 100
 - When provided, the `callback` is called instead of an inline search being presented.
 - `wordNums` is an array of word number sets, each of which corresponds to an original language hit.
 
@@ -425,9 +438,9 @@ window.bibleTagsWidget.hide()
 ```javascript
 baseVersion: {
 	versionCode: String,
-	bookId: Number,  // must be an integer between 1-66 (kjv ordering)
-	chapter: Number,  // must be an integer between 1-150
-	verse: Number,  // must be an integer between 0-176; use 0 for psalm headings
+	bookId: Number,
+	chapter: Number,
+	verse: Number,
 }
 ```
 
@@ -440,9 +453,9 @@ lookupVersions: [String]
 ```javascript
 {
 	[lookupversionCode1]: [{
-		bookId: Number,  // must be an integer between 1-66 (kjv ordering)
-		chapter: Number,  // must be an integer between 1-150
-		verse: Number,  // must be an integer between 0-176; use 0 for psalm headings
+		bookId: Number,
+		chapter: Number,
+		verse: Number,
 	}],
 	...
 }
@@ -460,7 +473,7 @@ window.bibleTagsWidget.getCorrespondingVerseLocations({
 	},
 	lookupVersions: ["nasb", "niv"],
 })
-// Returns
+// Returns:
 // {
 // 	nasb: [{
 // 		bookId: 1,
@@ -477,23 +490,56 @@ window.bibleTagsWidget.getCorrespondingVerseLocations({
 ```javascript
 ```
 
-Go through and italicize optional parameters (and add a note about this)
 
-collect following comments to single place
+### <a id="splitPlainTextVerseIntoWords" name="splitPlainTextVerseIntoWords"></a>`splitPlainTextVerseIntoWords`
 
-	bookId: Number,  // will be an integer between 1-66 (kjv ordering)
-	chapter: Number,  // will be an integer between 1-150
-	verse: Number,  // will be an integer between 0-176; will use 0 for psalm headings
-	contentCallback: Function({
-		plaintext: String,
-		usfm: String,  // USFM 3 format; allows for inline styles and notes
+This function allows the embedding site/app to split verses into words in a manner consistent with Bible Tags.
 
-I need a function that splits text into words for them (so it is consistent with how we do it)
+#### Parameters
 
-All Number's are integers
+```javascript
+plaintext!: String
+```
 
-All parameters are passing via object
+```javascript
+usfm!: String
+```
 
-appId will be shown to user
+#### Return value
+
+```javascript
+[String]  // An array of words from the verse, with punctuation stripped out.
+```
+
+#### Examples
+
+```javascript
+window.bibleTagsWidget.splitPlainTextVerseIntoWords({
+	plaintext: "In the beginning, God created the heavens and the earth.",
+})
+// Returns:
+// [
+// 	"In",
+// 	"the",
+// 	"beginning",
+// 	"God",
+// 	"created",
+// 	"the",
+// 	"heavens",
+// 	"and",
+// 	"the",
+// 	"earth",
+// ]
+```
+```javascript
+USFM example needed
+```
+
+
 
 Sending multiple verses for the secondary+ versions
+
+
+
+Specific USFM style allowed?
+Examples of USFM
