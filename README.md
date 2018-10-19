@@ -235,3 +235,5 @@ Needs implementation:
 
 
 ## LICENSE
+
+[MIT](LICENSE)
