@@ -103,7 +103,7 @@ Note:
 
 ### Project components
 
-* `widget-script`
+* `widget-script.js`
   * launches the widget in iframes using postMessage for communication
   * contains no dependencies
   * uglified upon deployment
@@ -231,4 +231,4 @@ Needs implementation:
 ## Updates
 
 * We create a GitHub release for [bibletags-data](https://github.com/educational-resources-and-services/bibletags-data) everytime we update the backend, and a release for [bibletags-widget](https://github.com/educational-resources-and-services/bibletags-widget) each time we update the live widget files. In both cases, embedding sites/apps need not make any changes.
-* When `widget-script` requires updating (rarely), embedding sites/apps must make this update manually. On this occasion there will likely also be breaking changes in the API. Such changes will be annotated here.
+* When `widget-script.js` requires updating (rarely), embedding sites/apps must make this update manually. On this occasion there will likely also be breaking changes in the API. Such changes will be annotated here.
