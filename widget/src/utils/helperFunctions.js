@@ -418,3 +418,22 @@ export const getMainWordPartIndex = wordParts => (wordParts ? (wordParts.length 
 export const getStrongs = wordInfo => (wordInfo ? (wordInfo.attributes.strong || '').replace(/^[a-z]+:/, '') : '')
 
 export const getIsEntirelyPrefixAndSuffix = wordInfo => (wordInfo && !getStrongs(wordInfo))
+
+export const getCorrespondingVerseLocations = ({ baseVersion={}, lookupVersions=[] }={}) => {
+  
+  const { bookId, chapter, verse } = baseVersion
+  const unconfirmedVerseLocations = {}
+
+  lookupVersions.forEach(lookupVersion => {
+    unconfirmedVerseLocations[lookupVersion] = { bookId, chapter, verse };
+  })
+
+  return unconfirmedVerseLocations
+}
+
+export const splitVerseIntoWords = ({ plaintext, usfm }={}) => {
+
+  // TODO
+  
+  return plaintext.split(' ')
+}

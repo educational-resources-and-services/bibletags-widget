@@ -2,12 +2,15 @@
 
 ### Installation
 
-Include `<script src="https://cdn.bibletags.org/widget/widget-script-v0.js" async></script>` within the `head` tag of your HTML.
+Include `<script src="https://cdn.bibletags.org/widget/widget-script-v0.js"></script>` within the `head` tag of your HTML.
+
+- Note that being in your `head` tag will require this file to be downloaded prior to page load. However, this file is very small (~5k) and will be delivered fast from AWS's worldwide cdn. In addition, its cache policy will require it to be downloaded only once. The effect is virtually no slow down to your website. The big upside to this approach is that you never need to check if the script has been loaded before using this API.
 
 
 ### Usage
 
-Call the [show](#show) function to display a text.
+- All API function contained in the `window.bibleTagsWidget` object.
+- Call the [window.bibleTagsWidget.show()](#show) function (with proper parameters) to display a text.
 
 
 ### Functions
@@ -19,8 +22,8 @@ General notes:
 - The `chapter` parameters must contain an integer between 1-150
 - The `verse` parameters must contain an integer between 0-176 (where 0 is used for psalm headings)
 - The `usfm` parameters must contain [USFM 3](https://ubsicap.github.io/usfm/) format to allow for some inline styles, footnotes and cross references.
-- `wordNum`-like parameters must be >= 1, representing the word number in the verse as split by `splitPlainTextVerseIntoWords`.
-- Verse content (i.e. `plaintext` or `usfm`) sent to the [show](#show) function or `fetchVerseCallback`'s `contentCallback` will have its word count checked against the word count of the current tagging of this verse. If there is inconsistency, original language tagging will not be available while the inconsistency awaits review.
+- `wordNum`-like parameters must be >= 1, representing the word number in the verse as split by `splitVerseIntoWords`.
+- Verse content (i.e. `plaintext` or `usfm`) sent to the [show()](#show) function or `fetchVerseCallback`'s `contentCallback` will have its word count checked against the word count of the current tagging of this verse. If there is inconsistency, original language tagging will not be available while the inconsistency awaits review.
 
 ## setUp()
 
@@ -62,7 +65,7 @@ offlineEnabled: Boolean
 containerEls: [HTMLElement]
 ```
 
-- **Recommended** since the first time the [show](#show) function is called with a `containerEl` not included here, rendering of the widget will be slow.
+- **Recommended** since the first time the [show()](#show) function is called with a `containerEl` not included here, rendering of the widget will be slow.
 - An array of up to 10 HTMLElements.
 - Container elements with the css value of `position: static` will be changed to `position: relative`.
 
@@ -72,7 +75,7 @@ uiLanguageCode: String
 
 - **Not yet implemented**
 - *Default: eng (English)*
-- Can be overridden in the [show](#show) function.
+- Can be overridden in the [show()](#show) function.
 - [Language codes](https://www.loc.gov/standards/iso639-2/php/code_list.php)
 
 #### Return value
@@ -186,7 +189,7 @@ versions!: [{
 ```
 
 - **Not yet implemented**
-- Will retrieve verse(s) corresponding to the first version as versification can change between versions. If subsequent versions do not properly correspond, they will get ignored. Hence, it is highly recommended that the [getCorrespondingVerseLocations](#getCorrespondingVerseLocations) function is used before calling this function on multiple versions.
+- Will retrieve verse(s) corresponding to the first version as versification can change between versions. If subsequent versions do not properly correspond, they will get ignored. Hence, it is highly recommended that the [getCorrespondingVerseLocations()](#getCorrespondingVerseLocations) function is used before calling this function on multiple versions.
 - The first version may only contain a single verse. However, there are times when subsequent versions require multiple verses to cover the same content present in this single verse of the first version (due to versification descrepencies). In such cases, the additional verses (in full) should simply be added on to the `versions` array. See the final example in the examples section below.
 - `wordNum` will only be taken into account in the first version within which it is found.
 - To only display the original language version, `versions` should contain a single object with the `versionCode` set to one of the original language versions (`uhb` or `bhp`), and `plaintext` and `usfm` should be left undefined.
@@ -255,7 +258,7 @@ uiLanguageCode: String
 ```
 
 - **Not yet implemented**
-- *Default: [language set in [setUp](#setUp) function, or else the language of the first version]*
+- *Default: [language set in [setUp()](#setUp) function, or else the language of the first version]*
 
 ```javascript
 addlOptions: [{
@@ -282,7 +285,7 @@ fetchVerseCallback: Function({
 
 - **Not yet implemented**
 - Required for search (unless `searchData` is provided) and for USFM cross reference content.
-- The provided `fetchVerseCallback` function must call `contentCallback` with either the `plaintext` or `usfm` verse content.
+- The provided `fetchVerseCallback()` function must call `contentCallback()` with either the `plaintext` or `usfm` verse content.
 
 ```javascript
 jumpToLocation: {
@@ -332,7 +335,7 @@ infoCallback: function({
 - **Not yet implemented**
 - Only relevant if `wordNum` was provided in `versions`.
 - `connectedWordNums` will contain an array of all the word numbers in the translation associated the relevant original language word. This is important since the `wordNum` provided might only be part of the translation of this original language word, while the embedding website/app might want to highlight all relevant translation words.
-- Eg. Genesis 1:1 ESV is sent to the [show](#show) function with `wordNum` set to 3. This is the word "beginning" which is one of two words translated from בְּרֵאשִׁית—the other being "In." Hence, `{ connectedWordNums: [1,3] }` is sent to the `infoCallback` function so that the embedding site/app can highlight both "In" and "beginning."
+- Eg. Genesis 1:1 ESV is sent to the [show()](#show) function with `wordNum` set to 3. This is the word "beginning" which is one of two words translated from בְּרֵאשִׁית—the other being "In." Hence, `{ connectedWordNums: [1,3] }` is sent to the `infoCallback()` function so that the embedding site/app can highlight both "In" and "beginning."
 
 #### Return value
 
@@ -458,7 +461,7 @@ window.bibleTagsWidget.show({
 widgetInstanceId: Number
 ```
 
-- The `widgetInstanceId` for each widget is the return value of the [show](#show) function.
+- The `widgetInstanceId` for each widget is the return value of the [show()](#show) function.
 - If this parameter is not provided, all widgets are hidden.
 
 #### Return value
@@ -481,27 +484,25 @@ window.bibleTagsWidget.hide()
 
 ## getCorrespondingVerseLocations()
 
-- **Not yet implemented**
+This function is useful when calling [show()](#show) with multiple versions. (See explanation in the `versions` parameter details.)
 
 #### Parameters
 
 ```javascript
-baseVersion: {
-	versionCode: String,
-	bookId: Number,
-	chapter: Number,
-	verse: Number,
+baseVersion!: {
+	versionCode!: String,
+	bookId!: Number,
+	chapter!: Number,
+	verse!: Number,
 }
 ```
 
 ```javascript
-lookupVersions: [String]
+lookupVersions!: [String]
 ```
 
-#### Return value
-
 ```javascript
-{
+callback!: {
 	[lookupversionCode1]: [{
 		bookId: Number,
 		chapter: Number,
@@ -511,7 +512,13 @@ lookupVersions: [String]
 }
 ```
 
-#### Examples
+#### Return value
+
+```javascript
+null
+```
+
+#### Example
 
 ```javascript
 window.bibleTagsWidget.getCorrespondingVerseLocations({
@@ -522,24 +529,25 @@ window.bibleTagsWidget.getCorrespondingVerseLocations({
 		verse: 1,
 	},
 	lookupVersions: ["nasb", "niv"],
+	callback: Function(correspondingVerseLocations) {
+		// {
+		// 	nasb: [{
+		// 		bookId: 1,
+		// 		chapter: 1,
+		// 		verse: 1,
+		// 	}],
+		// 	niv: [{
+		// 		bookId: 1,
+		// 		chapter: 1,
+		// 		verse: 1,
+		// 	}],
+		// }
+	},
 })
-// Returns:
-// {
-// 	nasb: [{
-// 		bookId: 1,
-// 		chapter: 1,
-// 		verse: 1,
-// 	}],
-// 	niv: [{
-// 		bookId: 1,
-// 		chapter: 1,
-// 		verse: 1,
-// 	}],
-// }
 ```
 
 
-## splitPlainTextVerseIntoWords()
+## splitVerseIntoWords()
 
 This function allows the embedding site/app to split verses into words in a manner consistent with Bible Tags.
 
@@ -555,29 +563,34 @@ plaintext!: String
 usfm!: String
 ```
 
+```javascript
+[String]  // An array of words from the verse, with punctuation stripped out.
+```
+
 #### Return value
 
 ```javascript
-[String]  // An array of words from the verse, with punctuation stripped out.
+null
 ```
 
 #### Examples
 
 ```javascript
-window.bibleTagsWidget.splitPlainTextVerseIntoWords({
+window.bibleTagsWidget.splitVerseIntoWords({
 	plaintext: "In the beginning, God created the heavens and the earth.",
+	callback: Function(wordsArray) {
+		// [
+		// 	"In",
+		// 	"the",
+		// 	"beginning",
+		// 	"God",
+		// 	"created",
+		// 	"the",
+		// 	"heavens",
+		// 	"and",
+		// 	"the",
+		// 	"earth",
+		// ]
+	},
 })
-// Returns:
-// [
-// 	"In",
-// 	"the",
-// 	"beginning",
-// 	"God",
-// 	"created",
-// 	"the",
-// 	"heavens",
-// 	"and",
-// 	"the",
-// 	"earth",
-// ]
 ```

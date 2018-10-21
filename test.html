@@ -2,10 +2,11 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width">
-    <script src="./widget-script.js" async></script>
-    <!-- <script src="https://cdn.staging.bibletags.org/widget/widget-script-1516264744804.js" async></script> -->
-    <!-- <script src="https://cdn.bibletags.org/widget/widget-script-v0.js" async></script> -->
+    <script src="./widget-script.js"></script>
+    <!-- <script src="https://cdn.staging.bibletags.org/widget/widget-script-1516264744804.js"></script> -->
+    <!-- <script src="https://cdn.bibletags.org/widget/widget-script-v0.js"></script> -->
     <script>
+      window.widgetIds = [];
       window.setUp = function() {
         window.bibleTagsWidget.setUp({
           containerEls: [
@@ -15,7 +16,7 @@
         })
       }
       window.show1 = function() {
-        window.lastWidgetId = window.bibleTagsWidget.show({
+        window.widgetIds.push(window.bibleTagsWidget.show({
           versions: [{
             versionCode: 'oshb',
             // content: 'In the beginning, God created the heavens and the earth.',
@@ -28,7 +29,7 @@
           containerEl: document.getElementById('div1'),
           anchorEl: document.getElementById("show1"),
           // uiLanguageCode: "eng",
-        })
+        }))
       }
     </script>
   </head>
@@ -38,7 +39,7 @@
         <button onClick="window.setUp()">Set up</button>
         <button onClick="window.bibleTagsWidget.preload({one: 1, two: 2})">Preload</button>
         <button onClick="window.show1()" id="show1">Show Genesis 1:1</button>
-        <button onClick="window.bibleTagsWidget.hide(window.lastWidgetId)">Hide last showed</button>
+        <button onClick="window.bibleTagsWidget.hide({ widgetInstanceId: window.widgetIds.pop() })">Hide last showed</button>
         <button onClick="window.bibleTagsWidget.hide()">Hide all</button>
       </div>
     </div>

@@ -25,6 +25,8 @@
   }
 
   let onDeckInstances = [];
+  let utilityInstance;
+  let utilityActionIndex = 1;
   const instances = {};
   let settings = {};
   let idIndex = 1;
@@ -159,7 +161,7 @@
     };
   };
 
-  const getInstanceTemplate = () => {
+  const getInstanceTemplate = isUtility => {
 
     // create widget container
     const widgetEl = newEl('div');
@@ -178,7 +180,7 @@
 
     // create iframe with widget
     const iframeEl = newEl('iframe', {
-      src: widgetUrl,
+      src: widgetUrl + (isUtility ? "#utility" : ""),
       style: `
         position: absolute;
         top: 0;
@@ -190,9 +192,9 @@
       `,
     });
 
-    iframeEl.onload = () => iframeEl.loaded = true;
+    iframeEl.addEventListener('load', () => iframeEl.loaded = true);
 
-    arrowEl && widgetEl.appendChild(arrowEl);
+    widgetEl.appendChild(arrowEl);
     widgetEl.appendChild(iframeEl);
 
     return {
@@ -209,6 +211,36 @@
     if(el && elComputedStyle.position === 'static') {
       el.style.setProperty('position', 'relative', 'important');
     }
+  };
+
+  const getUtilityInstance = () => {
+    if(!utilityInstance || !d.body.contains(utilityInstance.iframeEl)) {
+      utilityInstance = getInstanceTemplate(true);
+      utilityInstance.actionIndexResponseMap = {};
+
+      const { widgetEl, arrowEl, iframeEl, actionIndexResponseMap } = utilityInstance;
+
+      // will not be used as visual component, thus arrow unneeded
+      arrowEl.remove();
+
+      // set up postMessage communcation
+      const iframeElEvent = event => {
+        const { data, source, origin } = event;
+
+        if(source != iframeEl.contentWindow) return;
+        if(origin != widgetDomain && widgetDomain != '*') return;
+
+        const handleResponse = actionIndexResponseMap[data.payload.actionIndex];
+        handleResponse && handleResponse({ data });
+        delete actionIndexResponseMap[data.payload.actionIndex];
+      };
+
+      w.addEventListener('message', iframeElEvent);
+
+      d.body.appendChild(widgetEl);
+    }
+
+    return utilityInstance;
   };
 
   const loadOnDeckInstances = () => {
@@ -228,6 +260,9 @@
       makeRelativeIfStatic(containerEl);
       containerEl.appendChild(onDeckInstance.widgetEl);
     })
+
+    // load the utility instance as well, if it does not yet exist
+    getUtilityInstance();
   };
 
   const destroyInstance = id => {
@@ -236,6 +271,32 @@
     widgetEl.remove();
     w.removeEventListener('message', iframeElEvent) ;         
     delete instances[id];
+  };
+
+  const performActionOnUtilityInstance = ({ action, payload, handleResponse }) => {
+    let { widgetEl, iframeEl, actionIndexResponseMap } = getUtilityInstance();
+    const actionIndex = utilityActionIndex++;
+
+    // postMessage the options upon iframe load 
+    const sendActionMessage = () => {
+      iframeEl.contentWindow.postMessage({
+        action,
+        payload: {
+          ...payload,
+          actionIndex,
+        },
+      }, widgetDomain);
+    }
+
+    if(handleResponse) {
+      actionIndexResponseMap[actionIndex] = handleResponse;
+    }
+
+    if(iframeEl.loaded) {
+      sendActionMessage();
+    } else {
+      iframeEl.addEventListener('load', sendActionMessage);
+    }
   };
 
   const styleEl = d.createElement('style');
@@ -253,46 +314,13 @@
 
     preload: (options={}) => {
 
-      let { widgetEl, iframeEl } = getInstanceTemplate();
-
-      // postMessage the options upon iframe load 
-      iframeEl.onload = () => {
-        iframeEl.contentWindow.postMessage({
-          action: 'preload',
-          payload: {
-            settings,
-            options,
-          },
-        }, widgetDomain);
-      }
-
-      // set up postMessage communcation
-      const iframeElEvent = event => {
-        const { data, source, origin } = event;
-
-        if(source != iframeEl.contentWindow) return;
-        if(origin != widgetDomain && widgetDomain != '*') return;
-
-        switch(data.action) {
-          case 'close':
-            close();
-            break;
-        }
-      };
-
-      const close = () => {
-        if(!widgetEl) return;
-        widgetEl.remove();
-        w.removeEventListener('message', iframeElEvent);
-        widgetEl = iframeEl = null;
-      }
-
-      w.addEventListener('message', iframeElEvent);
-
-      d.body.appendChild(widgetEl);
-      
-      // destroy it in 30 seconds no matter what
-      setTimeout(close, 30 * 1000);
+      performActionOnUtilityInstance({
+        action: 'preload',
+        payload: {
+          settings,
+          options,
+        },
+      });
 
     },
 
@@ -328,7 +356,11 @@
       // postMessage the options upon iframe load 
       const sendShowPostMessage = () => {
 
-        iframeEl.loaded = false;
+        // I could not see any reason why I had the following line. (But I am
+        // leaving it commented out in case removing it breaks something.) Note
+        // that at the same time I had this line, I used onload instead of the 
+        // load event.
+        // iframeEl.loaded = false;
 
         const partialSettings = Object.assign({}, settings);
         const partialOptions = Object.assign({}, options);
@@ -393,7 +425,7 @@
       if(iframeEl.loaded) {
         sendShowPostMessage();
       } else {
-        iframeEl.onload = sendShowPostMessage;
+        iframeEl.addEventListener('load', sendShowPostMessage);
       }
 
       instances[id] = {
@@ -408,13 +440,49 @@
       
     },
 
-    hide: id => {
+    hide: ({ widgetInstanceId }={}) => {
       // destroy the matching widget iframe (or all, if id is absent)
-      if(id) {
-        destroyInstance(id);
+      if(widgetInstanceId) {
+        destroyInstance(widgetInstanceId);
       } else {
         Object.keys(instances).forEach(id => destroyInstance(id));
       }
+    },
+
+    getCorrespondingVerseLocations: ({ callback, ...options }={}) => {
+
+      performActionOnUtilityInstance({
+        action: 'getCorrespondingVerseLocations',
+        payload: {
+          options,
+        },
+        handleResponse: ({ data }) => {
+          switch(data.action) {
+            case 'reportCorrespondingVerseLocations':
+              callback(data.payload.verseLocations);
+              break;
+          }
+        },
+      });
+
+    },
+
+    splitVerseIntoWords: ({ callback, ...options }={}) => {
+
+      performActionOnUtilityInstance({
+        action: 'splitVerseIntoWords',
+        payload: {
+          options,
+        },
+        handleResponse: ({ data }) => {
+          switch(data.action) {
+            case 'reportWordsArray':
+              callback(data.payload.words);
+              break;
+          }
+        },
+      });
+
     },
 
   };

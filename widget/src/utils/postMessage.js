@@ -19,6 +19,13 @@ export const updateHeight = height => {
   }, '*')
 }
 
+export const report = ({ action, payload }) => {
+  window.parent.postMessage({
+    action,
+    payload,
+  }, '*')
+}
+
 export const close = () => {
   window.parent.postMessage({
     action: 'close',

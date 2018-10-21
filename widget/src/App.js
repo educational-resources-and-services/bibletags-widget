@@ -2,7 +2,8 @@ import React from 'react'
 // import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider'
 import { determineUILanguageCode, setUpI18n } from './utils/i18n.js'
 import styled from 'styled-components'
-import { setUp, ready, updateHeight } from './utils/postMessage.js'
+import { setUp, ready, updateHeight, report } from './utils/postMessage.js'
+import { getCorrespondingVerseLocations, splitVerseIntoWords } from './utils/helperFunctions.js'
 
 import Measure from 'react-measure'
 import CircularProgress from '@material-ui/core/CircularProgress'
@@ -47,7 +48,7 @@ class App extends React.Component {
   postMessageListener = event => {
     const { data, source } = event
     // const { data, source, origin } = event
-    const { settings, options } = data.payload || {}
+    const { settings, options, actionIndex } = data.payload || {}
 
     if(source !== window.parent) return
 
@@ -82,6 +83,26 @@ class App extends React.Component {
 
         this.readyStatus = 1
         
+        break
+        
+      case 'getCorrespondingVerseLocations':
+        report({
+          action: 'reportCorrespondingVerseLocations',
+          payload: {
+            actionIndex,
+            verseLocations: getCorrespondingVerseLocations(options),
+          },
+        })
+        break
+
+      case 'splitVerseIntoWords':
+        report({
+          action: 'reportWordsArray',
+          payload: {
+            actionIndex,
+            words: splitVerseIntoWords(options),
+          },
+        })
         break
 
       default:

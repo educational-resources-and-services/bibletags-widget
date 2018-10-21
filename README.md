@@ -11,9 +11,9 @@ For more information on this project, see the [Bible Tags website](https://bible
 
 ## Roadmap
 
-* getCorrespondingVerseLocations
-  * Look in graphql regarding this - I remember thinking through verse reference between the translation and original text quite a bit in setting this up.
-* splitPlainTextVerseIntoWords
+* getCorrespondingVerseLocations + splitVerseIntoWords
+  * Get preload working with verse content.
+  * Make promises an option in addition to callbacks?
 * Ability to send in English verse in plaintext
 * Send in multiple versions
 * Get Greek NT working
