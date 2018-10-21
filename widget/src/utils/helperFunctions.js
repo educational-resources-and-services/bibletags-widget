@@ -1,4 +1,5 @@
 import i18n from './i18n.js'
+import rewritePattern  from 'regexpu-core'
 
 const i18nBook = str => i18n(str, {}, "", "book")
 const i18nGrammar = str => i18n(str, {}, "", "grammar")
@@ -433,7 +434,20 @@ export const getCorrespondingVerseLocations = ({ baseVersion={}, lookupVersions=
 
 export const splitVerseIntoWords = ({ plaintext, usfm }={}) => {
 
-  // TODO
-  
-  return plaintext.split(' ')
+  // TODO: I need the text-specific regex's put in here
+
+  const splitRegExp = new RegExp(rewritePattern('[\\P{L}]+', 'u', {
+    unicodePropertyEscape: true,
+  }), 'g')
+
+  return plaintext
+
+    // escape apostraphes
+    .replace(/(\w)’(\w)/g, "$1ESCAPEDAPOSTRAPHE$2")
+
+    // split to words
+    .split(splitRegExp)
+
+    // unescape apostraphes
+    .map(word => word.replace(/ESCAPEDAPOSTRAPHE/g, "’"))
 }

@@ -12,7 +12,9 @@ For more information on this project, see the [Bible Tags website](https://bible
 ## Roadmap
 
 * getCorrespondingVerseLocations + splitVerseIntoWords
+  * functions actually working properly
   * Get preload working with verse content.
+  * no visuals in utility instance
   * Make promises an option in addition to callbacks?
 * Ability to send in English verse in plaintext
 * Send in multiple versions
@@ -189,11 +191,17 @@ How we propose to do it (mapping the translation to the original):
 
 ### Word divisions
 
-Most modern languages separate words with spaces, but there are some exceptions. See [here](https://en.wikipedia.org/wiki/Word_divider) and [here](https://linguistics.stackexchange.com/questions/6131/is-there-a-long-list-of-languages-whose-writing-systems-dont-use-spaces).
+Most modern languages separate words with spaces or other punctuation, but there are some exceptions. See [here](https://en.wikipedia.org/wiki/Word_divider) and [here](https://linguistics.stackexchange.com/questions/6131/is-there-a-long-list-of-languages-whose-writing-systems-dont-use-spaces).
 
-To address this, the database will need to record a `word divider regex` and `word regex` for any text where `/[\s-]+/` and `/\w+/` are not the proper respective values.
+To address this, the database will need to record a `word divider regex` for any text where the default `/[\\P{L}]+/gu` is not the valid regex for the split function.
 
 This will leave some languages without precise word dividers, resulting, at times, in smaller divisions than words (eg. syllables). While this is not ideal for these languages, it should nonetheless allow all aspects of the widget to function properly, and only require a bit more clicking when tagging these texts to the original languages.
+
+Programmatic exceptions to this approach will be few. To date, the following exception(s) exist:
+
+* Possession and contractions in English using an apostraphe. Eg. `Balaam’s`, `shouldn’t`. Such apostraphes will be escaped before the `word divider regex` is used to split the verse.
+
+*Please contact us to suggest any programmatic exceptions for other languages.*
 
 Known examples of languages without precise word dividers:
 
@@ -203,7 +211,7 @@ Known examples of languages without precise word dividers:
 * Japanese characters are each a single syllable.
 * Lao translation may or may not use spaces.
 
-Note: While embedding sites/apps providing USFM for verse content can distinguish between words, this information cannot be replied upon since other embedding sites/apps may only provide plain text.
+Note: While embedding sites/apps providing USFM for verse content could distinguish between words, this information cannot be replied upon since other embedding sites/apps may only provide plain text.
 
 
 ### Offline
