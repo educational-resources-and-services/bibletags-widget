@@ -158,7 +158,7 @@ Note:
 
 To line up verses between versions correctly, we will need to have versification mapping. However, we also want versification mapping primarily to be in the widget so as to reduce the amount of data that needs to be retrieved from the server with the use of each new translation. Thus, we use the concept of "versification models," since versification for most versions falls into one of a few traditions. Thus, a versification model number will live in the `versions` table in the database, along with any exceptional versification details. For each retrieved version, this information will be recorded in `localStorage` to avoid the need to retrieve it repeatedly.
 
-Versification model data structure:
+Versification model data structure (translation verses mapped to original language verses):
 
 ```json
 [

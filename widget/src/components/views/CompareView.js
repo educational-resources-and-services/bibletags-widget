@@ -272,7 +272,7 @@ const verseQueryOptions = {
   options: ({ options }) => ({
     variables: {
       // TODO: This needs to support multiple versions at once + translations
-      id: `${formLoc(options.versions[0])}-${options.versions[0].versionCode}`,
+      id: `${formLoc(options.versions[0])}-${options.versions[0].versionId}`,
     },
   }),
 }

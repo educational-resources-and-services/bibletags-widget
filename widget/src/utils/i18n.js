@@ -30,7 +30,7 @@ export const determineUILanguageCode = ({ settings, options }) => {
   try {
     uiLanguageCode = options.uiLanguageCode
       || settings.uiLanguageCode
-      || localStorage.getItem(`bibleTags-uiLang-${options.versions && (options.versions[0] || {}).versionCode}`)
+      || localStorage.getItem(`bibleTags-uiLang-${options.versions && (options.versions[0] || {}).versionId}`)
       || localStorage.getItem(`bibleTags-uiLang`)  // latest language code used
       || 'eng'  // presently unknown
   } catch(e) {
@@ -39,8 +39,8 @@ export const determineUILanguageCode = ({ settings, options }) => {
   return uiLanguageCode
 }
 
-// TODO: implement saveLatestUILanguageCode({ uiLanguageCode, version })
-// I need a postMessage sent back from the widget to set bibleTags-uiLang-[versionCode]
+// TODO: implement saveLatestUILanguageCode({ uiLanguageCode, versionId })
+// I need a postMessage sent back from the widget to set bibleTags-uiLang-[versionId]
 
 
 
@@ -59,6 +59,14 @@ export const setUpI18n = async uiLangCode => {
         - will need to convert [UIWord] into object like the example below
         - If there are str/desc combos in language.json that do not exist in [UIWord]...
           - flag users who have contributed (now or in the past) of the need for translation
+
+
+
+    If nextLanguageFetchDate is in the past OR is not set OR (we don't have all language variables AND nextLanguageFetchDate is more than a day in the future), then refetch the language (cache-first policy)
+
+    Set nextLanguageFetchDate to 24 hours in the future, if we don't have all language variables
+    Set nextLanguageFetchDate to two weeks in the future, if we do have all language variables
+
 
     Example resulting translations variable:
       const translations = {

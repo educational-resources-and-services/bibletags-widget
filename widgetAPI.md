@@ -117,7 +117,7 @@ Useful for having original language data prefetched from the server.
 
 ```javascript
 versions!: [{
-	versionCode!: String,
+	versionId!: String,
 	bookId!: Number,
 	chapter!: Number,
 	verse: Number,
@@ -146,7 +146,7 @@ null
 window.bibleTagsWidget.preload({
 	versions: [
 		{
-			versionCode: "esv",
+			versionId: "esv",
 			bookId: 1,
 			chapter: 1,
 			verse: 1,
@@ -158,12 +158,12 @@ window.bibleTagsWidget.preload({
 window.bibleTagsWidget.preload({
 	versions: [
 		{
-			versionCode: "esv",
+			versionId: "esv",
 			bookId: 1,
 			chapter: 1,
 		},
 		{
-			versionCode: "esv",
+			versionId: "esv",
 			bookId: 1,
 			chapter: 2,
 		},
@@ -178,7 +178,7 @@ window.bibleTagsWidget.preload({
 
 ```javascript
 versions!: [{
-	versionCode!: String,
+	versionId!: String,
 	plaintext: String,
 	usfm: String,
 	bookId!: Number,
@@ -192,7 +192,7 @@ versions!: [{
 - Will retrieve verse(s) corresponding to the first version as versification can change between versions. If subsequent versions do not properly correspond, they will get ignored. Hence, it is highly recommended that the [getCorrespondingVerseLocations()](#getCorrespondingVerseLocations) function is used before calling this function on multiple versions.
 - The first version may only contain a single verse. However, there are times when subsequent versions require multiple verses to cover the same content present in this single verse of the first version (due to versification descrepencies). In such cases, the additional verses (in full) should simply be added on to the `versions` array. See the final example in the examples section below.
 - `wordNum` will only be taken into account in the first version within which it is found.
-- To only display the original language version, `versions` should contain a single object with the `versionCode` set to one of the original language versions (`uhb` or `bhp`), and `plaintext` and `usfm` should be left undefined.
+- To only display the original language version, `versions` should contain a single object with the `versionId` set to one of the original language versions (`uhb` or `bhp`), and `plaintext` and `usfm` should be left undefined.
 - For each version (except for one of the original language versions), either `plaintext` or `usfm` must be provided.
 
 ```javascript
@@ -272,7 +272,7 @@ addlOptions: [{
 
 ```javascript
 fetchVerseCallback: Function({
-	versionCode: String,
+	versionId: String,
 	bookId: Number,
 	chapter: Number,
 	verse: Number,
@@ -291,7 +291,7 @@ fetchVerseCallback: Function({
 jumpToLocation: {
 	includeOptionForBasePassage: Boolean,
 	callback!: Function({
-		versionCode: String,
+		versionId: String,
 		bookId: Number,
 		chapter: Number,
 		verse: Number,
@@ -310,7 +310,7 @@ searchData: {
 		searchString: String,
 		totalNumResults: Number,
 		results: {
-			[versionCode]: [{
+			[versionId]: [{
 				bookId: Number,
 				chapter: Number,
 				verse: Number,
@@ -350,7 +350,7 @@ Number
 ```javascript
 window.bibleTagsWidget.show({
 	versions: [{
-		versionCode: "esv",
+		versionId: "esv",
 		plaintext: "In the beginning, God created the heavens and the earth.",
 		bookId: 1,
 		chapter: 1,
@@ -363,7 +363,7 @@ window.bibleTagsWidget.show({
 ```javascript
 window.bibleTagsWidget.show({
 	versions: [{
-		versionCode: "esv",
+		versionId: "esv",
 		plaintext: "In the beginning, God created the heavens and the earth.",
 		bookId: 1,
 		chapter: 1,
@@ -387,7 +387,7 @@ window.bibleTagsWidget.show({
 		},
 	}],
 	fetchVerseCallback: ({
-		versionCode,
+		versionId,
 		bookId,
 		chapter,
 		verse,
@@ -399,7 +399,7 @@ window.bibleTagsWidget.show({
 	jumpToLocation: {
 		includeOptionForBasePassage: false,
 		callback: ({
-			versionCode,
+			versionId,
 			bookId,
 			chapter,
 			verse,
@@ -429,21 +429,21 @@ window.bibleTagsWidget.show({
 window.bibleTagsWidget.show({
 	versions: [
 		{
-			versionCode: "esv",
+			versionId: "esv",
 			plaintext: "For he chose us in him before the creation of the world to be holy and blameless in his sight. In love",
 			bookId: 49,
 			chapter: 1,
 			verse: 4,
 		},
 		{
-			versionCode: "exb",
+			versionId: "exb",
 			plaintext: "That is, in Christ, he chose us before the world was made so that we would be his holy people—people without blame before him.",
 			bookId: 49,
 			chapter: 1,
 			verse: 4,
 		},
 		{
-			versionCode: "exb",
+			versionId: "exb",
 			plaintext: "Because of his love, God had already decided to make us his own children through Jesus Christ. That was what he wanted and what pleased him,",
 			bookId: 49,
 			chapter: 1,
@@ -492,7 +492,7 @@ This function is useful when calling [show()](#show) with multiple versions. (Se
 
 ```javascript
 baseVersion!: {
-	versionCode!: String,
+	versionId!: String,
 	bookId!: Number,
 	chapter!: Number,
 	verse!: Number,
@@ -525,7 +525,7 @@ null
 ```javascript
 window.bibleTagsWidget.getCorrespondingVerseLocations({
 	baseVersion: {
-		versionCode: "esv",
+		versionId: "esv",
 		bookId: 1,
 		chapter: 1,
 		verse: 1,
@@ -559,7 +559,7 @@ This function allows the embedding site/app to split verses into words in a mann
 
 ```javascript
 version!: {
-	versionCode!: String,
+	versionId!: String,
 	plaintext: String,
 	usfm: String,
 }
@@ -584,7 +584,7 @@ null
 ```javascript
 window.bibleTagsWidget.splitVerseIntoWords({
 	version: {
-		versionCode: "esv",
+		versionId: "esv",
 		plaintext: "In the beginning, God created the heavens and the earth.",
 	},
 	callback: Function(wordsArray) {

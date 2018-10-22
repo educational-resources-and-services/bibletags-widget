@@ -47,11 +47,11 @@ export const studyLanguage = {
   grc: i18n("Greek"),
 }
 
-export const getVersionStr = version => {
+export const getVersionStr = versionId => {
 
-  return studyVersions[version]
-    ? `${studyLanguage[studyVersions[version]]} (${version.toUpperCase()})`
-    : version.toUpperCase()
+  return studyVersions[versionId]
+    ? `${studyLanguage[studyVersions[versionId]]} (${versionId.toUpperCase()})`
+    : versionId.toUpperCase()
 
 }
 
@@ -424,6 +424,16 @@ export const getCorrespondingVerseLocations = ({ baseVersion={}, lookupVersions=
   
   const { bookId, chapter, verse } = baseVersion
   const unconfirmedVerseLocations = {}
+
+
+  // I need to know for each version. 
+    // number of chapters
+    // verses/chapter
+    // chapters with vs 0
+    // missing verses
+  // Use versification models idea here too.
+
+  // Also create a function to validate a verse ref for a particular version
 
   lookupVersions.forEach(lookupVersion => {
     unconfirmedVerseLocations[lookupVersion] = { bookId, chapter, verse };
