@@ -156,21 +156,14 @@ Note:
 
 ### Versification
 
-To line up verses between versions correctly, we will need to have exhaustive versification mapping. However, we also want versification mapping to be in the widget so that the graphql caching can work properly without an additional back-and-forth to the server. And if the exhaustive versification mapping is in the widget, it will need to be small. So this must be done smart, so as to keep it between 1k-2k in size.
+To line up verses between versions correctly, we will need to have versification mapping. However, we also want versification mapping primarily to be in the widget so as to reduce the amount of data that needs to be retrieved from the server with the use of each new translation. Thus, we use the concept of "versification models," since versification for most versions falls into one of a few traditions. Thus, a versification model number will live in the `versions` table in the database, along with any exceptional versification details. For each retrieved version, this information will be recorded in `localStorage` to avoid the need to retrieve it repeatedly.
 
-How others do it:
-
-* unfolding word?
-* https://crosswire.org/wiki/Survey_of_versification_schemes_in_French_Bibles#Canons_proposals_for_The_Sword_Project
-* https://crosswire.org/wiki/Alternate_Versification
-* https://github.com/openscriptures/BibleOrgSys/tree/master/DataFiles/VersificationSystems
-
-How we propose to do it (mapping the translation to the original):
+Versification model data structure:
 
 ```json
 [
   {
-    "versions": ["esv", "nasb", "kjv"],
+    "models": [1, 2],
     "mappings": {
       "02011030": "02012001",
       "02012001-": -1,
@@ -179,7 +172,7 @@ How we propose to do it (mapping the translation to the original):
     }
   },
   {
-    "notVersions": ["udi"],
+    "notModels": [2],
     "mappings": {
       "65002015": 1,
       "66001001:10-66001002": "66001002"
@@ -187,6 +180,17 @@ How we propose to do it (mapping the translation to the original):
   }
 ]
 ```
+
+Exceptional versifictaion structure:
+
+```json
+{
+  "02011030": "02012002",
+  "65002015": 2
+}
+```
+
+Versification is also complicated by the fact that some versions occasionally deliniate by verse range instead of individual verses. For example, John 10:22-23 are presented together in the Living Bible (TLB). In such cases, such verse ranges should be treated as the initial verse alone (i.e. John 10:22 in our example), but be mapped to the entire verse range in the original language. This approach assumes verse ranges to be exceptional. Versions containing *many* verse ranges (eg. The Message), on the other hand, are uncondussive to the Bible Tags project, being paraphrases more than translations.
 
 
 ### Word divisions
@@ -218,6 +222,7 @@ Note: While embedding sites/apps providing USFM for verse content could distingu
 
 Current functionality:
 
+* Caches Bible version info (name, language, versification, etc) for previously used versions in localStorage.
 * Caches ui language data (for non-English) in localStorage.
 * Caches scripture data in localStorage.
 * Being in localStorage, cached data is shared between iframe instances.

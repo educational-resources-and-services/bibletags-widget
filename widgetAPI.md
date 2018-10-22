@@ -340,8 +340,10 @@ infoCallback: function({
 #### Return value
 
 ```javascript
-Number  // the widgetInstanceId which can be used with the `hide` function
+Number
 ```
+
+- The widgetInstanceId which can be used with the `hide` function.
 
 #### Examples
 
@@ -556,16 +558,20 @@ This function allows the embedding site/app to split verses into words in a mann
 #### Parameters
 
 ```javascript
-plaintext!: String
+version!: {
+	versionCode!: String,
+	plaintext: String,
+	usfm: String,
+}
 ```
 
-```javascript
-usfm!: String
-```
+- Either `plaintext` or `usfm` must be provided.
 
 ```javascript
-[String]  // An array of words from the verse, with punctuation stripped out.
+callback!: [String]
 ```
+
+- An array of words from the verse, with punctuation stripped out.
 
 #### Return value
 
@@ -577,7 +583,10 @@ null
 
 ```javascript
 window.bibleTagsWidget.splitVerseIntoWords({
-	plaintext: "In the beginning, God created the heavens and the earth.",
+	version: {
+		versionCode: "esv",
+		plaintext: "In the beginning, God created the heavens and the earth.",
+	},
 	callback: Function(wordsArray) {
 		// [
 		// 	"In",
