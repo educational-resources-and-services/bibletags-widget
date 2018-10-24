@@ -505,7 +505,7 @@ lookupVersions!: [String]
 
 ```javascript
 callback!: {
-	[lookupversionCode1]: [{
+	[lookupVersionId1]: [{
 		bookId: Number,
 		chapter: Number,
 		verse: Number,
