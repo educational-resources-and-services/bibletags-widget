@@ -1,8 +1,14 @@
 {
-  "name": "widget",
-  "version": "0.1.0",
-  "private": true,
-  "homepage": "https://cdn.bibletags.org/widget/build",
+  "name": "bibletags-widget",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/educational-resources-and-services/bibletags-widget.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/educational-resources-and-services/bibletags-widget/issues"
+  },
+  "homepage": "https://bibletags.org",
   "dependencies": {
     "@material-ui/core": "3.2.2",
     "@material-ui/icons": "3.0.1",

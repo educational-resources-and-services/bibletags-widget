@@ -1,22 +1,18 @@
 {
-  "name": "bibletags-widget",
-  "version": "1.0.0",
-  "description": "",
-  "main": "widget-script.js",
+  "name": "bibletags-widget-script",
   "scripts": {
     "deploy": "node deployScript.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AndyHubert/bibletags-widget.git"
+    "url": "git+https://github.com/educational-resources-and-services/bibletags-widget.git"
   },
-  "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/AndyHubert/bibletags-widget/issues"
+    "url": "https://github.com/educational-resources-and-services/bibletags-widget/issues"
   },
-  "homepage": "https://github.com/AndyHubert/bibletags-widget#readme",
+  "homepage": "https://bibletags.org",
   "dependencies": {
     "shelljs": "0.8.2",
     "uglify-es": "3.3.9"
