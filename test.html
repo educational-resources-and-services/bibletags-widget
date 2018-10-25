@@ -2,8 +2,27 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width">
-    <script src="https://cdn.bibletags.org/widget/widget-script-v0.js#env=local" id="bibletags-widget-script"></script>
     <script>
+      // make the right widget-script call, based on url query params
+      const queryParamObject = {};
+      location.search
+        .split('?')
+        .slice(1)
+        .join('?')
+        .split('&')
+        .forEach(arg => {
+          const argParts = arg.split('=');
+          queryParamObject[argParts[0]] = argParts[1];
+        });
+
+      const s = document.createElement('script');
+      s.id = 'bibletags-widget-script';
+      s.src = `https://cdn.bibletags.org/widget/widget-script-v0.js`
+        + `#widget=${queryParamObject.widget || ``}`
+        + `&data=${queryParamObject.data || ``}`;
+      document.head.appendChild(s);
+
+      // functions for testing
       window.widgetIds = [];
       window.setUp = function() {
         window.bibleTagsWidget.setUp({

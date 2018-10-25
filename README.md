@@ -89,26 +89,79 @@ If you are aware of any open source word alignment data (what we call Bible tags
 * Please take note of the present coding style and do your best to write new code that accords with it.
 
 
-## Installation
-
-* `bibletags-data` (backend)
-  * Clone the [bibletags-data](https://github.com/educational-resources-and-services/bibletags-data) repository.
-  * Run `npm run setup` in the base directory of this repository.
-* `bibletags-widget`
-  * Clone this repository.
-
-
 ## Development
 
-* Run `npm start` from the base directory of the [bibletags-data](https://github.com/educational-resources-and-services/bibletags-data) repository in one terminal window.
-* Run `npm start` in the `widget` directory of this repository in different terminal window.
-* Open `test.html` in your browser.
+This project has been set up in such a way as to allow you to work one of the repositories without the need of cloning and running the others locally.
 
-Note:
+But, of course, you can run more than one locally at a time when need be. To do so, simply change the `widget` and `data` query parameters appropriately. Valid values are `local`, `staging` and `production` (default).
 
-* Changes to test.html or widget-script require you refresh your browser.
-* Changes to the widget get automatically hot loaded.
-* Changes to widget-data require you restart the server.
+Note: A lot of data is cached so as to make this widget fast and offline. Thus, in testing, you may need to delete application storage (i.e. LocalStorage, etc) from your browser from time to time.
+
+### bibletags-data (backend)
+
+#### Installation
+
+```bash
+git clone https://github.com/educational-resources-and-services/bibletags-data
+cd bibletags-data
+npm install
+npm run setup
+```
+
+#### Running
+
+* `npm start`
+  *You will need to kill this command and rerun with each change.
+* Open `test.html?widget=production&data=local` in a browser.
+
+### bibletags-widget
+
+#### Installation
+
+```bash
+git clone https://github.com/educational-resources-and-services/bibletags-widget
+cd bibletags-widget
+npm install
+```
+
+#### Running
+
+* `npm start`
+  * The widget will automatically hot-reload with each change you make.
+* Open `test.html?widget=local&data=production` in a browser.
+
+### bibletags-widget-script
+
+#### Installation
+
+```bash
+git clone https://github.com/educational-resources-and-services/bibletags-widget-script
+cd bibletags-widget-script
+npm install
+```
+
+#### Running
+
+* Open `test.html?widget=production&data=production` in a browser.
+  * You will need to refresh with each change.
+  * To test a deployed build, add a `build` query parameter.
+
+### bibletags-versification
+
+This repository is included by both `bibletags-data` and `bibletags-widget`.
+
+#### Installation
+
+```bash
+git clone https://github.com/educational-resources-and-services/bibletags-versification
+cd bibletags-versification
+npm install
+```
+
+#### Testing
+
+* `npm run test`
+
 
 ## Design
 
