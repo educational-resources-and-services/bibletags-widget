@@ -72,7 +72,7 @@ Post-launch:
 
 ## Report a bug / request a feature
 
-* Use this repository's [Issues](https://github.com/educational-resources-and-services/bibletags-widget/issues). Please first check if your bug report / feature request already exists before submitting a new issue.
+* Use the appropriate repository's `Issues`. Please first check if your bug report / feature request already exists before submitting a new issue.
 * For bug reports, please provide a clear description of the problem and step-by-step explanation of how to reproduce it.
 * For feature requests, please first get to the know the project via the [Design](#design) section below and review the [Roadmap](#roadmap) above to make sure the desired feature is inline with the direction this project is heading.
 
@@ -85,7 +85,7 @@ If you are aware of any open source word alignment data (what we call Bible tags
 ## Contributing
 
 * Get to know the project via the [Design](#design) section below and the [Roadmap](#roadmap) above.
-* Submit pull requests to fix bugs from [Issues](https://github.com/educational-resources-and-services/bibletags-widget/issues) and implement features that fall within the Roadmap. You would be wise to examine the [active branches](https://github.com/educational-resources-and-services/bibletags-widget/branches/active) so as to avoid taking up a feature that someone else is already actively working on.
+* Submit pull requests to fix bugs from `Issues` and implement features that fall within the Roadmap. You would be wise to examine the active branches so as to avoid taking on a feature that someone else is already actively working on.
 * Please take note of the present coding style and do your best to write new code that accords with it.
 
 
@@ -95,7 +95,7 @@ This project has been set up in such a way as to allow you to work one of the re
 
 But, of course, you can run more than one locally at a time when need be. To do so, simply change the `widget` and `data` query parameters appropriately. Valid values are `local`, `staging` and `production` (default).
 
-Note: A lot of data is cached so as to make this widget fast and offline. Thus, in testing, you may need to delete application storage (i.e. LocalStorage, etc) from your browser from time to time.
+Note: A lot of data is cached in the browser so as to make this widget fast and offline. Thus, in testing, you may need to delete application storage (i.e. localStorage, etc) from your browser from time to time.
 
 ### bibletags-data (backend)
 
@@ -111,8 +111,8 @@ npm run setup
 #### Running
 
 * `npm start`
-  *You will need to kill this command and rerun with each change.
-* Open `test.html?widget=production&data=local` in a browser.
+  * You will need to kill this command and rerun with each change.
+* Open `test.html` file with the appropriate query string (typically `test.html?widget=production&data=local`) in a browser.
 
 ### bibletags-widget
 
@@ -128,7 +128,7 @@ npm install
 
 * `npm start`
   * The widget will automatically hot-reload with each change you make.
-* Open `test.html?widget=local&data=production` in a browser.
+* Open `test.html` file with the appropriate query string (typically `test.html?widget=local&data=production`) in a browser.
 
 ### bibletags-widget-script
 
@@ -148,8 +148,6 @@ npm install
 
 ### bibletags-versification
 
-This repository is included by both `bibletags-data` and `bibletags-widget`.
-
 #### Installation
 
 ```bash
@@ -167,33 +165,41 @@ npm install
 
 ### Project components
 
-* `widget-script.js`
+* [bibletags-widget-script](https://github.com/educational-resources-and-services/bibletags-widget-script) (widget-script.js)
   * launches the widget in iframes using postMessage for communication
   * contains no dependencies
   * uglified upon deployment
   * lives on a cdn
-  * rarely changes
-* the widget
+  * holds as little logic as possible so as to rarely change, since each change requires an embed tag update
+* [biblearc-widget](https://github.com/educational-resources-and-services/bibletags-widget)
   * build with `create-react-app`
   * deploys to static files
   * lives on a cdn
   * makes graphql queries and mutations to `bibletags-data`
-  * to work offline
+  * will work offline
 * [bibletags-data](https://github.com/educational-resources-and-services/bibletags-data)
   * receives graphql requests
-  * build with express
-* mysql db
-  * live on aws rds
+  * built with express
+  * uses a mysql db that lives on aws rds
+* [bibletags-versification](https://github.com/educational-resources-and-services/bibletags-versification)
+  * included by both `bibletags-data` and `bibletags-widget`
+  * exposes three functions for aligning verses between versions
+    * `isValidVerse()`
+    * `isValidVerseInOriginal()`
+    * `getCorrespondingVerseLocations()`
+  * rarely changes as its consistency is foundational to the integrety of crowd-sourced tagging data
 * [BibleTags.org](https://bibletags.org)
-  * present the vision and how-to of the Bible Tags project
+  * presents the vision and how-to of the Bible Tags project
   * makes api calls to `bibletags-data`
   * contains a data hub with files in cdn (or aws s3)
-* react native app template
+* [bibletags-react-native-app](https://github.com/educational-resources-and-services/bibletags-react-native-app)
+  * an open source app template
+  * built in react native
   * built with [expo](https://expo.io/)
-  * super simple to deploy an app:
+  * super simple to deploy a Bible app with original language study components:
     * retrieve permission + data for one or more translations
     * set config settings (language, versions, colors, app name, logo, etc)
-    * ready to deploy to app stores
+    * it is ready to deploy to app stores
 
 
 ### Original language texts
@@ -220,41 +226,9 @@ npm install
   * Open Scripture's [GreekResources](https://github.com/openscriptures/GreekResources) will likely also be helpful.
 
 
-### Versification
+### Versification ( [bibletags-versification](https://github.com/educational-resources-and-services/bibletags-versification) )
 
 To line up verses between versions correctly, we will need to have versification mapping. However, we also want versification mapping primarily to be in the widget so as to reduce the amount of data that needs to be retrieved from the server with the use of each new translation. Thus, we use the concept of "versification models," since versification for most versions falls into one of a few traditions. Thus, a versification model id will live in the `versions` table in the database, along with any exceptional versification details. For each retrieved version, this information will be recorded in `localStorage` to avoid the need to retrieve it repeatedly.
-
-Versification model data structure (translation verses mapped to original language verses):
-
-```json
-[
-  {
-    "models": [1, 2],
-    "mappings": {
-      "02011030": "02012001",
-      "02012001-": -1,
-      "05012001-05012002": "05012001",
-      "05022005": "05022005-05022006"
-    }
-  },
-  {
-    "notModels": [2],
-    "mappings": {
-      "65002015": 1,
-      "66001001:10-66001002": "66001002"
-    }
-  }
-]
-```
-
-Exceptional versifictaion structure:
-
-```json
-{
-  "02011030": "02012002",
-  "65002015": 2
-}
-```
 
 Versification is also complicated by the fact that some versions occasionally deliniate by verse range instead of individual verses. For example, John 10:22-23 are presented together in the Living Bible (TLB). In such cases, such verse ranges should be treated as the initial verse alone (i.e. John 10:22 in our example), but be mapped to the entire verse range in the original language. This approach assumes verse ranges to be exceptional. Versions containing *many* verse ranges (eg. The Message), on the other hand, are uncondussive to the Bible Tags project, being paraphrases more than translations.
 
