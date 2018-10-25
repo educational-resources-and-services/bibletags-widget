@@ -2,7 +2,7 @@
 
 ### Installation
 
-Include `<script src="https://cdn.bibletags.org/widget/widget-script-v0.js"></script>` within the `head` tag of your HTML.
+Include `<script src="https://cdn.bibletags.org/widget/widget-script-v0.js" id="bibletags-widget-script"></script>` within the `head` tag of your HTML.
 
 - Note that being in your `head` tag will require this file to be downloaded prior to page load. However, this file is very small (~5k) and will be delivered fast from AWS's worldwide cdn. In addition, its cache policy will require it to be downloaded only once. The effect is virtually no slow down to your website. The big upside to this approach is that you never need to check if the script has been loaded before using this API.
 
