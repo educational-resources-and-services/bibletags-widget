@@ -16,6 +16,9 @@ For more information on this project, see the [Bible Tags website](https://bible
   * Get preload working with verse content.
   * no visuals in utility instance
   * Make promises an option in addition to callbacks?
+  * Do I need to have a bookId converter or lookup as an aid to people using this widget? Or perhaps a mapping object that they fill in? See https://github.com/openscriptures/BibleOrgSys/tree/master/DataFiles/BookOrders
+  * Explain somewhere that the KJV book ordering is used with an example mapping function (with an actual translation that has different ordering)
+* Make sure discrepency in API is right, where sometimes there is { [versionId]: { bookId, chapter, verse } } and other times versions: [{ versionId, bookId, chapter, verse }]
 * Ability to send in English verse in plaintext
 * Send in multiple versions
 * Get Greek NT working
@@ -53,6 +56,12 @@ For more information on this project, see the [Bible Tags website](https://bible
 
 Post-launch:
 
+* Seek permission to get data sets for translations tagged to strongs and the like. Reference:
+  * [STEP Bible](https://stepweb.atlassian.net/wiki/spaces/SUG/pages/12484619/Copyrights+Licences)
+  * Blue Letter Bible
+  * [Lumina](https://netbible.org/bible)
+  * CrossWay
+  * NASB, etc
 * Add in the ability to edit and verify parsings
 * Write an original language reference tagger using Biblearc
 * Make an npm module for using in a React app
@@ -144,9 +153,13 @@ Note:
   * [UGNT](https://git.door43.org/unfoldingWord/UGNT)
   * License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
   * Compiled by Alan Bunning via the [Center for New Testament Restoration](https://greekcntr.org)
-    * Alan is working on the non-prototype computer generated version
+    * Alan is currently adding parsing and lemma data to all variants
+    * Alan aims to create a non-prototype computer generated version (early 2019?)
     * Alan's manuscript types: (1) full books (2) snippets (3) quoted by church fathers (4) foreign languages
       * #1 and #2 currently considered in the `BHP`.
+    * Alan is looking to land on an ID system for words that would allow for new variants to be added without complicating existing data.
+      * Andy suggested using a 4-digit random unigue identifier for each unique word, explained in an email sent to Alan on Oct 25, 2018.
+    * Alan notes that punctuation and accents are somewhat up-in-the-air in the `BHP`, but hopes to refine and standardize them after the release of the computer generated version.
 * Septuagint
   * [LXX](http://ccat.sas.upenn.edu/gopher/text/religion/biblical/lxxmorph/)
   * License: [Commercial use requires prior written consent](http://ccat.sas.upenn.edu/gopher/text/religion/biblical/lxxvar/0-readme.txt)
@@ -156,7 +169,7 @@ Note:
 
 ### Versification
 
-To line up verses between versions correctly, we will need to have versification mapping. However, we also want versification mapping primarily to be in the widget so as to reduce the amount of data that needs to be retrieved from the server with the use of each new translation. Thus, we use the concept of "versification models," since versification for most versions falls into one of a few traditions. Thus, a versification model number will live in the `versions` table in the database, along with any exceptional versification details. For each retrieved version, this information will be recorded in `localStorage` to avoid the need to retrieve it repeatedly.
+To line up verses between versions correctly, we will need to have versification mapping. However, we also want versification mapping primarily to be in the widget so as to reduce the amount of data that needs to be retrieved from the server with the use of each new translation. Thus, we use the concept of "versification models," since versification for most versions falls into one of a few traditions. Thus, a versification model id will live in the `versions` table in the database, along with any exceptional versification details. For each retrieved version, this information will be recorded in `localStorage` to avoid the need to retrieve it repeatedly.
 
 Versification model data structure (translation verses mapped to original language verses):
 
