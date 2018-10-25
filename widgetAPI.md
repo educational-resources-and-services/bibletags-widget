@@ -192,7 +192,7 @@ versions!: [{
 - Will retrieve verse(s) corresponding to the first version as versification can change between versions. If subsequent versions do not properly correspond, they will get ignored. Hence, it is highly recommended that the [getCorrespondingVerseLocations()](#getCorrespondingVerseLocations) function is used before calling this function on multiple versions.
 - The first version may only contain a single verse. However, there are times when subsequent versions require multiple verses to cover the same content present in this single verse of the first version (due to versification descrepencies). In such cases, the additional verses (in full) should simply be added on to the `versions` array. See the final example in the examples section below.
 - `wordNum` will only be taken into account in the first version within which it is found.
-- To only display the original language version, `versions` should contain a single object with the `versionId` set to one of the original language versions (`uhb` or `bhp`), and `plaintext` and `usfm` should be left undefined.
+- To only display the original language version, `versions` should contain a single object with the `versionId` set to one of the original language versions (`uhb` or `bhp`), and `plaintext` and `usfm` should be left undefined. This is the only case where `versions` should ever include an object with `versionId` set to an original language version.
 - For each version (except for one of the original language versions), either `plaintext` or `usfm` must be provided.
 
 ```javascript
