@@ -10,9 +10,24 @@ import lzutf8 from 'lzutf8'
 
 import { onFinish } from './AfterwareLink'
 
-const dev = !!window.location.href.match(/localhost/)
-const staging = !!window.location.href.match(/staging/)
-const URI = dev ? "http://localhost:3001/graphql/" : (staging ? "https://api.staging.bibletags.org/graphql/" : "https://api.bibletags.org/graphql/")
+const hashParamObject = {}
+window.location.hash
+  .split('#')
+  .slice(1)
+  .join('#')
+  .split('&')
+  .forEach(arg => {
+    const argParts = arg.split('=');
+    hashParamObject[argParts[0]] = argParts[1];
+  });
+
+const URI = hashParamObject.data === 'local'
+  ? "http://localhost:3001/graphql/"
+  : (
+    hashParamObject.data === 'staging'
+      ? "https://api.staging.bibletags.org/graphql/"
+      : "https://api.bibletags.org/graphql/"
+  )
 const MAX_CACHE_KEYS = 500
 
 const batchHttpLink = new BatchHttpLink({ uri: URI })
