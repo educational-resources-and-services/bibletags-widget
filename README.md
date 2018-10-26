@@ -110,9 +110,8 @@ npm run setup
 
 #### Running
 
-* `npm start`
+* `npm run dev`
   * You will need to kill this command and rerun with each change.
-* Open `test.html` file with the appropriate query string (typically `test.html?widget=production&data=local`) in a browser.
 
 ### bibletags-widget
 
@@ -126,9 +125,8 @@ npm install
 
 #### Running
 
-* `npm start`
+* `npm run dev`
   * The widget will automatically hot-reload with each change you make.
-* Open `test.html` file with the appropriate query string (typically `test.html?widget=local&data=production`) in a browser.
 
 ### bibletags-widget-script
 
@@ -142,9 +140,9 @@ npm install
 
 #### Running
 
-* Open `test.html?widget=production&data=production` in a browser.
-  * You will need to refresh with each change.
-  * To test a deployed build, add a `build` query parameter.
+* `npm run dev`
+  * You will need to refresh the browser page with each change.
+  * To test a deployed build, add the appropriate value to either the `build` or `testBuild` query parameter.
 
 ### bibletags-versification
 

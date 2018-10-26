@@ -1,5 +1,6 @@
 import i18n from './i18n.js'
 import rewritePattern  from 'regexpu-core'
+import { getCorrespondingVerseLocation } from 'bibletags-versification'
 
 const i18nBook = str => i18n(str, {}, "", "book")
 const i18nGrammar = str => i18n(str, {}, "", "grammar")
@@ -422,24 +423,14 @@ export const getIsEntirelyPrefixAndSuffix = wordInfo => (wordInfo && !getStrongs
 
 export const getCorrespondingVerseLocations = ({ baseVersion={}, lookupVersions=[] }={}) => {
   
-  const { bookId, chapter, verse } = baseVersion
-  const unconfirmedVerseLocations = {}
-
-
-  // I need to know for each version. 
-    // number of chapters
-    // verses/chapter
-    // chapters with vs 0
-    // missing verses
-  // Use versification models idea here too.
-
-  // Also create a function to validate a verse ref for a particular version
+  const correspondingVerseLocations = {}
 
   lookupVersions.forEach(lookupVersion => {
-    unconfirmedVerseLocations[lookupVersion] = { bookId, chapter, verse };
+    const lookupVersionInfo = { versificationModel: 'original' }
+    correspondingVerseLocations[lookupVersion] = getCorrespondingVerseLocation({ baseVersion, lookupVersionInfo });
   })
 
-  return unconfirmedVerseLocations
+  return correspondingVerseLocations
 }
 
 export const splitVerseIntoWords = ({ plaintext, usfm }={}) => {
