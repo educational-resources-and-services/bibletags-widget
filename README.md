@@ -53,6 +53,9 @@ For more information on this project, see the [Bible Tags website](https://bible
 * Get working on Biblearc
 * Get marketing site working (with ways to stay in contact/contribute/etc)
 * Make API docs an HTML file at bibletags.org
+* Change test.html
+  * allow user to decide whether he wants to test the placement or not
+  * show loading until it can successfully get the widget loaded
 * Make public
 * Email announcement
 
