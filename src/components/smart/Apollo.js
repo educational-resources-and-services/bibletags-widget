@@ -113,7 +113,7 @@ const localStorageAfterware = onFinish(({ networkError, graphQLErrors, response,
   }
 })
 
-const client = new ApolloClient({
+export const client = new ApolloClient({
   link: from([
     // middleware,
     localStorageAfterware,

@@ -3,14 +3,16 @@ import React from 'react'
 import { determineUILanguageCode, setUpI18n } from './utils/i18n.js'
 import styled from 'styled-components'
 import { setUp, ready, updateHeight, report } from './utils/postMessage.js'
-import { getCorrespondingVerseLocations, splitVerseIntoWords } from './utils/helperFunctions.js'
+import { studyVersions, getCorrespondingVerseLocations, splitVerseIntoWords, getDataVar } from './utils/helperFunctions.js'
 
 import Measure from 'react-measure'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
-import Apollo, { restoreCache } from './components/smart/Apollo'
+import Apollo, { restoreCache, client } from './components/smart/Apollo'
 import CompareView from './components/views/CompareView'
 import Bar from './components/basic/Bar'
+
+import versionInfoQuery from './data/queries/versionInfo'
 
 // const dev = !!window.location.href.match(/localhost/)
 
@@ -45,7 +47,7 @@ class App extends React.Component {
     this.setState({ uiLanguageCode })
   }
 
-  postMessageListener = event => {
+  postMessageListener = async event => {
     const { data, source } = event
     // const { data, source, origin } = event
     const { settings, options, actionIndex } = data.payload || {}
@@ -54,7 +56,7 @@ class App extends React.Component {
 
     // TODO: record origin in ga
     
-    const { maxHeight } = options
+    let { maxHeight, baseVersion, lookupVersions } = options
 
     switch(data.action) {
       case 'setUp':
@@ -86,13 +88,45 @@ class App extends React.Component {
         break
         
       case 'getCorrespondingVerseLocations':
+
+        const getVersionInfo = async versionId => {
+          if(studyVersions[versionId]) {
+            return studyVersions[versionId].versionInfo
+          }
+
+          return await (
+            async () => {
+              const result = await client.query({
+                query: versionInfoQuery,
+                variables: {
+                  id: versionId,
+                },
+                fetchPolicy: "cache-first",  // TODO: not saving in localStorage cache
+              })
+              return getDataVar(result).versionInfo || { id: versionId }
+            }
+          )()
+        }
+
+        const lookupVersionInfos = []
+      
+        await Promise.all([
+          (async () => {
+            baseVersion.versionInfo = await getVersionInfo(baseVersion.versionId)
+          })(),
+          ...lookupVersions.map(async (versionId, index) => {
+            lookupVersionInfos[index] = await getVersionInfo(versionId)
+          }),
+        ])
+        
         report({
           action: 'reportCorrespondingVerseLocations',
           payload: {
             actionIndex,
-            verseLocations: getCorrespondingVerseLocations(options),
+            verseLocations: getCorrespondingVerseLocations({ baseVersion, lookupVersionInfos }),
           },
         })
+
         break
 
       case 'splitVerseIntoWords':

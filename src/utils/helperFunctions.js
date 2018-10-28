@@ -38,9 +38,30 @@ export const getDataVar = props => {
 }
 
 export const studyVersions = {
-  oshb: 'heb',
-  bhp: 'grc',
-  lxx: 'grc',
+  oshb: {
+    versionInfo: {
+      id: 'oshb',
+      partialScope: 'ot',
+      versificationModel: 'original',
+    },
+    language: 'heb',
+  },
+  bhp: {
+    versionInfo: {
+      id: 'bhp',
+      partialScope: 'nt',
+      versificationModel: 'original',
+    },
+    language: 'grc',
+  },
+  lxx: {
+    versionInfo: {
+      id: 'lxx',
+      partialScope: 'ot',
+      versificationModel: 'original',
+    },
+    language: 'grc',
+  },
 }
 
 export const studyLanguage = {
@@ -51,7 +72,7 @@ export const studyLanguage = {
 export const getVersionStr = versionId => {
 
   return studyVersions[versionId]
-    ? `${studyLanguage[studyVersions[versionId]]} (${versionId.toUpperCase()})`
+    ? `${studyLanguage[studyVersions[versionId].language]} (${versionId.toUpperCase()})`
     : versionId.toUpperCase()
 
 }
@@ -421,13 +442,30 @@ export const getStrongs = wordInfo => (wordInfo ? (wordInfo.attributes.strong ||
 
 export const getIsEntirelyPrefixAndSuffix = wordInfo => (wordInfo && !getStrongs(wordInfo))
 
-export const getCorrespondingVerseLocations = ({ baseVersion={}, lookupVersions=[] }={}) => {
+export const getCorrespondingVerseLocations = ({ baseVersion={}, lookupVersionInfos=[] }={}) => {
   
   const correspondingVerseLocations = {}
 
-  lookupVersions.forEach(lookupVersion => {
-    const lookupVersionInfo = { versificationModel: 'original' }
-    correspondingVerseLocations[lookupVersion] = getCorrespondingVerseLocation({ baseVersion, lookupVersionInfo });
+  lookupVersionInfos.forEach(lookupVersionInfo => {
+    console.log('{ baseVersion, lookupVersionInfo }', JSON.stringify({ baseVersion, lookupVersionInfo }))
+    correspondingVerseLocations[lookupVersionInfo.id] = getCorrespondingVerseLocation({ baseVersion, lookupVersionInfo });
+    // // correspondingVerseLocations[lookupVersionInfo.id] = getCorrespondingVerseLocation({
+    // //   baseVersion: {
+    // //     bookId:1,
+    // //     chapter: 1,
+    // //     verse: 1,
+    // //     versionInfo: {
+    // //       versificationModel:'original'
+    // //     }
+    // //   },
+    // //   lookupVersionInfo: {
+    // //     versificationModel: 'kjv',
+    // //   },
+    // // })
+    // correspondingVerseLocations[lookupVersionInfo.id] = getCorrespondingVerseLocation({
+    //   "baseVersion": { "bookId": 1, "chapter": 1, "verse": 1, "versionId": "oshb", "versionInfo": { "id": "oshb", "partialScope": "ot", "versificationModel": "original" } },
+    //   "lookupVersionInfo": { "id": "nasb", "name": "New Amer. S", "language": "eng", "wordDividerRegex": null, "partialScope": null, "versificationModel": "kjv", "skipsUnlikelyOriginals": false, "extraVerseMappings": null, "__typename": "VersionInfo" }
+    // })
   })
 
   return correspondingVerseLocations
