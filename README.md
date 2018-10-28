@@ -11,15 +11,22 @@ For more information on this project, see the [Bible Tags website](https://bible
 
 ## Roadmap
 
-* getCorrespondingVerseLocations + splitVerseIntoWords
-  * functions actually working properly
-  * Get preload working with verse content
-  * have setup include versions so I can preload versionInfo
+* getCorrespondingVerseLocations
+  * refetch versionInfo once/day (after a cache-first policy)
   * have versionInfo saved in the localStorage cache
   * no visuals in utility instance
   * Make promises an option in addition to callbacks?
   * Do I need to have a bookId converter or lookup as an aid to people using this widget? Or perhaps a mapping object that they fill in? See https://github.com/openscriptures/BibleOrgSys/tree/master/DataFiles/BookOrders
   * Explain somewhere that the KJV book ordering is used with an example mapping function (with an actual translation that has different ordering)
+  * Why is it slow getting data if everything is local??
+* versifications with all mappings, tests and passing tests (Sarah), then...
+  * put ESV and NASB's extraVerseMappings in
+    * figure out process for making extraVerseMappings correct for each version with regards to verses with the split verse issue
+    * since this is something that likely needs to be done by hand, have it flag someone when users start tagging a new translation so we know it is time to do so for that version
+  * test skipsUnlikelyOriginals (ESV vs KJV)
+  * import as much versionInfo data as possible from bible.com, find.bible, biblegateway
+    * figure out litmus test verses to figure out versificationModel, partialScope, skipsUnlikelyOriginals
+* Get preload working with verse content
 * Make sure discrepency in API is right, where sometimes there is { [versionId]: { bookId, chapter, verse } } and other times versions: [{ versionId, bookId, chapter, verse }]
 * Ability to send in English verse in plaintext
 * Send in multiple versions

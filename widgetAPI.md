@@ -74,9 +74,16 @@ uiLanguageCode: String
 ```
 
 - **Not yet implemented**
+- **Recommended** since the first time the [show()](#show) function is called with a non-English language not included here, rendering of the widget will be slow.
 - *Default: eng (English)*
 - Can be overridden in the [show()](#show) function.
 - [Language codes](https://www.loc.gov/standards/iso639-2/php/code_list.php)
+
+```javascript
+versionsToUse: [versionId]
+```
+
+- **Recommended** since the first time the [show()](#show) function is called with a version not included here, rendering of the widget will be slow.
 
 #### Return value
 

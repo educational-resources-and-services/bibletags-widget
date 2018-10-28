@@ -25,7 +25,7 @@
 let translations = {}
 let uiLanguageCode = 'eng'
 
-export const determineUILanguageCode = ({ settings, options }) => {
+export const determineUILanguageCode = ({ settings, options={} }) => {
   let uiLanguageCode
   try {
     uiLanguageCode = options.uiLanguageCode

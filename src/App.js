@@ -50,15 +50,29 @@ class App extends React.Component {
   postMessageListener = async event => {
     const { data, source } = event
     // const { data, source, origin } = event
-    const { settings, options, actionIndex } = data.payload || {}
+    const { settings, options={}, actionIndex } = data.payload || {}
 
     if(source !== window.parent) return
 
     // TODO: record origin in ga
     
     switch(data.action) {
+
       case 'setUp':
-        this.setUpLanguage({ settings, options })
+        this.setUpLanguage({ settings })
+
+        const { versionIdsToUse } = settings
+
+        ;(versionIdsToUse || []).forEach(id => {
+          client.query({
+            query: versionInfoQuery,
+            variables: {
+              id,
+            },
+            fetchPolicy: "cache-first",
+          })
+        })
+
         break
 
       case 'preload':
@@ -165,7 +179,7 @@ class App extends React.Component {
             words,
           },
         })
-        
+
         break
 
       default:
