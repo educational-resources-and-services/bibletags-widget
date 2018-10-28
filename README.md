@@ -110,8 +110,10 @@ npm run setup
 
 #### Running
 
-* `npm run dev`
-  * You will need to kill this command and rerun with each change.
+* `npm run open` (to open test.html in your browser)
+* `npm start` (to start the local server)
+
+Note: You will need to kill and rerun the server with each change.
 
 ### bibletags-widget
 
@@ -125,8 +127,9 @@ npm install
 
 #### Running
 
-* `npm run dev`
-  * The widget will automatically hot-reload with each change you make.
+* `npm run dev` (to start the widget and open test.html in your browser)
+
+Note: The widget will automatically hot-reload with each change you make.
 
 ### bibletags-widget-script
 
@@ -140,9 +143,11 @@ npm install
 
 #### Running
 
-* `npm run dev`
-  * You will need to refresh the browser page with each change.
-  * To test a deployed build, add the appropriate value to either the `build` or `testBuild` query parameter.
+* `npm run open` (to open test.html in your browser)
+
+Note: You will need to refresh the browser page with each change.
+
+To test a deployed build, add the appropriate value to either the `build` or `testBuild` query parameter.
 
 ### bibletags-versification
 

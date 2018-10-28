@@ -30,14 +30,14 @@
     "styled-components": "4.0.2"
   },
   "devDependencies": {
-    "concurrently": "4.0.1",
     "opn-cli": "3.1.0"
   },
   "scripts": {
     "build": "react-scripts build",
-    "dev": "concurrently 'BROWSER=none react-scripts start' 'npm run open-widget-test'",
+    "dev": "npm run open && npm start",
     "eject": "react-scripts eject",
-    "open-widget-test": "opn open-widget-test.html",
+    "open": "opn open-widget-test.html",
+    "start": "BROWSER=none react-scripts start",
     "test": "react-scripts test --env=jsdom"
   },
   "browserslist": [
