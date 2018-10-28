@@ -80,7 +80,7 @@ uiLanguageCode: String
 - [Language codes](https://www.loc.gov/standards/iso639-2/php/code_list.php)
 
 ```javascript
-versionsToUse: [versionId]
+versionIdsToUse: [versionId]
 ```
 
 - **Recommended** since the first time the [show()](#show) function is called with a version not included here, rendering of the widget will be slow.
