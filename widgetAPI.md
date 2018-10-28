@@ -511,7 +511,7 @@ lookupVersions!: [String]
 ```
 
 ```javascript
-callback!: {
+callback: {
 	[lookupVersionId1]: [{
 		bookId: Number,
 		chapter: Number,
@@ -524,35 +524,33 @@ callback!: {
 #### Return value
 
 ```javascript
-null
+Promise  // resolves to the same value as the callback
 ```
 
 #### Example
 
 ```javascript
-window.bibleTagsWidget.getCorrespondingVerseLocations({
+const correspondingVerseLocations = await window.bibleTagsWidget.getCorrespondingVerseLocations({
 	baseVersion: {
 		versionId: "esv",
 		bookId: 1,
 		chapter: 1,
 		verse: 1,
 	},
-	lookupVersions: ["nasb", "niv"],
-	callback: Function(correspondingVerseLocations) {
-		// {
-		// 	nasb: [{
-		// 		bookId: 1,
-		// 		chapter: 1,
-		// 		verse: 1,
-		// 	}],
-		// 	niv: [{
-		// 		bookId: 1,
-		// 		chapter: 1,
-		// 		verse: 1,
-		// 	}],
-		// }
-	},
+	lookupVersions: ["nasb", "niv"]
 })
+// {
+// 	nasb: [{
+// 		bookId: 1,
+// 		chapter: 1,
+// 		verse: 1,
+// 	}],
+// 	niv: [{
+// 		bookId: 1,
+// 		chapter: 1,
+// 		verse: 1,
+// 	}],
+// }
 ```
 
 
@@ -575,7 +573,7 @@ version!: {
 - Either `plaintext` or `usfm` must be provided.
 
 ```javascript
-callback!: [String] | null  // null, if the versionId is invalid
+callback: [String] | null  // null, if the versionId is invalid
 ```
 
 - An array of words from the verse, with punctuation stripped out.
@@ -583,30 +581,28 @@ callback!: [String] | null  // null, if the versionId is invalid
 #### Return value
 
 ```javascript
-null
+Promise  // resolves to the same value as the callback
 ```
 
 #### Examples
 
 ```javascript
-window.bibleTagsWidget.splitVerseIntoWords({
+const wordsArray = await window.bibleTagsWidget.splitVerseIntoWords({
 	version: {
 		versionId: "esv",
 		plaintext: "In the beginning, God created the heavens and the earth.",
 	},
-	callback: Function(wordsArray) {
-		// [
-		// 	"In",
-		// 	"the",
-		// 	"beginning",
-		// 	"God",
-		// 	"created",
-		// 	"the",
-		// 	"heavens",
-		// 	"and",
-		// 	"the",
-		// 	"earth",
-		// ]
-	},
+// [
+// 	"In",
+// 	"the",
+// 	"beginning",
+// 	"God",
+// 	"created",
+// 	"the",
+// 	"heavens",
+// 	"and",
+// 	"the",
+// 	"earth",
+// ]
 })
 ```

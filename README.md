@@ -14,8 +14,6 @@ For more information on this project, see the [Bible Tags website](https://bible
 * getCorrespondingVerseLocations
   * refetch versionInfo once/day (after a cache-first policy)
   * have versionInfo saved in the localStorage cache
-  * no visuals in utility instance
-  * Make promises an option in addition to callbacks?
   * Do I need to have a bookId converter or lookup as an aid to people using this widget? Or perhaps a mapping object that they fill in? See https://github.com/openscriptures/BibleOrgSys/tree/master/DataFiles/BookOrders
   * Explain somewhere that the KJV book ordering is used with an example mapping function (with an actual translation that has different ordering)
   * Why is it slow getting data if everything is local??
@@ -27,6 +25,7 @@ For more information on this project, see the [Bible Tags website](https://bible
   * import as much versionInfo data as possible from bible.com, find.bible, biblegateway
     * figure out litmus test verses to figure out versificationModel, partialScope, skipsUnlikelyOriginals
 * Get preload working with verse content
+  * no visuals in utility instance
 * Make sure discrepency in API is right, where sometimes there is { [versionId]: { bookId, chapter, verse } } and other times versions: [{ versionId, bookId, chapter, verse }]
 * Ability to send in English verse in plaintext
 * Send in multiple versions

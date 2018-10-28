@@ -447,7 +447,6 @@ export const getCorrespondingVerseLocations = ({ baseVersion={}, lookupVersionIn
   const correspondingVerseLocations = {}
 
   lookupVersionInfos.forEach(lookupVersionInfo => {
-    console.log('{ baseVersion, lookupVersionInfo }', JSON.stringify({ baseVersion, lookupVersionInfo }))
     correspondingVerseLocations[lookupVersionInfo.id] = getCorrespondingVerseLocation({ baseVersion, lookupVersionInfo });
   })
 
