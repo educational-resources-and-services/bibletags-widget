@@ -6,7 +6,7 @@ const i18nBook = str => i18n(str, {}, "", "book")
 const i18nGrammar = str => i18n(str, {}, "", "grammar")
 
 export const formLoc = ({ bookId, chapter, verse }) => (
-  `${(bookId + '').padStart(2, "0")}${(chapter + '').padStart(3, "0")}${(verse + '').padStart(3, "0")}`
+  `${('0'+bookId).substr(-2)}${('00'+chapter).substr(-3)}${('00'+verse).substr(-3)}`
 )
 
 export const getDataVar = props => {
