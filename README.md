@@ -13,7 +13,9 @@ For more information on this project, see the [Bible Tags website](https://bible
 
 * getCorrespondingVerseLocations + splitVerseIntoWords
   * functions actually working properly
-  * Get preload working with verse content.
+  * Get preload working with verse content
+  * have setup include versions so I can preload versionInfo
+  * have versionInfo saved in the localStorage cache
   * no visuals in utility instance
   * Make promises an option in addition to callbacks?
   * Do I need to have a bookId converter or lookup as an aid to people using this widget? Or perhaps a mapping object that they fill in? See https://github.com/openscriptures/BibleOrgSys/tree/master/DataFiles/BookOrders
@@ -147,7 +149,7 @@ npm install
 
 Note: You will need to refresh the browser page with each change.
 
-To test a deployed build, add the appropriate value to either the `build` or `testBuild` query parameter.
+To test a deployed build, add the appropriate value to either the `widgetScriptBuild` or `widgetScriptTestBuild` query parameter.
 
 ### bibletags-versification
 
