@@ -568,7 +568,7 @@ version!: {
 - Either `plaintext` or `usfm` must be provided.
 
 ```javascript
-callback!: [String]
+callback!: [String] | null  // null, if the versionId is invalid
 ```
 
 - An array of words from the verse, with punctuation stripped out.

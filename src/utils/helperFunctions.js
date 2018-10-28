@@ -449,33 +449,14 @@ export const getCorrespondingVerseLocations = ({ baseVersion={}, lookupVersionIn
   lookupVersionInfos.forEach(lookupVersionInfo => {
     console.log('{ baseVersion, lookupVersionInfo }', JSON.stringify({ baseVersion, lookupVersionInfo }))
     correspondingVerseLocations[lookupVersionInfo.id] = getCorrespondingVerseLocation({ baseVersion, lookupVersionInfo });
-    // // correspondingVerseLocations[lookupVersionInfo.id] = getCorrespondingVerseLocation({
-    // //   baseVersion: {
-    // //     bookId:1,
-    // //     chapter: 1,
-    // //     verse: 1,
-    // //     versionInfo: {
-    // //       versificationModel:'original'
-    // //     }
-    // //   },
-    // //   lookupVersionInfo: {
-    // //     versificationModel: 'kjv',
-    // //   },
-    // // })
-    // correspondingVerseLocations[lookupVersionInfo.id] = getCorrespondingVerseLocation({
-    //   "baseVersion": { "bookId": 1, "chapter": 1, "verse": 1, "versionId": "oshb", "versionInfo": { "id": "oshb", "partialScope": "ot", "versificationModel": "original" } },
-    //   "lookupVersionInfo": { "id": "nasb", "name": "New Amer. S", "language": "eng", "wordDividerRegex": null, "partialScope": null, "versificationModel": "kjv", "skipsUnlikelyOriginals": false, "extraVerseMappings": null, "__typename": "VersionInfo" }
-    // })
   })
 
   return correspondingVerseLocations
 }
 
-export const splitVerseIntoWords = ({ plaintext, usfm }={}) => {
+export const splitVerseIntoWords = ({ plaintext, usfm, wordDividerRegex }={}) => {
 
-  // TODO: I need the text-specific regex's put in here
-
-  const splitRegExp = new RegExp(rewritePattern('[\\P{L}]+', 'u', {
+  const wordDividerRegexRewritten = new RegExp(rewritePattern(wordDividerRegex || '[\\P{L}]+', 'u', {
     unicodePropertyEscape: true,
   }), 'g')
 
@@ -485,8 +466,11 @@ export const splitVerseIntoWords = ({ plaintext, usfm }={}) => {
     .replace(/(\w)’(\w)/g, "$1ESCAPEDAPOSTRAPHE$2")
 
     // split to words
-    .split(splitRegExp)
+    .split(wordDividerRegexRewritten)
 
     // unescape apostraphes
     .map(word => word.replace(/ESCAPEDAPOSTRAPHE/g, "’"))
+
+    // filter out empties
+    .filter(word => word !== "")
 }

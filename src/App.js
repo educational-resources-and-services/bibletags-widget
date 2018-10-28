@@ -56,8 +56,6 @@ class App extends React.Component {
 
     // TODO: record origin in ga
     
-    let { maxHeight, baseVersion, lookupVersions } = options
-
     switch(data.action) {
       case 'setUp':
         this.setUpLanguage({ settings, options })
@@ -71,6 +69,8 @@ class App extends React.Component {
 
       case 'show':
         if(this.readyStatus >= 1) break   // only single show call allowed
+
+        const { maxHeight } = options
 
         this.setUpLanguage({ settings, options })
 
@@ -88,6 +88,8 @@ class App extends React.Component {
         break
         
       case 'getCorrespondingVerseLocations':
+
+        let { baseVersion, lookupVersions } = options
 
         const getVersionInfo = async versionId => {
           if(studyVersions[versionId]) {
@@ -130,13 +132,40 @@ class App extends React.Component {
         break
 
       case 'splitVerseIntoWords':
+
+        const { version={} } = options
+        const { versionId } = version
+        let words = null
+
+        if(versionId) {
+          const result = await client.query({
+            query: versionInfoQuery,
+            variables: {
+              id: versionId,
+            },
+            fetchPolicy: "cache-first",  // TODO: not saving in localStorage cache
+          })
+          
+          const { versionInfo } = getDataVar(result)
+
+          if(versionInfo) {
+            const { wordDividerRegex } = versionInfo
+            
+            words = splitVerseIntoWords({
+              ...version,
+              wordDividerRegex,
+            })
+          }
+        }
+
         report({
           action: 'reportWordsArray',
           payload: {
             actionIndex,
-            words: splitVerseIntoWords(options),
+            words,
           },
         })
+        
         break
 
       default:
