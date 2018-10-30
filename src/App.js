@@ -21,6 +21,25 @@ const CircularProgressCont = styled.div`
   padding: 20px 0 25px;
 `
 
+const getVersionInfo = async versionId => {
+  if(studyVersions[versionId]) {
+    return studyVersions[versionId].versionInfo
+  }
+
+  return await (
+    async () => {
+      const result = await client.query({
+        query: versionInfoQuery,
+        variables: {
+          id: versionId,
+        },
+        fetchPolicy: "cache-first",
+      })
+      return getDataVar(result).versionInfo || { id: versionId }
+    }
+  )()
+}
+
 class App extends React.Component {
 
   state = {
@@ -55,6 +74,8 @@ class App extends React.Component {
     if(source !== window.parent) return
 
     // TODO: record origin in ga
+
+    restoreCache()
     
     switch(data.action) {
 
@@ -63,22 +84,13 @@ class App extends React.Component {
 
         const { versionIdsToUse } = settings
 
-        ;(versionIdsToUse || []).forEach(id => {
-          client.query({
-            query: versionInfoQuery,
-            variables: {
-              id,
-            },
-            fetchPolicy: "cache-first",
-          })
-        })
+        ;(versionIdsToUse || []).forEach(versionId => getVersionInfo(versionId))
 
         break
 
       case 'preload':
         console.log('preload', data)
         this.setUpLanguage({ settings, options })
-        restoreCache()
         break
 
       case 'show':
@@ -89,8 +101,6 @@ class App extends React.Component {
         this.setUpLanguage({ settings, options })
 
         setUp({ maxHeight })
-
-        restoreCache()
 
         this.setState({ options }, () => {
           updateHeight(this.refEl.offsetHeight)
@@ -104,26 +114,6 @@ class App extends React.Component {
       case 'getCorrespondingVerseLocations':
 
         let { baseVersion, lookupVersions } = options
-
-        const getVersionInfo = async versionId => {
-          if(studyVersions[versionId]) {
-            return studyVersions[versionId].versionInfo
-          }
-
-          return await (
-            async () => {
-              const result = await client.query({
-                query: versionInfoQuery,
-                variables: {
-                  id: versionId,
-                },
-                fetchPolicy: "cache-first",  // TODO: not saving in localStorage cache
-              })
-              return getDataVar(result).versionInfo || { id: versionId }
-            }
-          )()
-        }
-
         const lookupVersionInfos = []
       
         await Promise.all([
@@ -152,19 +142,9 @@ class App extends React.Component {
         let words = null
 
         if(versionId) {
-          const result = await client.query({
-            query: versionInfoQuery,
-            variables: {
-              id: versionId,
-            },
-            fetchPolicy: "cache-first",  // TODO: not saving in localStorage cache
-          })
-          
-          const { versionInfo } = getDataVar(result)
+          const { name, wordDividerRegex } = await getVersionInfo(versionId)
 
-          if(versionInfo) {
-            const { wordDividerRegex } = versionInfo
-            
+          if(name !== undefined) {
             words = splitVerseIntoWords({
               ...version,
               wordDividerRegex,

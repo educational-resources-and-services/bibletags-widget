@@ -13,9 +13,6 @@ For more information on this project, see the [Bible Tags website](https://bible
 
 * getCorrespondingVerseLocations
   * refetch versionInfo once/day (after a cache-first policy)
-  * have versionInfo saved in the localStorage cache
-  * Do I need to have a bookId converter or lookup as an aid to people using this widget? Or perhaps a mapping object that they fill in? See https://github.com/openscriptures/BibleOrgSys/tree/master/DataFiles/BookOrders
-  * Explain somewhere that the KJV book ordering is used with an example mapping function (with an actual translation that has different ordering)
   * Why is it slow getting data if everything is local??
 * versifications with all mappings, tests and passing tests (Sarah), then...
   * put ESV and NASB's extraVerseMappings in
@@ -33,6 +30,7 @@ For more information on this project, see the [Bible Tags website](https://bible
 * Get LXX working
 * infoCallback
 * Authentication
+* After I have graphql queries which receive arrays in return, see if my cache -> localstorage strategy works still
 * Get basic tagging functionality working
 * Get working for other languages
 * Test that uiLanguageCode works correctly
@@ -59,6 +57,7 @@ For more information on this project, see the [Bible Tags website](https://bible
 * Get working on Biblearc
 * Get marketing site working (with ways to stay in contact/contribute/etc)
 * Make API docs an HTML file at bibletags.org
+* Explain somewhere that the KJV book ordering is used with an example mapping function (with an actual translation that has different ordering) https://github.com/openscriptures/BibleOrgSys/tree/master/DataFiles/BookOrders
 * Change test.html
   * allow user to decide whether he wants to test the placement or not
   * show loading until it can successfully get the widget loaded

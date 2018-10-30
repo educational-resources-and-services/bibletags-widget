@@ -1,6 +1,7 @@
 import i18n from './i18n.js'
 import rewritePattern  from 'regexpu-core'
 import { getCorrespondingVerseLocation } from 'bibletags-versification'
+import { saveCache } from '../components/smart/Apollo'
 
 const i18nBook = str => i18n(str, {}, "", "book")
 const i18nGrammar = str => i18n(str, {}, "", "grammar")
@@ -11,7 +12,16 @@ export const formLoc = ({ bookId, chapter, verse }) => (
 
 export const getDataVar = props => {
 
-  if(props.data) return props.data
+  if(props.data) {
+    if(props.networkStatus === 7) {
+      for(let key in props.data) {
+        if(props.data[key]) {
+          saveCache(`${props.data[key].__typename}:${props.data[key].id}`)
+        }
+      }
+    }
+    return props.data
+  }
 
   const data = {
     loading: false,
@@ -29,6 +39,9 @@ export const getDataVar = props => {
       }
       if(props[x][x]) {
         data.count += parseInt(props[x][x].count, 10) || 0
+      }
+      if(props[x].networkStatus === 7 && data[x]) {
+        saveCache(`${data[x].__typename}:${data[x].id}`)
       }
     }
   }
