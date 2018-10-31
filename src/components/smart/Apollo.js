@@ -8,7 +8,7 @@ import { from } from 'apollo-link'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import lzutf8 from 'lzutf8'
 
-import { onFinish } from './AfterwareLink'
+// import { onFinish } from './AfterwareLink'
 
 const hashParamObject = {}
 window.location.hash
@@ -129,6 +129,19 @@ export const saveCache = lastKeyQueried => {
     }
   }, 500)
 }
+
+export const getStaleState = cacheKey => {
+  const cacheObj = cache.extract()
+  return cacheObj[cacheKey] && cacheObj[cacheKey].__x && cacheObj[cacheKey].__x < Date.now()
+}
+
+export const setStaleTime = ({ cacheKey, staleTime }) => {
+  const cacheObj = cache.extract()
+  if(cacheObj[cacheKey]) {
+    cacheObj[cacheKey].__x = staleTime
+  }
+}
+
 // const middleware = new ApolloLink((operation, forward) => {
 //   console.log('middleware', operation, forward)
 //   return forward(operation)

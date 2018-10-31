@@ -8,7 +8,7 @@ import { studyVersions, getCorrespondingVerseLocations, splitVerseIntoWords, get
 import Measure from 'react-measure'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
-import Apollo, { restoreCache, client } from './components/smart/Apollo'
+import Apollo, { restoreCache, client, getStaleState, setStaleTime } from './components/smart/Apollo'
 import CompareView from './components/views/CompareView'
 import Bar from './components/basic/Bar'
 
@@ -28,13 +28,31 @@ const getVersionInfo = async versionId => {
 
   return await (
     async () => {
-      const result = await client.query({
-        query: versionInfoQuery,
-        variables: {
-          id: versionId,
-        },
-        fetchPolicy: "cache-first",
-      })
+      // Since this information can change (improved extraVerseMappings, for example), set and
+      // check a stale time. When it is stale, still use the cache (for instant results), but
+      // make a second query as well that forces a new fetch via the network.
+
+      const cacheKey = `VersionInfo:${versionId}`
+      const isStale = getStaleState(cacheKey)
+
+      const getResult = fetchPolicy => (
+        client.query({
+          query: versionInfoQuery,
+          variables: {
+            id: versionId,
+          },
+          fetchPolicy,
+        })
+      )
+
+      const result = await getResult("cache-first")
+      
+      if(isStale) {
+        getResult("network-only").then(() => {
+          setStaleTime({ cacheKey, staleTime: Date.now() + (1000 * 60 * 60 * 24) })  // set to expire in 1 day
+        })
+      }
+
       return getDataVar(result).versionInfo || { id: versionId }
     }
   )()
