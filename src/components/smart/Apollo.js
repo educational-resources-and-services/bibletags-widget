@@ -28,7 +28,10 @@ const URI = hashParamObject.data === 'local'
       : "https://api.bibletags.org/graphql/"
   )
 
-const MAX_CACHE_KEYS = 5000 
+const APOLLO_CACHE_VERSION = "1"
+// Only update this when a change has been made that invalidates the previously saved cache.
+
+const MAX_CACHE_KEYS = 5000
 // Uses about 2.5MB of localstorage.
 // On a MacBook Pro 2.7 GHz Intel Core i7, it takes ~40ms to save and ~30ms to restore.
 
@@ -41,7 +44,16 @@ const getCacheFromLocalStorage = () => {
   if(lastCacheUpdate === parseInt(localStorage.getItem('apolloCacheLastUpdateTime') || 0, 10)) {
     // this widget instance was the last to update the cache, so no need to get it
     return null
+
+  } else if(localStorage.getItem('apolloCacheVersion') !== APOLLO_CACHE_VERSION) {
+    // the widget has been updated, rendering the previously saved cache no longer valid
+    localStorage.removeItem('apolloCache')
+    localStorage.removeItem('apolloCacheIndex')
+    localStorage.removeItem('apolloCacheLastUpdateTime')
+    localStorage.removeItem('apolloCacheVersion')
+    console.log('cache cleared')
   }
+  
   const apolloCache = localStorage.getItem('apolloCache')
   if(!apolloCache) return null
   return JSON.parse(apolloCache)
@@ -123,6 +135,7 @@ export const saveCache = lastKeyQueried => {
       localStorage.setItem('apolloCache', JSON.stringify(cacheObj))
       localStorage.setItem('apolloCacheIndex', cacheIndex)
       localStorage.setItem('apolloCacheLastUpdateTime', lastCacheUpdate)
+      localStorage.setItem('apolloCacheVersion', APOLLO_CACHE_VERSION)
 
       console.log('cache saved to localStorage')
   
