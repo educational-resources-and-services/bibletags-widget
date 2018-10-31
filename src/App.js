@@ -12,6 +12,8 @@ import Apollo, { restoreCache, client, getStaleState, setStaleTime, getDataVar }
 import CompareView from './components/views/CompareView'
 import Bar from './components/basic/Bar'
 
+import { hashParametersObject } from './utils/helperFunctions.js'
+
 import versionInfoQuery from './data/queries/versionInfo'
 
 // const dev = !!window.location.href.match(/localhost/)
@@ -204,7 +206,10 @@ class App extends React.Component {
           >
             {({ measureRef }) =>
               <div ref={this.setRefEl}>
-                <div ref={measureRef}>
+                <div
+                  ref={measureRef}
+                  style={hashParametersObject.utility ? { visibility: "hidden" } : null}
+                >
                   {uiLanguageCode !== null
                     ?
                       <CompareView
