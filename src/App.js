@@ -3,12 +3,12 @@ import React from 'react'
 import { determineUILanguageCode, setUpI18n } from './utils/i18n.js'
 import styled from 'styled-components'
 import { setUp, ready, updateHeight, report } from './utils/postMessage.js'
-import { studyVersions, getCorrespondingVerseLocations, splitVerseIntoWords, getDataVar } from './utils/helperFunctions.js'
+import { studyVersions, getCorrespondingVerseLocations, splitVerseIntoWords } from './utils/helperFunctions.js'
 
 import Measure from 'react-measure'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
-import Apollo, { restoreCache, client, getStaleState, setStaleTime } from './components/smart/Apollo'
+import Apollo, { restoreCache, client, getStaleState, setStaleTime, getDataVar } from './components/smart/Apollo'
 import CompareView from './components/views/CompareView'
 import Bar from './components/basic/Bar'
 

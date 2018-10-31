@@ -19,8 +19,7 @@ For more information on this project, see the [Bible Tags website](https://bible
   * test skipsUnlikelyOriginals (ESV vs KJV)
   * import as much versionInfo data as possible from bible.com, find.bible, biblegateway
     * figure out litmus test verses to figure out versificationModel, partialScope, skipsUnlikelyOriginals
-* Get preload working with verse content
-  * no visuals in utility instance
+* no visuals in utility instance
 * Make sure discrepency in API is right, where sometimes there is { [versionId]: { bookId, chapter, verse } } and other times versions: [{ versionId, bookId, chapter, verse }]
 * Ability to send in English verse in plaintext
 * Send in multiple versions

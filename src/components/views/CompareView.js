@@ -11,7 +11,8 @@ import Bar from '../basic/Bar'
 import Parallel from '../smart/Parallel'
 import Entry from '../smart/Entry'
 import SearchView from './SearchView'
-import { formLoc, getDataVar, getPassageStr, usfmToJSON } from '../../utils/helperFunctions.js'
+import { getDataVar } from '../smart/Apollo'
+import { formLoc, getPassageStr, usfmToJSON } from '../../utils/helperFunctions.js'
 
 import verseQuery from '../../data/queries/verse'
 

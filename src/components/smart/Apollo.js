@@ -7,23 +7,13 @@ import { from } from 'apollo-link'
 // import { ApolloLink, from } from 'apollo-link'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 
+import { hashParametersObject } from '../../utils/helperFunctions.js'
 // import { onFinish } from './AfterwareLink'
 
-const hashParamObject = {}
-window.location.hash
-  .split('#')
-  .slice(1)
-  .join('#')
-  .split('&')
-  .forEach(arg => {
-    const argParts = arg.split('=');
-    hashParamObject[argParts[0]] = argParts[1];
-  });
-
-const URI = hashParamObject.data === 'local'
+const URI = hashParametersObject.data === 'local'
   ? "http://localhost:3001/graphql/"
   : (
-    hashParamObject.data === 'staging'
+    hashParametersObject.data === 'staging'
       ? "https://api.staging.bibletags.org/graphql/"
       : "https://api.bibletags.org/graphql/"
   )
@@ -183,6 +173,45 @@ export const client = new ApolloClient({
   ]),
   cache,
 })
+
+export const getDataVar = props => {
+
+  if(props.data) {
+    if(props.networkStatus === 7) {
+      for(let key in props.data) {
+        if(props.data[key]) {
+          saveCache(`${props.data[key].__typename}:${props.data[key].id}`)
+        }
+      }
+    }
+    return props.data
+  }
+
+  const data = {
+    loading: false,
+    count: 0,
+  }
+
+  for(let x in props) {
+    if(props[x] && [ 'loading', 'networkStatus', 'variables', 'refetch' ].every(y => props[x][y] !== undefined)) {
+      // if it has all the properties above, in all likelihood it is a query
+      data[x + 'DataObj'] = props[x]
+      data[x] = props[x][x]
+      data.loading = data.loading || props[x].loading
+      if(!data.error && props[x].error) {
+        data.error = props[x].error
+      }
+      if(props[x][x]) {
+        data.count += parseInt(props[x][x].count, 10) || 0
+      }
+      if(props[x].networkStatus === 7 && data[x]) {
+        saveCache(`${data[x].__typename}:${data[x].id}`)
+      }
+    }
+  }
+
+  return data
+}
 
 class Apollo extends React.PureComponent {
 
