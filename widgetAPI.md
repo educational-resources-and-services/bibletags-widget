@@ -317,12 +317,12 @@ searchData: {
 		searchString: String,
 		totalNumResults: Number,
 		results: {
-			[versionId]: [{
+			[versionId]: [[{
 				bookId: Number,
 				chapter: Number,
 				verse: Number,
-				wordNums: [[Number]],
-			}],
+				wordNums: [Number],
+			}]],
 		},
 	}),
 }
@@ -331,7 +331,7 @@ searchData: {
 - **Not yet implemented**
 - When provided, `callback` is called instead of inline search results being presented.
 - `maxResults` (*Default: 100*) should be an integer between 1-500. 
-- `wordNums` is an array of word number sets, each of which corresponds to an original language hit.
+- `results` are returned with the following hierarchy: versions > hits > verses > words. All versions passed to the [show()](#show) function are included. Each hit is version-specific in terms of versification and word numbers, corresponding to an original language hit which was the basis of the search. There will only rarely be multiple verses per hit, in situations where the versification is highly problematic.
 
 ```javascript
 infoCallback: function({
