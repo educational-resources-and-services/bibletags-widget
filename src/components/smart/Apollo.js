@@ -114,7 +114,7 @@ export const saveCache = lastKeyQueried => {
       }
 
       for(let key in cacheObj.ROOT_QUERY) {
-        if(cacheObj.ROOT_QUERY[key].id && !cacheObj[cacheObj.ROOT_QUERY[key].id]) {
+        if(cacheObj.ROOT_QUERY[key] && cacheObj.ROOT_QUERY[key].id && !cacheObj[cacheObj.ROOT_QUERY[key].id]) {
           delete cacheObj.ROOT_QUERY[key]
         }
       }
