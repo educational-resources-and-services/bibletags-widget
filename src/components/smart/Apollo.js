@@ -6,7 +6,6 @@ import { BatchHttpLink } from "apollo-link-batch-http"
 import { from } from 'apollo-link'
 // import { ApolloLink, from } from 'apollo-link'
 import { InMemoryCache } from 'apollo-cache-inmemory'
-import lzutf8 from 'lzutf8'
 
 // import { onFinish } from './AfterwareLink'
 
@@ -28,7 +27,10 @@ const URI = hashParamObject.data === 'local'
       ? "https://api.staging.bibletags.org/graphql/"
       : "https://api.bibletags.org/graphql/"
   )
-const MAX_CACHE_KEYS = 10000  // ~2MB of localstorage
+
+const MAX_CACHE_KEYS = 5000 
+// Uses about 2.5MB of localstorage.
+// On a MacBook Pro 2.7 GHz Intel Core i7, it takes ~40ms to save and ~30ms to restore.
 
 const batchHttpLink = new BatchHttpLink({ uri: URI })
 const cache = new InMemoryCache()
@@ -42,7 +44,7 @@ const getCacheFromLocalStorage = () => {
   }
   const apolloCache = localStorage.getItem('apolloCache')
   if(!apolloCache) return null
-  return JSON.parse(lzutf8.decompress(apolloCache, { inputEncoding: "BinaryString" }))
+  return JSON.parse(apolloCache)
 }
 
 const getCacheFromLocalStorageAndCurrentPage = returnFalseIfNothingNewFromLocalStorage => {
@@ -118,10 +120,10 @@ export const saveCache = lastKeyQueried => {
       saveCacheKeys = []
   
       lastCacheUpdate = Date.now()
-      localStorage.setItem('apolloCache', lzutf8.compress(JSON.stringify(cacheObj), { outputEncoding: "BinaryString" }))
+      localStorage.setItem('apolloCache', JSON.stringify(cacheObj))
       localStorage.setItem('apolloCacheIndex', cacheIndex)
       localStorage.setItem('apolloCacheLastUpdateTime', lastCacheUpdate)
-  
+
       console.log('cache saved to localStorage')
   
     } catch(e) {

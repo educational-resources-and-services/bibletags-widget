@@ -11,9 +11,6 @@ For more information on this project, see the [Bible Tags website](https://bible
 
 ## Roadmap
 
-* getCorrespondingVerseLocations
-  * Why is it slow getting data if everything is local??
-  * test speed of saving to and restoring from localstorage when there are 10000 keys
 * versifications with all mappings, tests and passing tests (Sarah), then...
   * put ESV and NASB's extraVerseMappings in
     * figure out process for making extraVerseMappings correct for each version with regards to verses with the split verse issue
