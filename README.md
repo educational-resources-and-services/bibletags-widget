@@ -12,6 +12,7 @@ For more information on this project, see the [Bible Tags website](https://bible
 ## Roadmap
 
 * versifications with all mappings, tests and passing tests (Sarah), then...
+  * Check KJV by Alan's data
   * put ESV and NASB's extraVerseMappings in
     * figure out process for making extraVerseMappings correct for each version with regards to verses with the split verse issue
     * since this is something that likely needs to be done by hand, have it flag someone when users start tagging a new translation so we know it is time to do so for that version

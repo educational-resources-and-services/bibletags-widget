@@ -107,8 +107,10 @@ class App extends React.Component {
         break
 
       case 'preload':
-        console.log('preload', data)
         this.setUpLanguage({ settings, options })
+
+        this.setState({ options })
+
         break
 
       case 'show':
