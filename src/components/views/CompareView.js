@@ -2,6 +2,7 @@ import React from 'react'
 // import i18n from '../../utils/i18n.js'
 // import styled from 'styled-components'
 import { restoreCache } from '../smart/Apollo'
+import { formLoc, getPassageStr, usfmToJSON, studyVersions } from '../../utils/helperFunctions.js'
 
 import SmartQuery from '../smart/SmartQuery'
 import View from '../basic/View'
@@ -11,9 +12,10 @@ import Bar from '../basic/Bar'
 import Parallel from '../smart/Parallel'
 import Entry from '../smart/Entry'
 import SearchView from './SearchView'
-import { formLoc, getPassageStr, usfmToJSON } from '../../utils/helperFunctions.js'
+import Progress from '../basic/Progress'
 
 import verseQuery from '../../data/queries/verse'
+import tagSetQuery from '../../data/queries/tagSet'
 
 // const verse = {
 //   id: '0010101-wlc',
@@ -122,6 +124,24 @@ import verseQuery from '../../data/queries/verse'
 //   }
 // `
 
+const wrapInTagSetQueries = ({ tagSetIds, tagSets={}, content }) => {
+  if(tagSetIds.length === 0) return content(tagSets)
+
+  const tagSetId = tagSetIds[0]
+
+  return (
+    <SmartQuery
+      query={tagSetQuery}
+      variables={{ id: tagSetId }}
+    >
+      {({ data: { tagSet } }) => {
+        tagSets[tagSetId] = tagSet && tagSet.tags
+        return wrapInTagSetQueries({ tagSetIds: tagSetIds.slice(1), tagSets, content })
+      }}
+    </SmartQuery>
+  )
+}
+
 class CompareView extends React.PureComponent {
 
   state = {
@@ -178,6 +198,9 @@ class CompareView extends React.PureComponent {
 
     const verseId = `${formLoc(options.versions[0])}-${options.versions[0].versionId}`
 
+    const tagSetIds = ["01001001-esv", "01001001-nasbd"]
+
+
     return (
       <View
         show={show}
@@ -221,10 +244,16 @@ class CompareView extends React.PureComponent {
           </SwitchButtons> */}
         </Bar>
         <SmartQuery
-            query={verseQuery}
-            variables={{ id: verseId }}
+          query={verseQuery}
+          variables={{ id: verseId }}
         >
-          {({ data: { verse } }) => {
+          {({ data: { verse }, loading }) => wrapInTagSetQueries({ tagSetIds, content: tagSets => {
+
+            if(loading || Object.keys(tagSets).length !== tagSetIds.length) {
+              return (
+                <Progress />
+              )
+            }
 
             let wordNum = wordNumInState
 
@@ -252,7 +281,17 @@ class CompareView extends React.PureComponent {
               })
             }
 
+            // const verses = versePieces ? [{ id: verse.id, pieces: versePieces }] : []
             const verses = versePieces ? [{ id: verse.id, pieces: versePieces }] : null
+
+            // ;((options && options.versions) || []).forEach(version => {
+            //   if(!studyVersions[version.versionId]) {
+            //     verses.push({
+            //       id: `${formLoc(version)}-${version.versionId}`,
+            //       pieces: [ version.plaintext ],
+            //     })
+            //   }
+            // })
 
             return (
               <React.Fragment>
@@ -268,7 +307,7 @@ class CompareView extends React.PureComponent {
                 }
               </React.Fragment>
             )
-          }}
+          }})}
         </SmartQuery>
         <SearchView
           options={options}

@@ -1,13 +1,12 @@
 import React from 'react'
 // import i18n from '../../utils/i18n.js'
 import styled from 'styled-components'
-
-import CircularProgress from '@material-ui/core/CircularProgress'
+import { getVersionStr, getMainWordPartIndex, getGrammarColor, getIsEntirelyPrefixAndSuffix } from '../../utils/helperFunctions.js'
 
 import ParallelText from './ParallelText'
 // import ParallelComposite from './ParallelComposite'
 import ParallelHeader from '../basic/ParallelHeader'
-import { getVersionStr, getMainWordPartIndex, getGrammarColor, getIsEntirelyPrefixAndSuffix } from '../../utils/helperFunctions.js'
+import Progress from '../basic/Progress'
 
 // import createCourse from '../../data/mutations/createCourse'
 
@@ -24,11 +23,6 @@ const Word = styled.span`
 
 const SelectedWord = styled.span`
   color: black;
-`
-
-const CircularProgressCont = styled.div`
-  text-align: center;
-  padding: 20px 0 10px;
 `
 
 class Parallel extends React.Component {
@@ -96,9 +90,11 @@ class Parallel extends React.Component {
             ))
           )
           : (
-            <CircularProgressCont>
-              <CircularProgress />
-            </CircularProgressCont>
+            <Progress
+              containerStyle={{
+                paddingBottom: 10,
+              }}
+            />
           )
         }
       </ParallelContainer>

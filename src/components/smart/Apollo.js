@@ -6,7 +6,6 @@ import { BatchHttpLink } from "apollo-link-batch-http"
 import { from } from 'apollo-link'
 // import { ApolloLink, from } from 'apollo-link'
 import { InMemoryCache } from 'apollo-cache-inmemory'
-
 import { hashParametersObject } from '../../utils/helperFunctions.js'
 // import { onFinish } from './AfterwareLink'
 

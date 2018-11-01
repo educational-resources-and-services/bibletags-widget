@@ -1,6 +1,8 @@
 import React from 'react'
 // import i18n from '../../utils/i18n.js'
 import styled from 'styled-components'
+import { getStrongs, getIsEntirelyPrefixAndSuffix } from '../../utils/helperFunctions.js'
+import { getUILanguageCode } from '../../utils/i18n.js'
 
 import SmartQuery from './SmartQuery'
 import Parsing from '../basic/Parsing'
@@ -9,8 +11,7 @@ import EntryWord from '../basic/EntryWord'
 import EntryDetails from '../basic/EntryDetails'
 // import EntryHits from '../basic/EntryHits'
 // import EntrySimilar from '../basic/EntrySimilar'
-import { getStrongs, getIsEntirelyPrefixAndSuffix } from '../../utils/helperFunctions.js'
-import { getUILanguageCode } from '../../utils/i18n.js'
+import Progress from '../basic/Progress.js'
 
 import definitionQuery from '../../data/queries/definition'
 
@@ -48,36 +49,48 @@ class Entry extends React.Component {
           <SmartQuery
             query={definitionQuery}
             variables={{ id: `${strongs}-${getUILanguageCode()}` }}
-            progressContainterStyle={{
-              background: "#BBB",
-              paddingTop: 17,
-              paddingBottom: 15,
-            }}
           >
-            {({ data: { definition: { id, lemma, vocal, hits, gloss, pos } } }) => (
-              <EntrySections>
-                <LeftSide>
-                  <EntrySection bg="#BBB">
-                    <EntryWord
-                      id={id}
-                      lemma={lemma}
-                      vocal={vocal}
-                      hits={hits}
-                    />
-                    <EntryDetails
-                      gloss={gloss}
-                      pos={pos}
-                    />
-                  </EntrySection>
-                  {/* <EntrySection bg="#EEE" style={{ flex: 1, paddingBottom: 45 }}>
-                    <EntrySimilar />
+            {({ loading, data: { definition } }) => {
+
+              if(loading) {
+                return (
+                  <Progress
+                    containterStyle={{
+                      background: "#BBB",
+                      paddingTop: 17,
+                      paddingBottom: 15,
+                    }}
+                  />
+                )
+              }
+
+              const { id, lemma, vocal, hits, gloss, pos } = definition
+
+              return (
+                <EntrySections>
+                  <LeftSide>
+                    <EntrySection bg="#BBB">
+                      <EntryWord
+                        id={id}
+                        lemma={lemma}
+                        vocal={vocal}
+                        hits={hits}
+                      />
+                      <EntryDetails
+                        gloss={gloss}
+                        pos={pos}
+                      />
+                    </EntrySection>
+                    {/* <EntrySection bg="#EEE" style={{ flex: 1, paddingBottom: 45 }}>
+                      <EntrySimilar />
+                    </EntrySection> */}
+                  </LeftSide>
+                  {/* <EntrySection  bg="#DDD">
+                    <EntryHits />
                   </EntrySection> */}
-                </LeftSide>
-                {/* <EntrySection  bg="#DDD">
-                  <EntryHits />
-                </EntrySection> */}
-              </EntrySections>
-            )}
+                </EntrySections>
+              )
+            }}
           </SmartQuery>
         }
       </div>

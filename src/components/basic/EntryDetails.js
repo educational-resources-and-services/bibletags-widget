@@ -1,11 +1,10 @@
 import React from 'react'
 import i18n from '../../utils/i18n.js'
 import styled from 'styled-components'
+import { posTerms } from '../../utils/helperFunctions.js'
 
 // import IconButton from '@material-ui/core/IconButton'
 // import LibraryBooksIcon from '@material-ui/icons/LibraryBooks'
-
-import { posTerms } from '../../utils/helperFunctions.js'
 
 const DetailsLine = styled.div`
   padding-top: 10px;

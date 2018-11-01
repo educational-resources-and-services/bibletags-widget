@@ -1,27 +1,19 @@
 import React from 'react'
 // import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider'
 import { determineUILanguageCode, setUpI18n } from './utils/i18n.js'
-import styled from 'styled-components'
+// import styled from 'styled-components'
 import { setUp, ready, updateHeight, report } from './utils/postMessage.js'
-import { studyVersions, getCorrespondingVerseLocations, splitVerseIntoWords } from './utils/helperFunctions.js'
-
+import { studyVersions, getCorrespondingVerseLocations, splitVerseIntoWords, hashParametersObject } from './utils/helperFunctions.js'
 import Measure from 'react-measure'
-import CircularProgress from '@material-ui/core/CircularProgress'
-
 import Apollo, { restoreCache, client, getStaleState, setStaleTime, getQueryVars } from './components/smart/Apollo'
+
 import CompareView from './components/views/CompareView'
 import Bar from './components/basic/Bar'
-
-import { hashParametersObject } from './utils/helperFunctions.js'
+import Progress from './components/basic/Progress'
 
 import versionInfoQuery from './data/queries/versionInfo'
 
 // const dev = !!window.location.href.match(/localhost/)
-
-const CircularProgressCont = styled.div`
-  text-align: center;
-  padding: 20px 0 25px;
-`
 
 const getVersionInfo = async versionId => {
   if(studyVersions[versionId]) {
@@ -220,9 +212,11 @@ class App extends React.Component {
                     :
                       <div>
                         <Bar />
-                        <CircularProgressCont>
-                          <CircularProgress />
-                        </CircularProgressCont>
+                        <Progress
+                          containerStyle={{
+                            paddingBottom: 25,
+                          }}
+                        />
                       </div>
                   }
                 </div>
