@@ -357,7 +357,7 @@ Number
 window.bibleTagsWidget.show({
 	versions: [{
 		versionId: "esv",
-		plaintext: "In the beginning, God created the heavens and the earth.",
+		usfm: "In the beginning, God created the heavens and the earth.",
 		bookId: 1,
 		chapter: 1,
 		verse: 1,
@@ -370,7 +370,7 @@ window.bibleTagsWidget.show({
 window.bibleTagsWidget.show({
 	versions: [{
 		versionId: "esv",
-		plaintext: "In the beginning, God created the heavens and the earth.",
+		usfm: "In the beginning, God created the heavens and the earth.",
 		bookId: 1,
 		chapter: 1,
 		verse: 1,
@@ -399,8 +399,8 @@ window.bibleTagsWidget.show({
 		verse,
 		contentCallback,
 	}) => {
-		// Get the content for the requested verse and put it in a variabled named `plaintext`.
-		contentCallback({ plaintext });
+		// Get the content for the requested verse and put it in a variabled named `usfm`.
+		contentCallback({ usfm });
 	},
 	jumpToLocation: {
 		includeOptionForBasePassage: false,
@@ -436,21 +436,21 @@ window.bibleTagsWidget.show({
 	versions: [
 		{
 			versionId: "esv",
-			plaintext: "For he chose us in him before the creation of the world to be holy and blameless in his sight. In love",
+			usfm: "For he chose us in him before the creation of the world to be holy and blameless in his sight. In love",
 			bookId: 49,
 			chapter: 1,
 			verse: 4,
 		},
 		{
 			versionId: "exb",
-			plaintext: "That is, in Christ, he chose us before the world was made so that we would be his holy people—people without blame before him.",
+			usfm: "That is, in Christ, he chose us before the world was made so that we would be his holy people—people without blame before him.",
 			bookId: 49,
 			chapter: 1,
 			verse: 4,
 		},
 		{
 			versionId: "exb",
-			plaintext: "Because of his love, God had already decided to make us his own children through Jesus Christ. That was what he wanted and what pleased him,",
+			usfm: "Because of his love, God had already decided to make us his own children through Jesus Christ. That was what he wanted and what pleased him,",
 			bookId: 49,
 			chapter: 1,
 			verse: 5,
@@ -586,7 +586,7 @@ Promise  // resolves to the same value as the callback
 const wordsArray = await window.bibleTagsWidget.splitVerseIntoWords({
 	version: {
 		versionId: "esv",
-		plaintext: "In the beginning, God created the heavens and the earth.",
+		usfm: "In the beginning, God created the heavens and the earth.",
 	},
 // [
 // 	"In",
