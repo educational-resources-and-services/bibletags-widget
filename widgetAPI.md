@@ -21,9 +21,9 @@ General notes:
 - The `bookId` parameters must contain an integer between 1-66 (KJV ordering)
 - The `chapter` parameters must contain an integer between 1-150
 - The `verse` parameters must contain an integer between 0-176 (where 0 is used for psalm headings)
-- The `usfm` parameters must contain [USFM 3](https://ubsicap.github.io/usfm/) format to allow for some inline styles, footnotes and cross references.
+- The `usfm` parameters may contain [USFM 3](https://ubsicap.github.io/usfm/) format markers for some inline styles, footnotes and cross references. Plain text is also acceptable USFM, so long as it does not contain unescaped backslashes. Non-inline styles like chapter markers (\c), verse markers (\v) and paragraph markers (\p) will be ignored. 
 - `wordNum`-like parameters must be >= 1, representing the word number in the verse as split by `splitVerseIntoWords`.
-- Verse content (i.e. `plaintext` or `usfm`) sent to the [show()](#show) function or `fetchVerseCallback`'s `contentCallback` will have its word count checked against the word count of the current tagging of this verse. If there is inconsistency, original language tagging will not be available while the inconsistency awaits review.
+- Verse content (i.e. the `usfm` parameter) sent to the [show()](#show) function or `fetchVerseCallback`'s `contentCallback` will have its word count checked against the word count of the current tagging of this verse. If there is inconsistency, original language tagging will not be available while the inconsistency awaits review.
 
 ## setUp()
 
@@ -186,7 +186,6 @@ window.bibleTagsWidget.preload({
 ```javascript
 versions!: [{
 	versionId!: String,
-	plaintext: String,
 	usfm: String,
 	bookId!: Number,
 	chapter!: Number,
@@ -199,8 +198,9 @@ versions!: [{
 - Will retrieve verse(s) corresponding to the first version as versification can change between versions. If subsequent versions do not properly correspond, they will get ignored. Hence, it is highly recommended that the [getCorrespondingVerseLocations()](#getCorrespondingVerseLocations) function is used before calling this function on multiple versions.
 - The first version may only contain a single verse. However, there are times when subsequent versions require multiple verses to cover the same content present in this single verse of the first version (due to versification descrepencies). In such cases, the additional verses (in full) should simply be added on to the `versions` array. See the final example in the examples section below.
 - `wordNum` will only be taken into account in the first version within which it is found.
-- To only display the original language version, `versions` should contain a single object with the `versionId` set to one of the original language versions (`uhb` or `bhp`), and `plaintext` and `usfm` should be left undefined. This is the only case where `versions` should ever include an object with `versionId` set to an original language version.
-- For each version (except for one of the original language versions), either `plaintext` or `usfm` must be provided.
+- To only display the original language version, `versions` should contain a single object with the `versionId` set to one of the original language versions (`uhb` or `bhp`), and `usfm` can be left undefined. This is the only case where `versions` should ever include an object with `versionId` set to an original language version.
+- For each version other than one of the original language versions, `usfm` is required.
+- `usfm` may contain plain text. (See "General notes" above.)
 
 ```javascript
 anchorEl: HTMLElement
@@ -284,15 +284,14 @@ fetchVerseCallback: Function({
 	chapter: Number,
 	verse: Number,
 	contentCallback: Function({
-		plaintext: String,
-		usfm: String,
+		usfm!: String,
 	}),
 }),
 ```
 
 - **Not yet implemented**
 - Required for search (unless `searchData` is provided) and for USFM cross reference content.
-- The provided `fetchVerseCallback()` function must call `contentCallback()` with either the `plaintext` or `usfm` verse content.
+- The provided `fetchVerseCallback()` function must cause `contentCallback()` to be called in response.
 
 ```javascript
 jumpToLocation: {
@@ -565,12 +564,9 @@ This function allows the embedding site/app to split verses into words in a mann
 ```javascript
 version!: {
 	versionId!: String,
-	plaintext: String,
 	usfm: String,
 }
 ```
-
-- Either `plaintext` or `usfm` must be provided.
 
 ```javascript
 callback: [String] | null  // null, if the versionId is invalid
