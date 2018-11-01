@@ -1,9 +1,9 @@
 import React from 'react'
 // import i18n from '../../utils/i18n.js'
 // import styled from 'styled-components'
-import { graphql, compose } from 'react-apollo'
 import { restoreCache } from '../smart/Apollo'
 
+import SmartQuery from '../smart/SmartQuery'
 import View from '../basic/View'
 import Bar from '../basic/Bar'
 // import SwitchButtons from '../basic/SwitchButtons'
@@ -11,7 +11,6 @@ import Bar from '../basic/Bar'
 import Parallel from '../smart/Parallel'
 import Entry from '../smart/Entry'
 import SearchView from './SearchView'
-import { getDataVar } from '../smart/Apollo'
 import { formLoc, getPassageStr, usfmToJSON } from '../../utils/helperFunctions.js'
 
 import verseQuery from '../../data/queries/verse'
@@ -131,33 +130,21 @@ class CompareView extends React.PureComponent {
     wordNum: null,
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { options } = nextProps
-    const { verse } = getDataVar(nextProps)
-    let { wordNum } = this.state
+  static getDerivedStateFromProps({ options }, { wordNum }) {
+    let returnVal = null
 
-    const hasNewOptions = options && options !== this.props.options
-
-    if(hasNewOptions) {
-      // TODO: work with more than 1 version
-      const firstVersionObj = options && options.versions && options.versions[0]
-      const defaultWordNum = firstVersionObj && parseInt(firstVersionObj.wordNum, 10)
-
-      if(defaultWordNum) {
-        this.setState({ wordNum: defaultWordNum })
-        wordNum = defaultWordNum
-      }
+    if(wordNum === null && options) {
+      ;(options.versions || []).some(version => {
+        if(typeof version.wordNum === 'number') {
+          returnVal = {
+            wordNum: version.wordNum,
+          }
+        }
+        return returnVal
+      })
     }
 
-    if(verse && wordNum) {
-      const versePieces = verse && usfmToJSON(verse.usfm)
-      const numWords = versePieces.filter(verseWord => verseWord.parts).length
-
-      if(wordNum < 1 || wordNum > numWords) {
-        this.setState({ wordNum: null })
-      }
-
-    }
+    return returnVal
   }
 
   hideSearchView = () => this.setState({ showSearchView: false })
@@ -177,8 +164,7 @@ class CompareView extends React.PureComponent {
 
   render() {
     const { options, show, back, style } = this.props 
-    const { verse } = getDataVar(this.props)
-    const { showSearchView, wordNum } = this.state
+    const { showSearchView, wordNum: wordNumInState } = this.state
     // const { showSearchView, mode, wordNum } = this.state
 
     const firstVersionObj = options && options.versions && options.versions[0]
@@ -188,21 +174,9 @@ class CompareView extends React.PureComponent {
     //   chapter: firstVersionObj.chapter,
     // } : false
 
-    const versePieces = verse && usfmToJSON(verse.usfm)
+    if(!options || !(options.versions || []).length) return null
 
-    let wordInfo = null
-    if(versePieces && wordNum !== null) {
-      let wNum = 1
-      versePieces.some(verseWord => {
-        if(verseWord.parts && wordNum === wNum++) {
-          wordInfo = verseWord
-          return true
-        }
-        return false
-      })
-    }
-
-    const verses = versePieces ? [{ id: verse.id, pieces: versePieces }] : null
+    const verseId = `${formLoc(options.versions[0])}-${options.versions[0].versionId}`
 
     return (
       <View
@@ -246,16 +220,56 @@ class CompareView extends React.PureComponent {
             </SwitchButton>
           </SwitchButtons> */}
         </Bar>
-        <Parallel
-          verses={verses}  // TODO
-          wordNum={wordNum}
-          updateWordNum={this.updateWordNum}
-        />
-        {wordNum !== null &&
-          <Entry
-            wordInfo={wordInfo}
-          />
-        }
+        <SmartQuery
+            query={verseQuery}
+            variables={{ id: verseId }}
+        >
+          {({ data: { verse } }) => {
+
+            let wordNum = wordNumInState
+
+            if(verse && wordNum) {
+              const versePieces = verse && usfmToJSON(verse.usfm)
+              const numWords = versePieces.filter(verseWord => verseWord.parts).length
+
+              if(wordNum < 1 || wordNum > numWords) {
+                wordNum = null
+              }
+
+            }
+
+            const versePieces = verse && usfmToJSON(verse.usfm)
+
+            let wordInfo = null
+            if(versePieces && wordNum !== null) {
+              let wNum = 1
+              versePieces.some(verseWord => {
+                if(verseWord.parts && wordNum === wNum++) {
+                  wordInfo = verseWord
+                  return true
+                }
+                return false
+              })
+            }
+
+            const verses = versePieces ? [{ id: verse.id, pieces: versePieces }] : null
+
+            return (
+              <React.Fragment>
+                <Parallel
+                  verses={verses}  // TODO
+                  wordNum={wordNum}
+                  updateWordNum={this.updateWordNum}
+                />
+                {wordNum !== null &&
+                  <Entry
+                    wordInfo={wordInfo}
+                  />
+                }
+              </React.Fragment>
+            )
+          }}
+        </SmartQuery>
         <SearchView
           options={options}
           show={showSearchView}
@@ -267,17 +281,4 @@ class CompareView extends React.PureComponent {
 
 }
 
-const verseQueryOptions = {
-  name: 'verse',
-  skip: ({ options }) => !options || !(options.versions || []).length,
-  options: ({ options }) => ({
-    variables: {
-      // TODO: This needs to support multiple versions at once + translations
-      id: `${formLoc(options.versions[0])}-${options.versions[0].versionId}`,
-    },
-  }),
-}
-
-export default compose(
-  graphql(verseQuery, verseQueryOptions),
-)(CompareView)
+export default CompareView

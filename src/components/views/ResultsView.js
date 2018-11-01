@@ -1,7 +1,6 @@
 import React from 'react'
 import i18n from '../../utils/i18n.js'
 // import styled from 'styled-components'
-// import { graphql, compose } from 'react-apollo'
 
 import View from '../basic/View'
 import Bar from '../basic/Bar'
@@ -69,7 +68,3 @@ class ResultsView extends React.PureComponent {
 }
 
 export default ResultsView
-
-// export default compose(
-//   // graphql(createCourseAdmin, { name: 'createCourseAdmin' }),
-// )(ResultsView)

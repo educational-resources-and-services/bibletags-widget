@@ -1,7 +1,6 @@
 import React from 'react'
 import i18n from '../../utils/i18n.js'
 import styled from 'styled-components'
-import { graphql, compose } from 'react-apollo'
 
 import View from '../basic/View'
 import Entry from '../smart/Entry'
@@ -36,6 +35,4 @@ class WordView extends React.PureComponent {
 
 }
 
-export default compose(
-  // graphql(createCourseAdmin, { name: 'createCourseAdmin' }),
-)(WordView)
+export default WordView

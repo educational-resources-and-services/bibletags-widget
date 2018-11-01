@@ -1,7 +1,6 @@
 import React from 'react'
 import i18n from '../../utils/i18n.js'
 // import styled from 'styled-components'
-// import { graphql, compose } from 'react-apollo'
 
 import Bar from '../basic/Bar'
 import View from '../basic/View'
@@ -66,7 +65,3 @@ class SearchView extends React.PureComponent {
 }
 
 export default SearchView
-
-// export default compose(
-//   // graphql(createCourseAdmin, { name: 'createCourseAdmin' }),
-// )(SearchView)

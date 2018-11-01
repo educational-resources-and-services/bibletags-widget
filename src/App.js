@@ -8,7 +8,7 @@ import { studyVersions, getCorrespondingVerseLocations, splitVerseIntoWords } fr
 import Measure from 'react-measure'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
-import Apollo, { restoreCache, client, getStaleState, setStaleTime, getDataVar } from './components/smart/Apollo'
+import Apollo, { restoreCache, client, getStaleState, setStaleTime, getQueryVars } from './components/smart/Apollo'
 import CompareView from './components/views/CompareView'
 import Bar from './components/basic/Bar'
 
@@ -55,7 +55,7 @@ const getVersionInfo = async versionId => {
         })
       }
 
-      return getDataVar(result).versionInfo || { id: versionId }
+      return getQueryVars(result).versionInfo || { id: versionId }
     }
   )()
 }
