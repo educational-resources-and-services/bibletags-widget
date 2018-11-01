@@ -22,13 +22,18 @@ For more information on this project, see the [Bible Tags website](https://bible
 
 * Ability to send in English verse in plaintext
 * Send in multiple versions
+* Entire chapter preload (chapter and tagSets queries)
+* utilize definitionsByPosition query for when wordnum supplied (so only a single back-and-forth is needed)
+* Decide on orig version names and ids
+* Decide on a lemma/strongs/etc system after talking with Jesse and Alan (and Andy and DeRouchie?)
 * Get Greek NT working
 * Get LXX working
 * infoCallback
 * Authentication
 * After I have graphql queries which receive arrays in return, see if my cache -> localstorage strategy works still
 * Get basic tagging functionality working
-* Get working for other languages
+* Set up ParallelComposite (texts weaved together, and not just one above the other)
+* Get working for other languages (uiWords query)
 * Test that uiLanguageCode works correctly
 * hideVerse
 * hideOriginal
@@ -71,6 +76,7 @@ Post-launch:
 * Add in the ability to edit and verify parsings
 * Write an original language reference tagger using Biblearc
 * Make an npm module for using in a React app
+* Consider prefetching definitions before they are clicked on when a verse is shown (not for preload in utility instance)
 * Offline
 * Create the React Native template apps
 * containerElTargetScroll
