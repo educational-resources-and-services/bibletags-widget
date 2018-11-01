@@ -506,7 +506,7 @@ baseVersion!: {
 ```
 
 ```javascript
-lookupVersions!: [String]
+lookupVersionIds!: [String]
 ```
 
 ```javascript
@@ -536,7 +536,7 @@ const correspondingVerseLocations = await window.bibleTagsWidget.getCorrespondin
 		chapter: 1,
 		verse: 1,
 	},
-	lookupVersions: ["nasb", "niv"]
+	lookupVersionIds: ["nasb", "niv"]
 })
 // {
 // 	nasb: [{

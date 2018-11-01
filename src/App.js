@@ -56,7 +56,7 @@ class App extends React.Component {
 
   state = {
     uiLanguageCode: "eng",
-    options: null,
+    options: {},
   }
 
   componentDidMount() {
@@ -127,14 +127,14 @@ class App extends React.Component {
         
       case 'getCorrespondingVerseLocations':
 
-        let { baseVersion, lookupVersions } = options
+        let { baseVersion, lookupVersionIds } = options
         const lookupVersionInfos = []
       
         await Promise.all([
           (async () => {
             baseVersion.versionInfo = await getVersionInfo(baseVersion.versionId)
           })(),
-          ...lookupVersions.map(async (versionId, index) => {
+          ...lookupVersionIds.map(async (versionId, index) => {
             lookupVersionInfos[index] = await getVersionInfo(versionId)
           }),
         ])
