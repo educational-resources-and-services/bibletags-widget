@@ -22,7 +22,7 @@ export const formLoc = ({ bookId, chapter, verse }) => (
 
 export const studyVersions = {
   oshb: {
-    versionInfo: {
+    info: {
       id: 'oshb',
       partialScope: 'ot',
       versificationModel: 'original',
@@ -30,7 +30,7 @@ export const studyVersions = {
     language: 'heb',
   },
   bhp: {
-    versionInfo: {
+    info: {
       id: 'bhp',
       partialScope: 'nt',
       versificationModel: 'original',
@@ -38,7 +38,7 @@ export const studyVersions = {
     language: 'grc',
   },
   lxx: {
-    versionInfo: {
+    info: {
       id: 'lxx',
       partialScope: 'ot',
       versificationModel: 'original',
@@ -430,19 +430,22 @@ export const getCorrespondingVerseLocations = ({ baseVersion={}, lookupVersionIn
   const correspondingVerseLocations = {}
 
   lookupVersionInfos.forEach(lookupVersionInfo => {
-    correspondingVerseLocations[lookupVersionInfo.id] = getCorrespondingVerseLocation({ baseVersion, lookupVersionInfo });
+    correspondingVerseLocations.push({
+      id: lookupVersionInfo.id,
+      refs: getCorrespondingVerseLocation({ baseVersion, lookupVersionInfo }),
+    })
   })
 
   return correspondingVerseLocations
 }
 
-export const splitVerseIntoWords = ({ plaintext, usfm, wordDividerRegex }={}) => {
+export const splitVerseIntoWords = ({ ref: { usfm }, wordDividerRegex }={}) => {
 
   const wordDividerRegexRewritten = new RegExp(rewritePattern(wordDividerRegex || '[\\P{L}]+', 'u', {
     unicodePropertyEscape: true,
   }), 'g')
 
-  return plaintext
+  return usfm
 
     // escape apostraphes
     .replace(/(\w)’(\w)/g, "$1ESCAPEDAPOSTRAPHE$2")

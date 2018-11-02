@@ -15,9 +15,9 @@ import versionInfoQuery from './data/queries/versionInfo'
 
 // const dev = !!window.location.href.match(/localhost/)
 
-const getVersionInfo = async versionId => {
-  if(studyVersions[versionId]) {
-    return studyVersions[versionId].versionInfo
+const getVersionInfo = async id => {
+  if(studyVersions[id]) {
+    return studyVersions[id].info
   }
 
   return await (
@@ -26,14 +26,14 @@ const getVersionInfo = async versionId => {
       // check a stale time. When it is stale, still use the cache (for instant results), but
       // make a second query as well that forces a new fetch via the network.
 
-      const cacheKey = `VersionInfo:${versionId}`
+      const cacheKey = `VersionInfo:${id}`
       const isStale = getStaleState(cacheKey)
 
       const getResult = fetchPolicy => (
         client.query({
           query: versionInfoQuery,
           variables: {
-            id: versionId,
+            id,
           },
           fetchPolicy,
         })
@@ -47,7 +47,7 @@ const getVersionInfo = async versionId => {
         })
       }
 
-      return getQueryVars(result).versionInfo || { id: versionId }
+      return getQueryVars(result).versionInfo || { id }
     }
   )()
 }
@@ -132,7 +132,7 @@ class App extends React.Component {
       
         await Promise.all([
           (async () => {
-            baseVersion.versionInfo = await getVersionInfo(baseVersion.versionId)
+            baseVersion.info = await getVersionInfo(baseVersion.id)
           })(),
           ...lookupVersionIds.map(async (versionId, index) => {
             lookupVersionInfos[index] = await getVersionInfo(versionId)
@@ -152,11 +152,11 @@ class App extends React.Component {
       case 'splitVerseIntoWords':
 
         const { version={} } = options
-        const { versionId } = version
+        const { id } = version
         let words = null
 
-        if(versionId) {
-          const { name, wordDividerRegex } = await getVersionInfo(versionId)
+        if(id) {
+          const { name, wordDividerRegex } = await getVersionInfo(id)
 
           if(name !== undefined) {
             words = splitVerseIntoWords({
