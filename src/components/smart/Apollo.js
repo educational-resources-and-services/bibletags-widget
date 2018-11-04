@@ -173,12 +173,12 @@ export const client = new ApolloClient({
   cache,
 })
 
-export const getQueryVars = ({ queryInfo, varSuffix='' }) => {
+export const getQueryVars = ({ queryInfo, queryVarSuffix='' }) => {
 
   const queryVars = {}
 
   for(let key in queryInfo) {
-    queryVars[`${key}${varSuffix}`] = queryInfo[key]
+    queryVars[`${key}${queryVarSuffix}`] = queryInfo[key]
   }
 
   if(queryInfo.networkStatus === 7) {

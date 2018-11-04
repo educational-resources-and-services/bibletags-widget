@@ -3,9 +3,10 @@ import React from 'react'
 import { determineUILanguageCode, setUpI18n } from './utils/i18n.js'
 // import styled from 'styled-components'
 import { setUp, ready, updateHeight, report } from './utils/postMessage.js'
-import { studyVersions, getCorrespondingVerseLocations, splitVerseIntoWords, hashParametersObject } from './utils/helperFunctions.js'
+import { origLangAndLXXVersions, splitVerseIntoWords, hashParametersObject } from './utils/helperFunctions.js'
 import Measure from 'react-measure'
 import Apollo, { restoreCache, client, getStaleState, setStaleTime, getQueryVars } from './components/smart/Apollo'
+import { getCorrespondingVerseLocation } from 'bibletags-versification'
 
 import CompareView from './components/views/CompareView'
 import Bar from './components/basic/Bar'
@@ -16,8 +17,8 @@ import versionInfoQuery from './data/queries/versionInfo'
 // const dev = !!window.location.href.match(/localhost/)
 
 const getVersionInfo = async id => {
-  if(studyVersions[id]) {
-    return studyVersions[id].info
+  if(origLangAndLXXVersions[id]) {
+    return origLangAndLXXVersions[id].info
   }
 
   return await (
@@ -39,15 +40,15 @@ const getVersionInfo = async id => {
         })
       )
 
-      const result = await getResult("cache-first")
-      
+      const queryInfo = await getResult("cache-first")
+
       if(isStale) {
         getResult("network-only").then(() => {
           setStaleTime({ cacheKey, staleTime: Date.now() + (1000 * 60 * 60 * 24) })  // set to expire in 1 day
         })
       }
 
-      return getQueryVars(result).versionInfo || { id }
+      return getQueryVars({ queryInfo }).data.versionInfo || { id }
     }
   )()
 }
@@ -129,7 +130,8 @@ class App extends React.Component {
 
         let { baseVersion, lookupVersionIds } = options
         const lookupVersionInfos = []
-      
+        const verseLocations = []
+
         await Promise.all([
           (async () => {
             baseVersion.info = await getVersionInfo(baseVersion.id)
@@ -138,12 +140,19 @@ class App extends React.Component {
             lookupVersionInfos[index] = await getVersionInfo(versionId)
           }),
         ])
-        
+
+        lookupVersionInfos.forEach(lookupVersionInfo => {
+          verseLocations.push({
+            id: lookupVersionInfo.id,
+            refs: getCorrespondingVerseLocation({ baseVersion, lookupVersionInfo }),
+          })
+        })
+
         report({
           action: 'reportCorrespondingVerseLocations',
           payload: {
             actionIndex,
-            verseLocations: getCorrespondingVerseLocations({ baseVersion, lookupVersionInfos }),
+            verseLocations,
           },
         })
 

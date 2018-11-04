@@ -21,6 +21,7 @@ For more information on this project, see the [Bible Tags website](https://bible
     * figure out litmus test verses to figure out versificationModel, partialScope, skipsUnlikelyOriginals
 
 * Ability to send in English verse in plaintext
+  * Show a, b or c after verse number when it is not complete by referencing the wordRange value returned from getCorrespondingVerseLocation (Eg. 12:3b)
 * Send in multiple versions
 * Entire chapter preload (chapter and tagSets queries)
 * utilize definitionsByPosition query for when wordnum supplied (so only a single back-and-forth is needed)
@@ -34,6 +35,8 @@ For more information on this project, see the [Bible Tags website](https://bible
 * Get basic tagging functionality working
 * Set up ParallelComposite (texts weaved together, and not just one above the other)
 * Get working for other languages (uiWords query)
+  * Should lang codes only be 3-digit? (i.e. no eng-gb?) Think about Chinese as another example
+  * Think about different ways besides chap:verse that translations represent ref's
 * Test that uiLanguageCode works correctly
 * hideVerse
 * hideOriginal
@@ -55,6 +58,7 @@ For more information on this project, see the [Bible Tags website](https://bible
   * Examine mock ups and docs to see what remain of initial design and add them to the roadmap
 * Test all implemented aspects of the API
 * Do first beta releases
+* Have API parameters checked and errors properly thrown when they are invalid (TypeScript?)
 * Get working on Biblearc
 * Get marketing site working (with ways to stay in contact/contribute/etc)
 * Make API docs an HTML file at bibletags.org

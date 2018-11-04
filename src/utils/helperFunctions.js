@@ -1,6 +1,5 @@
 import i18n from './i18n.js'
 import rewritePattern  from 'regexpu-core'
-import { getCorrespondingVerseLocation } from 'bibletags-versification'
 
 const i18nBook = str => i18n(str, {}, "", "book")
 const i18nGrammar = str => i18n(str, {}, "", "grammar")
@@ -20,7 +19,9 @@ export const formLoc = ({ bookId, chapter, verse }) => (
   `${('0'+bookId).substr(-2)}${('00'+chapter).substr(-3)}${('00'+verse).substr(-3)}`
 )
 
-export const studyVersions = {
+export const getOrigLangVersionIdFromRef = ref => ref.bookId <= 39 ? 'oshb' : 'bhp'
+
+export const origLangAndLXXVersions = {
   oshb: {
     info: {
       id: 'oshb',
@@ -41,28 +42,26 @@ export const studyVersions = {
     info: {
       id: 'lxx',
       partialScope: 'ot',
-      versificationModel: 'original',
+      versificationModel: 'lxx',
     },
     language: 'grc',
   },
 }
 
-export const studyLanguage = {
+export const origLanguages = {
   heb: i18n("Hebrew"),
   grc: i18n("Greek"),
 }
 
-export const getVersionStr = versionId => {
-
-  return studyVersions[versionId]
-    ? `${studyLanguage[studyVersions[versionId].language]} (${versionId.toUpperCase()})`
+export const getVersionStr = versionId => (
+  origLangAndLXXVersions[versionId]
+    ? `${origLanguages[origLangAndLXXVersions[versionId].language]} (${versionId.toUpperCase()})`
     : versionId.toUpperCase()
+)
 
-}
-
-export const getPassageStr = ({ bookId, chapter, verse }) => {
-  return `${getBibleBookName(bookId)} ${chapter}` + (verse != null ? `:${verse}` : ``)
-}
+export const getPassageStr = ({ bookId, chapter, verse }) => (
+  getBibleBookName(bookId) + (chapter == null ? `` : (` ${chapter}` + (verse == null ? `` : `:${verse}`)))
+)
 
 export const getBibleBookName = bookid => {
 
@@ -424,20 +423,6 @@ export const getMainWordPartIndex = wordParts => (wordParts ? (wordParts.length 
 export const getStrongs = wordInfo => (wordInfo ? (wordInfo.attributes.strong || '').replace(/^[a-z]+:/, '') : '')
 
 export const getIsEntirelyPrefixAndSuffix = wordInfo => (wordInfo && !getStrongs(wordInfo))
-
-export const getCorrespondingVerseLocations = ({ baseVersion={}, lookupVersionInfos=[] }={}) => {
-  
-  const correspondingVerseLocations = {}
-
-  lookupVersionInfos.forEach(lookupVersionInfo => {
-    correspondingVerseLocations.push({
-      id: lookupVersionInfo.id,
-      refs: getCorrespondingVerseLocation({ baseVersion, lookupVersionInfo }),
-    })
-  })
-
-  return correspondingVerseLocations
-}
 
 export const splitVerseIntoWords = ({ ref: { usfm }, wordDividerRegex }={}) => {
 
