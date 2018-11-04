@@ -28,7 +28,7 @@ const getVersionInfo = async id => {
       // make a second query as well that forces a new fetch via the network.
 
       const cacheKey = `VersionInfo:${id}`
-      const isStale = getStaleState(cacheKey)
+      const staleState = getStaleState(cacheKey)
 
       const getResult = fetchPolicy => (
         client.query({
@@ -43,10 +43,11 @@ const getVersionInfo = async id => {
       const queryInfo = await getResult("cache-first")
       const oneDayInTheFuture = Date.now() + (1000 * 60 * 60 * 24)
 
-      if(isStale) {
-        getResult("network-only").then(() => {
-          setStaleTime({ cacheKey, staleTime: oneDayInTheFuture })
-        })
+      if(staleState <= 0) {
+        if(staleState === 0) {
+          getResult("network-only")
+        }
+        setStaleTime({ cacheKey, staleTime: oneDayInTheFuture })
       }
 
       return getQueryVars({ queryInfo }).data.versionInfo || { id }

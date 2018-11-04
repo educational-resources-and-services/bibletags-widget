@@ -60,6 +60,7 @@ For more information on this project, see the [Bible Tags website](https://bible
 * Do first beta releases
 * Have API parameters checked and errors properly thrown when they are invalid (TypeScript?)
 * Get working on Biblearc
+* Check for unnecessary renders (I found one related to the Measure component)
 * Get marketing site working (with ways to stay in contact/contribute/etc)
 * Make API docs an HTML file at bibletags.org
 * Explain somewhere that the KJV book ordering is used with an example mapping function (with an actual translation that has different ordering) https://github.com/openscriptures/BibleOrgSys/tree/master/DataFiles/BookOrders

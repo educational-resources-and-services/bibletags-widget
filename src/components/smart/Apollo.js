@@ -87,7 +87,7 @@ export const saveCache = lastKeyQueried => {
   if(!saveCacheKeys.includes(lastKeyQueried)) {
     saveCacheKeys.push(lastKeyQueried)
   }
-  
+
   setTimeout(() => {
     if(saveCacheKeys.length === 0) return
 
@@ -135,8 +135,19 @@ export const saveCache = lastKeyQueried => {
 }
 
 export const getStaleState = cacheKey => {
+  // returns...
+  //    -1 if there is no cache obj or cache value
+  //    0 if the cache value is stale
+  //    1 if it is good
+
   const cacheObj = cache.extract()
-  return cacheObj[cacheKey] && cacheObj[cacheKey].__x && cacheObj[cacheKey].__x < Date.now()
+  return (!cacheObj[cacheKey] || !cacheObj[cacheKey].__x)
+    ? -1
+    : (
+      cacheObj[cacheKey].__x < Date.now()
+        ? 0
+        : 1
+    )
 }
 
 export const setStaleTime = ({ cacheKey, staleTime }) => {
