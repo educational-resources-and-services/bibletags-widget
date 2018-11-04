@@ -41,10 +41,11 @@ const getVersionInfo = async id => {
       )
 
       const queryInfo = await getResult("cache-first")
+      const oneDayInTheFuture = Date.now() + (1000 * 60 * 60 * 24)
 
       if(isStale) {
         getResult("network-only").then(() => {
-          setStaleTime({ cacheKey, staleTime: Date.now() + (1000 * 60 * 60 * 24) })  // set to expire in 1 day
+          setStaleTime({ cacheKey, staleTime: oneDayInTheFuture })
         })
       }
 

@@ -36,6 +36,8 @@ class Entry extends React.Component {
 
     const isEntirelyPrefixAndSuffix = getIsEntirelyPrefixAndSuffix(wordInfo)
     const strongs = getStrongs(wordInfo)
+    const id = `${strongs}-${getUILanguageCode()}`
+    const oneDayInTheFuture = Date.now() + (1000 * 60 * 60 * 24)
 
     return (
       <div>
@@ -48,7 +50,9 @@ class Entry extends React.Component {
         {!isEntirelyPrefixAndSuffix && strongs &&
           <SmartQuery
             query={definitionQuery}
-            variables={{ id: `${strongs}-${getUILanguageCode()}` }}
+            variables={{ id }}
+            staleTime={oneDayInTheFuture}
+            cacheKey={`Definition:${id}`}
           >
             {({ loading, data: { definition } }) => {
 
