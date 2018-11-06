@@ -82,18 +82,18 @@ const usfmMarkersToKeep = [
 
 ]
 
-const getFilteredVerseObjects = tagObjs => tagObjs.filter(tagObj => {
-  const { tag, text, type, children } = tagObj
+const getFilteredVerseObjects = unitObjs => unitObjs.filter(unitObj => {
+  const { tag, text, type, children } = unitObj
 
-  // get rid of all unsupported tags which do NOT have content to keep
+  // get rid of all unsupported markers which do NOT have content to keep
   // if(usfmMarkersWithContentToDiscard.includes(tag)) return false
   // It seems that usfmMarkersWithContentToDiscard is not needed, since usfm-js distinguishes between content and text,
   // and so if something is not in usfmMarkersToKeep and has no text, we just get rid of it.
   
-  // convert all unsupported tags which DO have content to keep into type=text
+  // convert all unsupported markers which DO have content to keep into type=text
   if(!usfmMarkersToKeep.includes(tag)) {
     if(!text && !children) return false
-    // tagObj.type = "text"
+    // unitObj.type = "text"
   }
 
   // change all .text to .children
@@ -102,16 +102,16 @@ const getFilteredVerseObjects = tagObjs => tagObjs.filter(tagObj => {
       // type: "text",
       text,
     })
-    delete tagObj.text
+    delete unitObj.text
   }
 
   // make consistent with marker objects to be created
   if(type === 'text') {
-    delete tagObj.type
+    delete unitObj.type
   }
 
   if(children) {
-    tagObj.children = getFilteredVerseObjects(children)
+    unitObj.children = getFilteredVerseObjects(children)
   }
 
   return true
@@ -134,49 +134,49 @@ const splitOnWords = ({ text, regexes }) => {
     .filter(word => word !== "")
 }
 
-const reduceLevels = tagObjs => (
-  tagObjs.map(tagObj => {
-    if(tagObj.children) {
-      tagObj.children = reduceLevels(tagObj.children)
-      if(tagObj.children.length === 1) {
-        const onlyChild = tagObj.children[0]
-        if(Object.keys(tagObj).every(key => onlyChild[key] === tagObj[key] || typeof onlyChild[key] === 'undefined')) {
-          delete tagObj.children
+const reduceLevels = unitObjs => (
+  unitObjs.map(unitObj => {
+    if(unitObj.children) {
+      unitObj.children = reduceLevels(unitObj.children)
+      if(unitObj.children.length === 1) {
+        const onlyChild = unitObj.children[0]
+        if(Object.keys(unitObj).every(key => onlyChild[key] === unitObj[key] || typeof onlyChild[key] === 'undefined')) {
+          delete unitObj.children
           return {
-            ...tagObj,
+            ...unitObj,
             ...onlyChild,
           }
         }
       }
     }
-    return tagObj
+    return unitObj
   })
 )
 
-const filterOutEmptyObjects = tagObjs => (
-  tagObjs.filter(tagObj => {
-    const { text, children, content } = tagObj
+const filterOutEmptyObjects = unitObjs => (
+  unitObjs.filter(unitObj => {
+    const { text, children, content } = unitObj
 
     if(!text && (!children || !children.length) && !content) {
       return false
     }
 
     if(children) {
-      tagObj.children = filterOutEmptyObjects(children)
+      unitObj.children = filterOutEmptyObjects(children)
     }
 
     return true
   })
 )
 
-const getNewTagObjWithUnlistedChildrenFilterOut = ({ tagObj, list }) => ({
-  ...tagObj,
-  ...(tagObj.children
+const getNewTagObjWithUnlistedChildrenFilterOut = ({ unitObj, list }) => ({
+  ...unitObj,
+  ...(unitObj.children
     ? {
       children: (
-        tagObj.children
+        unitObj.children
           .filter(child => list.includes(child))
-          .map(child => getNewTagObjWithUnlistedChildrenFilterOut({ tagObj: child, list }))
+          .map(child => getNewTagObjWithUnlistedChildrenFilterOut({ unitObj: child, list }))
       ),
     }
     : {}
@@ -188,16 +188,16 @@ const getGroupedVerseObjects = ({ filteredVerseObjects, regexes }) => {
   const includesEmptyWordDividers = regexes.wordDividerStartToEnd.test("")
   const splitWordFixesInfo = []
 
-  const getGroupedVerseObjectsRecursive = ({ tagObjs, ancestorLine: passedInAncestorLine, splitWordInfo }) => {
+  const getGroupedVerseObjectsRecursive = ({ unitObjs, ancestorLine: passedInAncestorLine, splitWordInfo }) => {
 
-    tagObjs.forEach((tagObj, tagObjIndex) => {
-      const { text, children } = tagObj
-      const ancestorLine = [ ...(passedInAncestorLine || []), tagObjs, tagObj ]
+    unitObjs.forEach((unitObj, unitObjIndex) => {
+      const { text, children } = unitObj
+      const ancestorLine = [ ...(passedInAncestorLine || []), unitObjs, unitObj ]
 
       if(text) {
         const textSplitOnWords = splitOnWords({ text, regexes })
 
-        tagObj.children = textSplitOnWords.map(wordOrWordDivider => {
+        unitObj.children = textSplitOnWords.map(wordOrWordDivider => {
           const doesNotHaveWord = regexes.wordDividerStartToEnd.test(wordOrWordDivider)
           return {
             text: wordOrWordDivider,
@@ -205,11 +205,11 @@ const getGroupedVerseObjects = ({ filteredVerseObjects, regexes }) => {
           }
         })
 
-        delete tagObj.text
+        delete unitObj.text
 
         if(splitWordInfo) {
 
-          const firstChild = tagObj.children[0]
+          const firstChild = unitObj.children[0]
 
           if(firstChild.type === "word") {
             const {
@@ -227,7 +227,7 @@ const getGroupedVerseObjects = ({ filteredVerseObjects, regexes }) => {
             }
             const word2PartInfo = {
               obj: firstChild,
-              arrayContainingObj: tagObj.children,
+              arrayContainingObj: unitObj.children,
               childOfCommonAncestor: ancestorLine[ancestorLine.indexOf(commonAncestorArray) + 1],
             }
             const word2AncestorList = [
@@ -269,23 +269,23 @@ const getGroupedVerseObjects = ({ filteredVerseObjects, regexes }) => {
           splitWordInfo = null
         }
         
-        const lastChild = tagObj.children[tagObj.children.length - 1]
+        const lastChild = unitObj.children[unitObj.children.length - 1]
         splitWordInfo = lastChild.type === "word" && !includesEmptyWordDividers
           ? {
-            arrayWhichEndsWithWord: tagObj.children,
-            ancestorLineWhichEndsWithWord: [ tagObj.children, lastChild ],
-            commonAncestorArray: tagObjs,
-            indexOfChildOfCommonAncestor: tagObjIndex,
+            arrayWhichEndsWithWord: unitObj.children,
+            ancestorLineWhichEndsWithWord: [ unitObj.children, lastChild ],
+            commonAncestorArray: unitObjs,
+            indexOfChildOfCommonAncestor: unitObjIndex,
           }
           : null
 
       } else if(children) {
         const childrenInfo = getGroupedVerseObjectsRecursive({
-          tagObjs: children,
+          unitObjs: children,
           ancestorLine,
           splitWordInfo,
         })
-        tagObj.children = childrenInfo.groupedVerseObjects
+        unitObj.children = childrenInfo.groupedVerseObjects
         splitWordInfo = childrenInfo.splitWordInfo && !includesEmptyWordDividers
           ? {
             ...childrenInfo.splitWordInfo,
@@ -294,20 +294,20 @@ const getGroupedVerseObjects = ({ filteredVerseObjects, regexes }) => {
               childrenInfo.splitWordInfo.commonAncestorArray,
               childrenInfo.splitWordInfo.commonAncestorArray[childrenInfo.splitWordInfo.indexOfChildOfCommonAncestor],
             ],
-            commonAncestorArray: tagObjs,
-            indexOfChildOfCommonAncestor: tagObjIndex,
+            commonAncestorArray: unitObjs,
+            indexOfChildOfCommonAncestor: unitObjIndex,
           }
           : null
       }
     })
 
     return {
-      groupedVerseObjects: tagObjs,
+      groupedVerseObjects: unitObjs,
       splitWordInfo,
     }
   }
 
-  let { groupedVerseObjects } = getGroupedVerseObjectsRecursive({ tagObjs: filteredVerseObjects })
+  let { groupedVerseObjects } = getGroupedVerseObjectsRecursive({ unitObjs: filteredVerseObjects })
 
   splitWordFixesInfo.forEach(splitWordFixInfo => {
     const { wordPartsInfo, ancestorList, commonAncestorArray } = splitWordFixInfo
@@ -322,7 +322,7 @@ const getGroupedVerseObjects = ({ filteredVerseObjects, regexes }) => {
         const objIndex = arrayContainingObj.indexOf(obj)
         
         const newChild = getNewTagObjWithUnlistedChildrenFilterOut({
-          tagObj: childOfCommonAncestor,
+          unitObj: childOfCommonAncestor,
           list: ancestorList,
         })
 
