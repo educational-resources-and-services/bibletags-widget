@@ -309,11 +309,11 @@ class CompareView extends React.PureComponent {
           querySets={this.getVersionInfoQuerySets()}
           staleTime={oneDayInTheFuture}
         >
-          {({ queryVarSets, isAllLoaded }) => {
+          {versionInfoData => {
 
-            if(!isAllLoaded()) return <Progress />
+            if(!versionInfoData.isAllLoaded()) return <Progress />
 
-            const { commonRef, origLangAndLXXVerseIds, tagSetIds, hasMisallignment } = this.getVerseAndTagSetQueryVars(queryVarSets)
+            const { commonRef, origLangAndLXXVerseIds, tagSetIds, hasMisallignment } = this.getVerseAndTagSetQueryVars(versionInfoData.queryVarSets)
 
             return (
               <SmartQueries
@@ -381,6 +381,8 @@ class CompareView extends React.PureComponent {
                       versions.forEach(({ id, refs }) => {
                         if(id === 'lxx') return
 
+                        const { wordDividerRegex } = versionInfoData.queryVarSets[id].data.versionInfo
+
                         refs.forEach(ref => {
 
                           const loc = getLocFromRef(ref)
@@ -405,7 +407,7 @@ class CompareView extends React.PureComponent {
 
                             version.refs.push({
                               loc,
-                              pieces: getPiecesFromUSFM({ usfm }),
+                              pieces: getPiecesFromUSFM({ usfm, wordDividerRegex }),
                             })
                           }
                         })

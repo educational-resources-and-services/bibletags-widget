@@ -349,9 +349,8 @@ export const getPiecesFromUSFM = ({ usfm='', wordDividerRegex, isOrigLangOrLXXVe
   const usfmWithoutChapterAndVerse = usfm.replace(/^(?:.|\r\n|\r|\n)*\\c [0-9]+(?:.|\r\n|\r|\n)*\\v [0-9]+ */g, '')
   const { verseObjects } = usfmJS.toJSON(`\\c 1 \\v 1 ${usfmWithoutChapterAndVerse}`).chapters["1"]["1"]
 
-console.log('verseObjects', JSON.parse(JSON.stringify(verseObjects)))
+  if(isOrigLangOrLXXVersion) return verseObjects
 
-// wordDividerRegex = '(?:[\\P{L}]+|)'
   const regexes = {
     wordDividerInGroupGlobal: new RegExp(rewritePattern(`(${wordDividerRegex || '[\\P{L}]+'})`, 'u', {
       unicodePropertyEscape: true,
@@ -361,8 +360,6 @@ console.log('verseObjects', JSON.parse(JSON.stringify(verseObjects)))
     })),
   }
 
-  if(isOrigLangOrLXXVersion) return verseObjects
-
   const filteredVerseObjects = getFilteredVerseObjects(verseObjects)
 
   const groupedVerseObjects = getGroupedVerseObjects({
@@ -370,11 +367,7 @@ console.log('verseObjects', JSON.parse(JSON.stringify(verseObjects)))
     regexes,
   })
 
-    // error if there is a single tag that is both multi-word but only part of one of the words
-
   return groupedVerseObjects
-
-{/* https://github.com/translationCoreApps/usfm-js/tree/master/__tests__/resources */}
 }
 
 export const splitVerseIntoWords = ({ ref: { usfm }, wordDividerRegex }={}) => {
