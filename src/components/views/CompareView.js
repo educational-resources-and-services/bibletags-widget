@@ -2,8 +2,9 @@ import React from 'react'
 // import i18n from '../../utils/i18n.js'
 // import styled from 'styled-components'
 import { restoreCache } from '../smart/Apollo'
-import { formLoc, getPassageStr, usfmToJSON, origLangAndLXXVersions, getOrigLangVersionIdFromRef } from '../../utils/helperFunctions.js'
-import { getCorrespondingVerseLocation, isValidRefInOriginal } from 'bibletags-versification'
+import { getPassageStr, origLangAndLXXVersions, getOrigLangVersionIdFromRef } from '../../utils/helperFunctions.js'
+import { getPiecesFromUSFM } from '../../utils/splitting.js'
+import { getCorrespondingVerseLocation, isValidRefInOriginal, getLocFromRef, getRefFromLoc } from 'bibletags-versification'
 
 import SmartQuery from '../smart/SmartQuery'
 import SmartQueries from '../smart/SmartQueries'
@@ -193,7 +194,7 @@ class CompareView extends React.PureComponent {
   
     if(origLangAndLXXVersions[baseVersion.id]) {
       if(isValidRefInOriginal(baseVersion.ref)) {
-        origLangAndLXXVerseIds = [`${formLoc(baseVersion.ref)}-${baseVersion.id}`]
+        origLangAndLXXVerseIds = [`${getLocFromRef(baseVersion.ref)}-${baseVersion.id}`]
         tagSetIds = []
       }
   
@@ -206,7 +207,7 @@ class CompareView extends React.PureComponent {
 
       if(origLangRefs) {
         updateCommonRef(origLangRefs)
-        origLangAndLXXVerseIds = origLangRefs.map(ref => `${formLoc(ref)}-${origLangVersionId}`)
+        origLangAndLXXVerseIds = origLangRefs.map(ref => `${getLocFromRef(ref)}-${origLangVersionId}`)
         tagSetIds = []
   
         versions.forEach(version => {
@@ -220,8 +221,8 @@ class CompareView extends React.PureComponent {
             if(neededRefs) {
               updateCommonRef(neededRefs)
   
-              const neededLocs = neededRefs.map(ref => formLoc(ref))
-              const passedInLocs = version.refs.map(ref => formLoc(ref))
+              const neededLocs = neededRefs.map(ref => getLocFromRef(ref))
+              const passedInLocs = version.refs.map(ref => getLocFromRef(ref))
   
               if(neededLocs.every(loc => passedInLocs.includes(loc))) {
                 tagSetIds = [
@@ -248,7 +249,7 @@ class CompareView extends React.PureComponent {
   
       if(neededRefs) {
         updateCommonRef(neededRefs)
-        const neededIds = neededRefs.map(ref => `${formLoc(ref)}-lxx`)
+        const neededIds = neededRefs.map(ref => `${getLocFromRef(ref)}-lxx`)
   
         origLangAndLXXVerseIds = [
           ...origLangAndLXXVerseIds,
@@ -354,28 +355,93 @@ class CompareView extends React.PureComponent {
                         )
                       }
 
+                      const preppedVersions = []
 
-                      console.log('verseData.queryVarSets', verseData.queryVarSets)
-                      console.log('tagSetData.queryVarSets', tagSetData.queryVarSets)
+                      // Add orig languages and LXX to preppedVersions
+                      origLangAndLXXVerseIds.forEach(id => {
+                        const [ loc, versionId ] = id.split('-')
+                        const { usfm } = verseData.queryVarSets[id].data.verse || {}
+                        const pieces = getPiecesFromUSFM({ usfm, isOrigLangOrLXXVersion: true })
+
+                        const key = versionId === 'lxx' ? 1 : 0
+
+                        if(!preppedVersions[key]) {
+                          preppedVersions[key] = {
+                            id: versionId,
+                            refs: [],
+                          }
+                        }
+                        preppedVersions[key].refs.push({
+                          loc,
+                          pieces,
+                        })
+                      })
+
+                      // Add translations to preppedVersions
+                      versions.forEach(({ id, refs }) => {
+                        if(id === 'lxx') return
+
+                        refs.forEach(ref => {
+
+                          const loc = getLocFromRef(ref)
+
+                          if(tagSetData.queryVarSets[`${loc}-${id}`]) {
+
+                            const { usfm } = ref
+
+                            let version
+                            if(!preppedVersions.some(preppedVersion => {
+                              if(preppedVersion.id === id) {
+                                version = preppedVersion
+                                return true
+                              }
+                            })) {
+                              version = {
+                                id,
+                                refs: [],
+                              }
+                              preppedVersions.push(version)
+                            }
+
+                            version.refs.push({
+                              loc,
+                              pieces: getPiecesFromUSFM({ usfm }),
+                            })
+                          }
+                        })
+                      })
+
+                      console.log('pieces', preppedVersions[1].refs[0].pieces)
 
                       return null
 
-                        // prep translations
                         // strip usfm out to make plain text
                         // splits translations
                         // convert translations to usfm
+                        // convert all to JSON and put in verses var
 
-                      // verses
-                      //     id
-                      //       0010101-wlc
-                      //     pieces
-                      //       parts
-                      //         ["in", "the", "beginning"]
-                      //       attributes
-                      //         ["x-morph", "strong"]
+                      {/* verses: [
+                        {
+                          versionId: "wlc",
+                          refs: [
+                            {
+                              id: "01001001-wlc"
+                              pieces: [
+                                {
+                                  parts: ["in"]
+                                  attributes: {
+                                    "x-morph": "ABC",
+                                    "strong": "123",
+                                  },
+                                },
+                              ],
+                            },
+                          ],
+                        },
+                      ] */}
 
 
-                      let wordNum = wordNumInState
+                      {/* let wordNum = wordNumInState
 
                       if(verse && wordNum) {
                         const versePieces = verse && usfmToJSON(verse.usfm)
@@ -387,14 +453,14 @@ class CompareView extends React.PureComponent {
 
                       }
 
-                      const versePieces = verse && usfmToJSON(verse.usfm)
+                      const versePieces = verse && usfmToJSON(verse.usfm) */}
 
           // selectedWordInOriginal={selectedWordInOriginal}  // { bookId, chapter, verse, wordNum }
           // semiSelectedWordsInOriginal={semiSelectedWordsInOriginal}  // { bookId, chapter, verse, wordNums }
 
           // make verses partial verses where need be
 
-                      let selectedWordInfo = null
+                      {/* let selectedWordInfo = null
                       if(versePieces && wordNum !== null) {
                         let wNum = 1
                         versePieces.some(verseWord => {
@@ -404,21 +470,21 @@ class CompareView extends React.PureComponent {
                           }
                           return false
                         })
-                      }
+                      } */}
 
                       // const verses = versePieces ? [{ id: verse.id, pieces: versePieces }] : []
-                      const verses = versePieces ? [{ id: verse.id, pieces: versePieces }] : null
+                      {/* const verses = versePieces ? [{ id: verse.id, pieces: versePieces }] : null */}
 
                       // ;((options && options.versions) || []).forEach(version => {
                       //   if(!origLangAndLXXVersions[version.versionId]) {
                       //     verses.push({
-                      //       id: `${formLoc(version.ref)}-${version.versionId}`,
+                      //       id: `${getLocFromRef(version.ref)}-${version.versionId}`,
                       //       pieces: [ version.plaintext ],
                       //     })
                       //   }
                       // })
 
-                      return (
+                      {/* return (
                         <React.Fragment>
                           <Bar
                             back={back}
@@ -431,7 +497,7 @@ class CompareView extends React.PureComponent {
                               </div>
                             }
                           >
-                            {/* <SwitchButtons
+                            <SwitchButtons
                               selectedId={mode}
                               setSelectedId={mode => this.setState({ mode })}
                             >
@@ -454,10 +520,10 @@ class CompareView extends React.PureComponent {
                                   <DashedLine />
                                 </div>
                               </SwitchButton>
-                            </SwitchButtons> */}
+                            </SwitchButtons>
                           </Bar>
                           <Parallel
-                            verses={verses}  // TODO
+                            versions={preppedVersions}  // TODO
                             wordNum={wordNum}
                             //boundsVersionId={versions[0].id}  // will base the bounds of the text off the full verse in this version
                             //verses={verses}  // already made partial verses where need be
@@ -471,7 +537,7 @@ class CompareView extends React.PureComponent {
                             />
                           }
                         </React.Fragment>
-                      )
+                      ) */}
                     }}
                   </SmartQueries>
                 )}

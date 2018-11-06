@@ -31,7 +31,8 @@ class Parallel extends React.Component {
     const { verses, wordNum, updateWordNum } = this.props 
 
     let wNum = 1
-
+// ~ is a non-breaking space!
+// // can be removed
     return (
       <ParallelContainer>
         {verses

@@ -22,10 +22,14 @@ For more information on this project, see the [Bible Tags website](https://bible
 
 * Ability to send in English verse in plaintext
   * Show a, b or c after verse number when it is not complete by referencing the wordRange value returned from getCorrespondingVerseLocation (Eg. 12:3b)
+  * Ask Jesse how USFM handles languages which do not divide words by spaces + hyphens/maqephs/etc + whether we need a PR to usfm-js to distinguish this
+  * Ask Jesse about usfm-js and footnotes, which are not presently parsed. Should they be?
+  * Jesse: \f vs \fe
+* hide all API gets rid of the utility instance? (bug)
 * Send in multiple versions
 * Entire chapter preload (chapter and tagSets queries)
 * utilize definitionsByPosition query for when wordnum supplied (so only a single back-and-forth is needed)
-* Decide on orig version names and ids
+* Decide on orig version names (talk to Jesse) and ids
 * Decide on a lemma/strongs/etc system after talking with Jesse and Alan (and Andy and DeRouchie?)
 * Get Greek NT working
 * Get LXX working
@@ -33,6 +37,7 @@ For more information on this project, see the [Bible Tags website](https://bible
 * Authentication
 * After I have graphql queries which receive arrays in return, see if my cache -> localstorage strategy works still
 * Get basic tagging functionality working
+  * It needs to throw an error of some sort when a text if fed to the API with a different number of words from what was tagged
 * Set up ParallelComposite (texts weaved together, and not just one above the other)
 * Get working for other languages (uiWords query)
   * Should lang codes only be 3-digit? (i.e. no eng-gb?) Think about Chinese as another example

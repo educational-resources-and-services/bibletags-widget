@@ -1,5 +1,4 @@
 import i18n from './i18n.js'
-import rewritePattern  from 'regexpu-core'
 
 const i18nBook = str => i18n(str, {}, "", "book")
 const i18nGrammar = str => i18n(str, {}, "", "grammar")
@@ -14,10 +13,6 @@ window.location.hash
     const argParts = arg.split('=');
     hashParametersObject[argParts[0]] = argParts[1];
   })
-
-export const formLoc = ({ bookId, chapter, verse }) => (
-  `${('0'+bookId).substr(-2)}${('00'+chapter).substr(-3)}${('00'+verse).substr(-3)}`
-)
 
 export const getOrigLangVersionIdFromRef = ref => ref.bookId <= 39 ? 'oshb' : 'bhp'
 
@@ -389,58 +384,8 @@ export const getMorphPartDisplayInfo = ({ lang, morphPart, isPrefixOrSuffix, wor
   return ['H','A'].includes(lang) ? getHebrewMorphPartDisplayInfo({ lang, morphPart, isPrefixOrSuffix, wordIsMultiPart }) : getGreekMorphPartDisplayInfo({ morphPart, isPrefixOrSuffix })
 }
 
-export const usfmToJSON = usfm => {
-
-  const wordRegex = /^\\w (.*?[^\\])(?:\|(.*))?\\w\*$/
-
-  return usfm.split(/(\\w .*?\\w\*)/g).filter(fragment => fragment !== '').map(fragment => {
-
-    if(fragment.match(wordRegex)) {
-      const attributes = {}
-      fragment
-        .replace(wordRegex, '$2')
-        .trim()
-        .match(/\S+=["']?(?:.(?!["']?\s+(?:\S+)=|[>"']))+.["']?/g)
-        .forEach(attribute => {
-          const attributePieces = attribute.split('=')
-          attributes[attributePieces[0]] = attributePieces.splice(1).join('=').replace(/^"(.*)"$|'(.*)'^$/, '$1')
-        })
-
-      return {
-        parts: fragment.replace(wordRegex, '$1').split(/\//g),
-        attributes,
-      }
-
-    } else {
-      return fragment
-    }
-
-  })
-}
-
 export const getMainWordPartIndex = wordParts => (wordParts ? (wordParts.length - (wordParts[wordParts.length - 1].match(/^S/) ? 2 : 1)) : null)
 
 export const getStrongs = wordInfo => (wordInfo ? (wordInfo.attributes.strong || '').replace(/^[a-z]+:/, '') : '')
 
 export const getIsEntirelyPrefixAndSuffix = wordInfo => (wordInfo && !getStrongs(wordInfo))
-
-export const splitVerseIntoWords = ({ ref: { usfm }, wordDividerRegex }={}) => {
-
-  const wordDividerRegexRewritten = new RegExp(rewritePattern(wordDividerRegex || '[\\P{L}]+', 'u', {
-    unicodePropertyEscape: true,
-  }), 'g')
-
-  return usfm
-
-    // escape apostraphes
-    .replace(/(\w)’(\w)/g, "$1ESCAPEDAPOSTRAPHE$2")
-
-    // split to words
-    .split(wordDividerRegexRewritten)
-
-    // unescape apostraphes
-    .map(word => word.replace(/ESCAPEDAPOSTRAPHE/g, "’"))
-
-    // filter out empties
-    .filter(word => word !== "")
-}
