@@ -166,10 +166,11 @@ const getGroupedVerseObjects = ({ filteredVerseObjects, regexes }) => {
 
   const splitWordFixesInfo = []
 
-  const getGroupedVerseObjectsRecursive = ({ tagObjs, ancestorArray=[], splitWordInfo }) => {
+  const getGroupedVerseObjectsRecursive = ({ tagObjs, ancestorLine: passedInAncestorLine, splitWordInfo }) => {
 
     tagObjs.forEach((tagObj, tagObjIndex) => {
       const { text, children } = tagObj
+      const ancestorLine = [ ...(passedInAncestorLine || []), tagObjs, tagObj ]
 
       if(text) {
         const textSplitOnWords = splitOnWords({ text, regexes })
@@ -193,24 +194,22 @@ const getGroupedVerseObjects = ({ filteredVerseObjects, regexes }) => {
               arrayWhichEndsWithWord,
               ancestorLineWhichEndsWithWord,
               commonAncestorArray,
-              indexOfChildOfCommonParent,
+              indexOfChildOfCommonAncestor,
             } = splitWordInfo
 
             const word1Obj = arrayWhichEndsWithWord[arrayWhichEndsWithWord.length-1]
             const word1PartInfo = {
               obj: word1Obj,
               arrayContainingObj: arrayWhichEndsWithWord,
-              childOfCommonAncestor: commonAncestorArray[indexOfChildOfCommonParent],
+              childOfCommonAncestor: commonAncestorArray[indexOfChildOfCommonAncestor],
             }
             const word2PartInfo = {
               obj: firstChild,
               arrayContainingObj: tagObj.children,
-              childOfCommonAncestor: commonAncestorArray[indexOfChildOfCommonParent + 1],
-// this won't work if there is a textless item between
+              childOfCommonAncestor: ancestorLine[ancestorLine.indexOf(commonAncestorArray) + 1],
             }
             const word2AncestorList = [
-              ...ancestorArray,
-              tagObj,
+              ...ancestorLine,
               firstChild,
             ]
 
@@ -252,16 +251,16 @@ const getGroupedVerseObjects = ({ filteredVerseObjects, regexes }) => {
         splitWordInfo = lastChild.type === "word"
           ? {
             arrayWhichEndsWithWord: tagObj.children,
-            ancestorLineWhichEndsWithWord: [lastChild],
+            ancestorLineWhichEndsWithWord: [ tagObj.children, lastChild ],
             commonAncestorArray: tagObjs,
-            indexOfChildOfCommonParent: tagObjIndex,
+            indexOfChildOfCommonAncestor: tagObjIndex,
           }
           : null
 
       } else if(children) {
         const childrenInfo = getGroupedVerseObjectsRecursive({
           tagObjs: children,
-          ancestorArray: [ ...ancestorArray, tagObj ],
+          ancestorLine,
           splitWordInfo,
         })
         tagObj.children = childrenInfo.groupedVerseObjects
@@ -270,10 +269,11 @@ const getGroupedVerseObjects = ({ filteredVerseObjects, regexes }) => {
             ...childrenInfo.splitWordInfo,
             ancestorLineWhichEndsWithWord: [
               ...childrenInfo.splitWordInfo.ancestorLineWhichEndsWithWord,
-              childrenInfo.splitWordInfo.commonAncestorArray[childrenInfo.splitWordInfo.indexOfChildOfCommonParent],
+              childrenInfo.splitWordInfo.commonAncestorArray,
+              childrenInfo.splitWordInfo.commonAncestorArray[childrenInfo.splitWordInfo.indexOfChildOfCommonAncestor],
             ],
             commonAncestorArray: tagObjs,
-            indexOfChildOfCommonParent: tagObjIndex,
+            indexOfChildOfCommonAncestor: tagObjIndex,
           }
           : null
       }
