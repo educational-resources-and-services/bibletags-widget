@@ -372,21 +372,28 @@ export const getPiecesFromUSFM = ({ usfm='', wordDividerRegex, isOrigLangOrLXXVe
 
 export const splitVerseIntoWords = ({ ref: { usfm }, wordDividerRegex }={}) => {
 
-  const getWords = pieces => {
+  const getWords = unitObjs => {
     let words = []
-// note when there are new words via the type=word
 
-    pieces.forEach(piece => {
-      const { text, children } = piece
-      if(text) {
+    const getWordText = unitObj => {
+      const { text, children } = unitObj
+      return text || (children && children.map(child => getWordText(child)).join("")) || ""
+    }
 
-      } else {
+    unitObjs.forEach(unitObj => {
+      const { type, children } = unitObj
+
+      if(type === "word") {
+        words.push(getWordText(unitObj))
+      } else if(children) {
         words = [
           ...words,
-          ...getWords(children)
+          ...getWords(children),
         ]
       }
     })
+
+    return words
   }
 
   return getWords( getPiecesFromUSFM({ usfm, wordDividerRegex }) )
