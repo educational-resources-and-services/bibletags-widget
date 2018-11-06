@@ -106,7 +106,7 @@ const getFilteredVerseObjects = tagObjs => tagObjs.filter(tagObj => {
   }
 
   if(children) {
-    tagObjs.children = getFilteredVerseObjects(children)
+    tagObj.children = getFilteredVerseObjects(children)
   }
 
   return true
@@ -166,93 +166,99 @@ const getGroupedVerseObjects = ({ filteredVerseObjects, regexes }) => {
 
   const splitWordFixes = []
 
-  const getGroupedVerseObjectsRecursive = ({ tagObjs, ancestorArray=[] }) => {
-    let splitWordInfo = null
+  const getGroupedVerseObjectsRecursive = ({ tagObjs, ancestorArray=[], splitWordInfo }) => {
 
-    return {
-      groupedVerseObjects: tagObjs.map((tagObj, tagObjIndex) => {
-        const { text, children } = tagObj
+    tagObjs.forEach((tagObj, tagObjIndex) => {
+      const { text, children } = tagObj
 
-        if(text) {
-          const textSplitOnWords = splitOnWords({ text, regexes })
+      if(text) {
+        const textSplitOnWords = splitOnWords({ text, regexes })
 
-          tagObj.children = textSplitOnWords.map(wordOrWordDivider => {
-            const doesNotHaveWord = regexes.wordDividerStartToEnd.test(wordOrWordDivider)
-            return {
-              text: wordOrWordDivider,
-              ...(doesNotHaveWord ? {} : { type: "word" }),
-            }
-          })
+        tagObj.children = textSplitOnWords.map(wordOrWordDivider => {
+          const doesNotHaveWord = regexes.wordDividerStartToEnd.test(wordOrWordDivider)
+          return {
+            text: wordOrWordDivider,
+            ...(doesNotHaveWord ? {} : { type: "word" }),
+          }
+        })
 
-          delete tagObj.text
+        delete tagObj.text
 
-          if(splitWordInfo) {
-            const firstChild = tagObj.children[0]
-            if(firstChild.type === "word") {
-              const {
-                arrayWhichEndsWithWord,
-                ancestorLineWhichEndsWithWord,
-                commonParentArray,
-                indexOfChildOfCommonParent,
-              } = splitWordInfo
+        if(splitWordInfo) {
+
+          const firstChild = tagObj.children[0]
+
+          if(firstChild.type === "word") {
+            const {
+              arrayWhichEndsWithWord,
+              ancestorLineWhichEndsWithWord,
+              commonParentArray,
+              indexOfChildOfCommonParent,
+            } = splitWordInfo
 console.log('do magic', firstChild, splitWordInfo, commonParentArray[indexOfChildOfCommonParent], commonParentArray[indexOfChildOfCommonParent+1])
-              splitWordFixes.unshift(() => {
-                delete arrayWhichEndsWithWord[arrayWhichEndsWithWord.length-1].type
-                delete firstChild.type
+            splitWordFixes.unshift(() => {
+              delete arrayWhichEndsWithWord[arrayWhichEndsWithWord.length-1].type
+              delete firstChild.type
 
-                const newWordObj = {
-                  children: [
-                    getNewTagObjWithUnlistedChildrenFilterOut({
-                      tagObj: commonParentArray[indexOfChildOfCommonParent],
-                      list: ancestorLineWhichEndsWithWord,
-                    }),
-                    getNewTagObjWithUnlistedChildrenFilterOut({
-                      tagObj: commonParentArray[indexOfChildOfCommonParent+1],
-                      list: [
-                        ...ancestorArray,
-                        firstChild,
-                      ],
-                    })
-                  ],
-                  type: "word",
-                }
+              const newWordObj = {
+                children: [
+                  getNewTagObjWithUnlistedChildrenFilterOut({
+                    tagObj: commonParentArray[indexOfChildOfCommonParent],
+                    list: ancestorLineWhichEndsWithWord,
+                  }),
+                  getNewTagObjWithUnlistedChildrenFilterOut({
+                    tagObj: commonParentArray[indexOfChildOfCommonParent+1],
+                    list: [
+                      ...ancestorArray,
+                      firstChild,
+                    ],
+                  })
+                ],
+                type: "word",
+              }
 
-                commonParentArray.splice(indexOfChildOfCommonParent+1, 0, newWordObj)
-                arrayWhichEndsWithWord.pop()
-                tagObj.children.shift()
-              })
-            }
-            splitWordInfo = null
+              commonParentArray.splice(indexOfChildOfCommonParent+1, 0, newWordObj)
+              arrayWhichEndsWithWord.pop()
+              tagObj.children.shift()
+            })
           }
           
-          const lastChild = tagObj.children[tagObj.children.length - 1]
-          splitWordInfo = lastChild.type === "word"
-            ? {
-              arrayWhichEndsWithWord: tagObj.children,
-              ancestorLineWhichEndsWithWord: [lastChild],
-              commonParentArray: tagObjs,
-              indexOfChildOfCommonParent: tagObjIndex,
-            }
-            : null
-
-        } else if(children) {
-          const childrenInfo = getGroupedVerseObjectsRecursive({ tagObjs: children, ancestorArray: [ ...ancestorArray, tagObj ] })
-          tagObjs.children = childrenInfo.groupedVerseObjects
-          splitWordInfo = childrenInfo.splitWordInfo
-            ? {
-              ...childrenInfo.splitWordInfo,
-              ancestorLineWhichEndsWithWord: [
-                ...childrenInfo.splitWordInfo.ancestorLineWhichEndsWithWord,
-                childrenInfo.splitWordInfo.commonParentArray[childrenInfo.splitWordInfo.indexOfChildOfCommonParent]
-              ],
-              commonParentArray: tagObjs,
-              indexOfChildOfCommonParent: tagObjIndex,
-            }
-            : null
+          splitWordInfo = null
         }
+        
+        const lastChild = tagObj.children[tagObj.children.length - 1]
+        splitWordInfo = lastChild.type === "word"
+          ? {
+            arrayWhichEndsWithWord: tagObj.children,
+            ancestorLineWhichEndsWithWord: [lastChild],
+            commonParentArray: tagObjs,
+            indexOfChildOfCommonParent: tagObjIndex,
+          }
+          : null
 
-        return tagObj
-      }),
+      } else if(children) {
+        const childrenInfo = getGroupedVerseObjectsRecursive({
+          tagObjs: children,
+          ancestorArray: [ ...ancestorArray, tagObj ],
+          splitWordInfo,
+        })
+        tagObj.children = childrenInfo.groupedVerseObjects
+        splitWordInfo = childrenInfo.splitWordInfo
+          ? {
+            ...childrenInfo.splitWordInfo,
+            ancestorLineWhichEndsWithWord: [
+              ...childrenInfo.splitWordInfo.ancestorLineWhichEndsWithWord,
+              childrenInfo.splitWordInfo.commonParentArray[childrenInfo.splitWordInfo.indexOfChildOfCommonParent],
+            ],
+            commonParentArray: tagObjs,
+            indexOfChildOfCommonParent: tagObjIndex,
+          }
+          : null
+      }
+    })
+
+    return {
+      groupedVerseObjects: tagObjs,
       splitWordInfo,
     }
   }
