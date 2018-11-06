@@ -195,7 +195,7 @@ const getGroupedVerseObjects = ({ filteredVerseObjects, regexes }) => {
               commonParentArray,
               indexOfChildOfCommonParent,
             } = splitWordInfo
-console.log('do magic', firstChild, splitWordInfo, commonParentArray[indexOfChildOfCommonParent], commonParentArray[indexOfChildOfCommonParent+1])
+
             splitWordFixes.unshift(() => {
               delete arrayWhichEndsWithWord[arrayWhichEndsWithWord.length-1].type
               delete firstChild.type
@@ -210,6 +210,7 @@ console.log('do magic', firstChild, splitWordInfo, commonParentArray[indexOfChil
                     tagObj: commonParentArray[indexOfChildOfCommonParent+1],
                     list: [
                       ...ancestorArray,
+                      tagObj,
                       firstChild,
                     ],
                   })
@@ -218,6 +219,7 @@ console.log('do magic', firstChild, splitWordInfo, commonParentArray[indexOfChil
               }
 
               commonParentArray.splice(indexOfChildOfCommonParent+1, 0, newWordObj)
+              
               arrayWhichEndsWithWord.pop()
               tagObj.children.shift()
             })
