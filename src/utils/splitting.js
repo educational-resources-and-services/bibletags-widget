@@ -164,6 +164,7 @@ const getNewTagObjWithUnlistedChildrenFilterOut = ({ tagObj, list }) => ({
 
 const getGroupedVerseObjects = ({ filteredVerseObjects, regexes }) => {
 
+  const includesEmptyWordDividers = regexes.wordDividerStartToEnd.test("")
   const splitWordFixesInfo = []
 
   const getGroupedVerseObjectsRecursive = ({ tagObjs, ancestorLine: passedInAncestorLine, splitWordInfo }) => {
@@ -248,7 +249,7 @@ const getGroupedVerseObjects = ({ filteredVerseObjects, regexes }) => {
         }
         
         const lastChild = tagObj.children[tagObj.children.length - 1]
-        splitWordInfo = lastChild.type === "word"
+        splitWordInfo = lastChild.type === "word" && !includesEmptyWordDividers
           ? {
             arrayWhichEndsWithWord: tagObj.children,
             ancestorLineWhichEndsWithWord: [ tagObj.children, lastChild ],
@@ -264,7 +265,7 @@ const getGroupedVerseObjects = ({ filteredVerseObjects, regexes }) => {
           splitWordInfo,
         })
         tagObj.children = childrenInfo.groupedVerseObjects
-        splitWordInfo = childrenInfo.splitWordInfo
+        splitWordInfo = childrenInfo.splitWordInfo && !includesEmptyWordDividers
           ? {
             ...childrenInfo.splitWordInfo,
             ancestorLineWhichEndsWithWord: [
