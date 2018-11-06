@@ -83,7 +83,7 @@ const usfmMarkersToKeep = [
 ]
 
 const getFilteredVerseObjects = tagObjs => tagObjs.filter(tagObj => {
-  const { tag, text, children } = tagObj
+  const { tag, text, type, children } = tagObj
 
   // get rid of all unsupported tags which do NOT have content to keep
   // if(usfmMarkersWithContentToDiscard.includes(tag)) return false
@@ -103,6 +103,11 @@ const getFilteredVerseObjects = tagObjs => tagObjs.filter(tagObj => {
       text,
     })
     delete tagObj.text
+  }
+
+  // make consistent with marker objects to be created
+  if(type === 'text') {
+    delete tagObj.type
   }
 
   if(children) {
@@ -145,6 +150,22 @@ const reduceLevels = tagObjs => (
       }
     }
     return tagObj
+  })
+)
+
+const filterOutEmptyObjects = tagObjs => (
+  tagObjs.filter(tagObj => {
+    const { text, children, content } = tagObj
+
+    if(!text && (!children || !children.length) && !content) {
+      return false
+    }
+
+    if(children) {
+      tagObj.children = filterOutEmptyObjects(children)
+    }
+
+    return true
   })
 )
 
@@ -318,8 +339,7 @@ const getGroupedVerseObjects = ({ filteredVerseObjects, regexes }) => {
   })
 
   groupedVerseObjects = reduceLevels(groupedVerseObjects)
-
-// do filter of empty objects
+  groupedVerseObjects = filterOutEmptyObjects(groupedVerseObjects)
 
   return groupedVerseObjects
 }
