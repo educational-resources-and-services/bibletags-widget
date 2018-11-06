@@ -164,7 +164,7 @@ const getNewTagObjWithUnlistedChildrenFilterOut = ({ tagObj, list }) => ({
 
 const getGroupedVerseObjects = ({ filteredVerseObjects, regexes }) => {
 
-  const splitWordFixes = []
+  const splitWordFixesInfo = []
 
   const getGroupedVerseObjectsRecursive = ({ tagObjs, ancestorArray=[], splitWordInfo }) => {
 
@@ -192,37 +192,57 @@ const getGroupedVerseObjects = ({ filteredVerseObjects, regexes }) => {
             const {
               arrayWhichEndsWithWord,
               ancestorLineWhichEndsWithWord,
-              commonParentArray,
+              commonAncestorArray,
               indexOfChildOfCommonParent,
             } = splitWordInfo
 
-            splitWordFixes.unshift(() => {
-              delete arrayWhichEndsWithWord[arrayWhichEndsWithWord.length-1].type
-              delete firstChild.type
+            const word1Obj = arrayWhichEndsWithWord[arrayWhichEndsWithWord.length-1]
+            const word1PartInfo = {
+              obj: word1Obj,
+              arrayContainingObj: arrayWhichEndsWithWord,
+              childOfCommonAncestor: commonAncestorArray[indexOfChildOfCommonParent],
+            }
+            const word2PartInfo = {
+              obj: firstChild,
+              arrayContainingObj: tagObj.children,
+              childOfCommonAncestor: commonAncestorArray[indexOfChildOfCommonParent + 1],
+// this won't work if there is a textless item between
+            }
+            const word2AncestorList = [
+              ...ancestorArray,
+              tagObj,
+              firstChild,
+            ]
 
-              const newWordObj = {
-                children: [
-                  getNewTagObjWithUnlistedChildrenFilterOut({
-                    tagObj: commonParentArray[indexOfChildOfCommonParent],
-                    list: ancestorLineWhichEndsWithWord,
-                  }),
-                  getNewTagObjWithUnlistedChildrenFilterOut({
-                    tagObj: commonParentArray[indexOfChildOfCommonParent+1],
-                    list: [
-                      ...ancestorArray,
-                      tagObj,
-                      firstChild,
-                    ],
-                  })
-                ],
-                type: "word",
+            if(!splitWordFixesInfo.some(splitWordFixInfo => {
+              if(splitWordFixInfo.wordPartsInfo.map(({ obj }) => obj).includes(word1Obj)) {
+                // add in word2 info only
+                splitWordFixInfo.wordPartsInfo.push(word2PartInfo)
+                splitWordFixInfo.ancestorList = [
+                  ...splitWordFixInfo.ancestorList,
+                  ...word2AncestorList,
+                ]
+
+                if(splitWordFixInfo.commonAncestorArray !== commonAncestorArray) {
+                  throw "USFM with nested markers not presently supported."
+                }
+
+                return true
               }
-
-              commonParentArray.splice(indexOfChildOfCommonParent+1, 0, newWordObj)
-              
-              arrayWhichEndsWithWord.pop()
-              tagObj.children.shift()
-            })
+            })) {
+              // add new entry with word1 and word2 info
+              splitWordFixesInfo.push({
+                wordPartsInfo: [
+                  word1PartInfo,
+                  word2PartInfo,
+                ],
+                ancestorList: [
+                  ...ancestorLineWhichEndsWithWord,
+                  ...word2AncestorList,
+                ],
+                commonAncestorArray,
+              })
+            }
           }
           
           splitWordInfo = null
@@ -233,7 +253,7 @@ const getGroupedVerseObjects = ({ filteredVerseObjects, regexes }) => {
           ? {
             arrayWhichEndsWithWord: tagObj.children,
             ancestorLineWhichEndsWithWord: [lastChild],
-            commonParentArray: tagObjs,
+            commonAncestorArray: tagObjs,
             indexOfChildOfCommonParent: tagObjIndex,
           }
           : null
@@ -250,9 +270,9 @@ const getGroupedVerseObjects = ({ filteredVerseObjects, regexes }) => {
             ...childrenInfo.splitWordInfo,
             ancestorLineWhichEndsWithWord: [
               ...childrenInfo.splitWordInfo.ancestorLineWhichEndsWithWord,
-              childrenInfo.splitWordInfo.commonParentArray[childrenInfo.splitWordInfo.indexOfChildOfCommonParent],
+              childrenInfo.splitWordInfo.commonAncestorArray[childrenInfo.splitWordInfo.indexOfChildOfCommonParent],
             ],
-            commonParentArray: tagObjs,
+            commonAncestorArray: tagObjs,
             indexOfChildOfCommonParent: tagObjIndex,
           }
           : null
@@ -267,9 +287,38 @@ const getGroupedVerseObjects = ({ filteredVerseObjects, regexes }) => {
 
   let { groupedVerseObjects } = getGroupedVerseObjectsRecursive({ tagObjs: filteredVerseObjects })
 
-  splitWordFixes.forEach(splitWordFix => splitWordFix())
+  splitWordFixesInfo.forEach(splitWordFixInfo => {
+    const { wordPartsInfo, ancestorList, commonAncestorArray } = splitWordFixInfo
+
+    wordPartsInfo.forEach(wordPartInfo => delete wordPartInfo.obj.type)
+
+    const commonAncestorArrayIndexesToSplice = []
+
+    const newWordObj = {
+      children: wordPartsInfo.map(({ obj, arrayContainingObj, childOfCommonAncestor }) => {
+
+        const objIndex = arrayContainingObj.indexOf(obj)
+        
+        const newChild = getNewTagObjWithUnlistedChildrenFilterOut({
+          tagObj: childOfCommonAncestor,
+          list: ancestorList,
+        })
+
+        arrayContainingObj.splice(objIndex, 1)
+
+        return newChild
+      }),
+      type: "word",
+    }
+
+    const insertIndex = commonAncestorArray.indexOf(wordPartsInfo[0].childOfCommonAncestor) + 1
+    
+    commonAncestorArray.splice(insertIndex, 0, newWordObj)
+  })
 
   groupedVerseObjects = reduceLevels(groupedVerseObjects)
+
+// do filter of empty objects
 
   return groupedVerseObjects
 }
@@ -278,6 +327,8 @@ export const getPiecesFromUSFM = ({ usfm='', wordDividerRegex, isOrigLangOrLXXVe
 
   const usfmWithoutChapterAndVerse = usfm.replace(/^(?:.|\r\n|\r|\n)*\\c [0-9]+(?:.|\r\n|\r|\n)*\\v [0-9]+ */g, '')
   const { verseObjects } = usfmJS.toJSON(`\\c 1 \\v 1 ${usfmWithoutChapterAndVerse}`).chapters["1"]["1"]
+
+console.log('verseObjects', JSON.parse(JSON.stringify(verseObjects)))
 
 // wordDividerRegex = '(?:[\\P{L}]+|)'
   const regexes = {

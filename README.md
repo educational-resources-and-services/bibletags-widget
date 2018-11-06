@@ -23,8 +23,10 @@ For more information on this project, see the [Bible Tags website](https://bible
 * Ability to send in English verse in plaintext
   * Show a, b or c after verse number when it is not complete by referencing the wordRange value returned from getCorrespondingVerseLocation (Eg. 12:3b)
   * Ask Jesse how USFM handles languages which do not divide words by spaces + hyphens/maqephs/etc + whether we need a PR to usfm-js to distinguish this
+  * Ask Jesse if he wants a PR to support nested elements in usfm-js (http://ubsicap.github.io/usfm/characters/nesting.html)
   * Ask Jesse about usfm-js and footnotes, which are not presently parsed. Should they be?
-  * Jesse: \f vs \fe
+  * Ask Jesse about usfm-js bug where a space following an ending marker is not counted as text, but just listed as nextChar. (Eg. "In the beginning G\\sc od\\sc* created.")
+  * Jesse: \f vs \fe - what is the difference?
 * hide all API gets rid of the utility instance? (bug)
 * Send in multiple versions
 * Entire chapter preload (chapter and tagSets queries)
