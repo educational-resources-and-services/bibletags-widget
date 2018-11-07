@@ -1,17 +1,16 @@
 import React from 'react'
 // import i18n from '../../utils/i18n.js'
-// import styled from 'styled-components'
-import { restoreCache } from '../smart/Apollo'
-import { getPassageStr, origLangAndLXXVersions, getOrigLangVersionIdFromRef } from '../../utils/helperFunctions.js'
+import styled from 'styled-components'
+import { restoreCache, getDataObjFromQueryVarSets } from '../smart/Apollo'
+import { getPassageStr, origLangAndLXXVersions, getOrigLangVersionIdFromRef, origLanguages } from '../../utils/helperFunctions.js'
 import { getPiecesFromUSFM } from '../../utils/splitting.js'
-import { getCorrespondingVerseLocation, isValidRefInOriginal, getLocFromRef, getRefFromLoc } from 'bibletags-versification'
+import { getCorrespondingVerseLocation, isValidRefInOriginal, getLocFromRef } from 'bibletags-versification'
 
-import SmartQuery from '../smart/SmartQuery'
 import SmartQueries from '../smart/SmartQueries'
 import View from '../basic/View'
 import Bar from '../basic/Bar'
-// import SwitchButtons from '../basic/SwitchButtons'
-// import SwitchButton from '../basic/SwitchButton'
+import SwitchButtons from '../basic/SwitchButtons'
+import SwitchButton from '../basic/SwitchButton'
 import Parallel from '../smart/Parallel'
 import Entry from '../smart/Entry'
 import SearchView from './SearchView'
@@ -101,32 +100,32 @@ import tagSetQuery from '../../data/queries/tagSet'
 // }
 
 
-// const DoubleLine = styled.div`
-//   width: 20px;
-//   height: 4px;
-//   border: 1px solid black;
-//   border-width: 1px 0;
-//   .depressed & {
-//     border-color: white;
-//   }
-// `
+const DoubleLine = styled.div`
+  width: 20px;
+  height: 4px;
+  border: 1px solid black;
+  border-width: 1px 0;
+  .depressed & {
+    border-color: white;
+  }
+`
 
-// const SwitchButtonText = styled.div`
-//   display: block;
-//   font-size: 9px;
-//   line-height: 1;
-//   margin-bottom: 3px;
-// `
+const SwitchButtonText = styled.div`
+  display: block;
+  font-size: 9px;
+  line-height: 1;
+  margin-bottom: 3px;
+`
 
-// const DashedLine = styled.div`
-//   display: block;
-//   width: 100%;
-//   height: 1px;
-//   border-top: 1px dashed black;
-//   .depressed & {
-//     border-color: white;
-//   }
-// `
+const DashedLine = styled.div`
+  display: block;
+  width: 100%;
+  height: 1px;
+  border-top: 1px dashed black;
+  .depressed & {
+    border-color: white;
+  }
+`
 
 class CompareView extends React.PureComponent {
 
@@ -167,14 +166,14 @@ class CompareView extends React.PureComponent {
       }))
   }
 
-  getVerseAndTagSetQueryVars = versionInfoQueryVarSets => {
+  getVerseAndTagSetQueryVars = versionInfo => {
     const { options } = this.props 
     const { versions, includeLXX } = options
 
     const baseVersion = {
       ...versions[0],
       ref: versions[0].refs[0],
-      info: versionInfoQueryVarSets[versions[0].id].data.versionInfo,
+      info: versionInfo[versions[0].id],
     }
     delete baseVersion.refs
 
@@ -194,18 +193,21 @@ class CompareView extends React.PureComponent {
   
     if(origLangAndLXXVersions[baseVersion.id]) {
       if(isValidRefInOriginal(baseVersion.ref)) {
+        versionInfo[baseVersion.id] = origLangAndLXXVersions[baseVersion.id].info
         origLangAndLXXVerseIds = [`${getLocFromRef(baseVersion.ref)}-${baseVersion.id}`]
         tagSetIds = []
       }
   
     } else {
       const origLangVersionId = getOrigLangVersionIdFromRef(baseVersion.ref)
+      const lookupVersionInfo = origLangAndLXXVersions[origLangVersionId].info
       const origLangRefs = getCorrespondingVerseLocation({
         baseVersion,
-        lookupVersionInfo: origLangAndLXXVersions[origLangVersionId].info,
+        lookupVersionInfo,
       })
 
       if(origLangRefs) {
+        versionInfo[origLangVersionId] = lookupVersionInfo
         updateCommonRef(origLangRefs)
         origLangAndLXXVerseIds = origLangRefs.map(ref => `${getLocFromRef(ref)}-${origLangVersionId}`)
         tagSetIds = []
@@ -215,7 +217,7 @@ class CompareView extends React.PureComponent {
   
             const neededRefs = getCorrespondingVerseLocation({
               baseVersion,
-              lookupVersionInfo: versionInfoQueryVarSets[version.id].data.versionInfo,
+              lookupVersionInfo: versionInfo[version.id],
             })
   
             if(neededRefs) {
@@ -242,12 +244,14 @@ class CompareView extends React.PureComponent {
     }
   
     if(includeLXX) {
+      const lookupVersionInfo = origLangAndLXXVersions['lxx'].info
       const neededRefs = getCorrespondingVerseLocation({
         baseVersion,
-        lookupVersionInfo: origLangAndLXXVersions['lxx'].info,
+        lookupVersionInfo,
       })
   
       if(neededRefs) {
+        versionInfo.lxx = lookupVersionInfo
         updateCommonRef(neededRefs)
         const neededIds = neededRefs.map(ref => `${getLocFromRef(ref)}-lxx`)
   
@@ -291,7 +295,7 @@ class CompareView extends React.PureComponent {
 
   render() {
     const { options, show, back, style } = this.props 
-    const { showSearchView, wordNum: wordNumInState } = this.state
+    const { showSearchView, wordNum: wordNumInState, mode } = this.state
     const { versions } = options
 
     if(!versions) return null
@@ -313,7 +317,13 @@ class CompareView extends React.PureComponent {
 
             if(!versionInfoData.isAllLoaded()) return <Progress />
 
-            const { commonRef, origLangAndLXXVerseIds, tagSetIds, hasMisallignment } = this.getVerseAndTagSetQueryVars(versionInfoData.queryVarSets)
+            const { versionInfo } = getDataObjFromQueryVarSets(versionInfoData.queryVarSets)
+            const {
+              commonRef,
+              origLangAndLXXVerseIds,
+              tagSetIds,
+              hasMisallignment,
+            } = this.getVerseAndTagSetQueryVars(versionInfo)
 
             return (
               <SmartQueries
@@ -355,12 +365,14 @@ class CompareView extends React.PureComponent {
                         )
                       }
 
+                      const { verse } = getDataObjFromQueryVarSets(verseData.queryVarSets)
+                      const { tagSet } = getDataObjFromQueryVarSets(tagSetData.queryVarSets)
                       const preppedVersions = []
 
                       // Add orig languages and LXX to preppedVersions
                       origLangAndLXXVerseIds.forEach(id => {
                         const [ loc, versionId ] = id.split('-')
-                        const { usfm } = verseData.queryVarSets[id].data.verse || {}
+                        const { usfm } = verse[id] || {}
                         const pieces = getPiecesFromUSFM({ usfm, isOrigLangOrLXXVersion: true })
 
                         const key = versionId === 'lxx' ? 1 : 0
@@ -381,13 +393,13 @@ class CompareView extends React.PureComponent {
                       versions.forEach(({ id, refs }) => {
                         if(id === 'lxx') return
 
-                        const { wordDividerRegex } = versionInfoData.queryVarSets[id].data.versionInfo
+                        const { wordDividerRegex } = versionInfo[id]
 
                         refs.forEach(ref => {
 
                           const loc = getLocFromRef(ref)
 
-                          if(tagSetData.queryVarSets[`${loc}-${id}`]) {
+                          if(tagSetIds.includes(`${loc}-${id}`)) {
 
                             const { usfm } = ref
 
@@ -397,6 +409,7 @@ class CompareView extends React.PureComponent {
                                 version = preppedVersion
                                 return true
                               }
+                              return false
                             })) {
                               version = {
                                 id,
@@ -413,37 +426,9 @@ class CompareView extends React.PureComponent {
                         })
                       })
 
-                      console.log('pieces', preppedVersions[1].refs[0].pieces)
-
-                      return null
-
-                        // strip usfm out to make plain text
-                        // splits translations
-                        // convert translations to usfm
-                        // convert all to JSON and put in verses var
-
-                      {/* verses: [
-                        {
-                          versionId: "wlc",
-                          refs: [
-                            {
-                              id: "01001001-wlc"
-                              pieces: [
-                                {
-                                  parts: ["in"]
-                                  attributes: {
-                                    "x-morph": "ABC",
-                                    "strong": "123",
-                                  },
-                                },
-                              ],
-                            },
-                          ],
-                        },
-                      ] */}
 
 
-                      {/* let wordNum = wordNumInState
+                      /* let wordNum = wordNumInState
 
                       if(verse && wordNum) {
                         const versePieces = verse && usfmToJSON(verse.usfm)
@@ -455,14 +440,14 @@ class CompareView extends React.PureComponent {
 
                       }
 
-                      const versePieces = verse && usfmToJSON(verse.usfm) */}
+                      const versePieces = verse && usfmToJSON(verse.usfm) */
 
           // selectedWordInOriginal={selectedWordInOriginal}  // { bookId, chapter, verse, wordNum }
           // semiSelectedWordsInOriginal={semiSelectedWordsInOriginal}  // { bookId, chapter, verse, wordNums }
 
-          // make verses partial verses where need be
+                      let selectedWordInfo = null
 
-                      {/* let selectedWordInfo = null
+                      /* let selectedWordInfo = null
                       if(versePieces && wordNum !== null) {
                         let wNum = 1
                         versePieces.some(verseWord => {
@@ -472,10 +457,7 @@ class CompareView extends React.PureComponent {
                           }
                           return false
                         })
-                      } */}
-
-                      // const verses = versePieces ? [{ id: verse.id, pieces: versePieces }] : []
-                      {/* const verses = versePieces ? [{ id: verse.id, pieces: versePieces }] : null */}
+                      } */
 
                       // ;((options && options.versions) || []).forEach(version => {
                       //   if(!origLangAndLXXVersions[version.versionId]) {
@@ -486,7 +468,7 @@ class CompareView extends React.PureComponent {
                       //   }
                       // })
 
-                      {/* return (
+                      return (
                         <React.Fragment>
                           <Bar
                             back={back}
@@ -499,47 +481,47 @@ class CompareView extends React.PureComponent {
                               </div>
                             }
                           >
-                            <SwitchButtons
-                              selectedId={mode}
-                              setSelectedId={mode => this.setState({ mode })}
-                            >
-                              <SwitchButton id="separate">
-                                <DoubleLine />
-                              </SwitchButton>
-                              <SwitchButton id="greekBased">
-                                <div>
-                                  <SwitchButtonText
-                                    style={{
-                                      textTransform: 'none',
-                                    }}
-                                  >{i18n("Greek")}</SwitchButtonText>
-                                  <DashedLine />
-                                </div>
-                              </SwitchButton>
-                              <SwitchButton id="translationBased">
-                                <div>
-                                  <SwitchButtonText>ESV</SwitchButtonText>
-                                  <DashedLine />
-                                </div>
-                              </SwitchButton>
-                            </SwitchButtons>
+                            {false &&
+                              <SwitchButtons
+                                selectedId={mode}
+                                setSelectedId={mode => this.setState({ mode })}
+                              >
+                                <SwitchButton id="separate">
+                                  <DoubleLine />
+                                </SwitchButton>
+                                <SwitchButton id="greekBased">
+                                  <div>
+                                    <SwitchButtonText
+                                      style={{
+                                        textTransform: 'none',
+                                      }}
+                                    >{origLanguages['grc']}</SwitchButtonText>
+                                    <DashedLine />
+                                  </div>
+                                </SwitchButton>
+                                <SwitchButton id="translationBased">
+                                  <div>
+                                    <SwitchButtonText>ESV</SwitchButtonText>
+                                    <DashedLine />
+                                  </div>
+                                </SwitchButton>
+                              </SwitchButtons>
+                            }
                           </Bar>
                           <Parallel
-                            versions={preppedVersions}  // TODO
-                            wordNum={wordNum}
+                            versions={preppedVersions}
+                            versionInfo={versionInfo}
+                            //wordNum={wordNum}
                             //boundsVersionId={versions[0].id}  // will base the bounds of the text off the full verse in this version
-                            //verses={verses}  // already made partial verses where need be
-                            //selectedWordInOriginal={selectedWordInOriginal}  // { bookId, chapter, verse, wordNum }
-                            //semiSelectedWordsInOriginal={semiSelectedWordsInOriginal}  // { bookId, chapter, verse, wordNums }
                             updateWordNum={this.updateWordNum}
                           />
-                          {wordNum !== null &&
+                          {!!selectedWordInfo &&
                             <Entry
                               selectedWordInfo={selectedWordInfo}
                             />
                           }
                         </React.Fragment>
-                      ) */}
+                      )
                     }}
                   </SmartQueries>
                 )}

@@ -44,7 +44,7 @@ class Entry extends React.Component {
         {wordInfo && 
           <Parsing
             isEntirelyPrefixAndSuffix={isEntirelyPrefixAndSuffix}
-            morph={wordInfo.attributes['x-morph']}
+            morph={wordInfo.morph}
           />
         }
         {!isEntirelyPrefixAndSuffix && strongs &&

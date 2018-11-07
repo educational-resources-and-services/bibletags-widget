@@ -22,24 +22,26 @@ export const origLangAndLXXVersions = {
       id: 'oshb',
       partialScope: 'ot',
       versificationModel: 'original',
+      language: 'heb',
+      isOriginal: "Hebrew",
     },
-    language: 'heb',
   },
   bhp: {
     info: {
       id: 'bhp',
       partialScope: 'nt',
       versificationModel: 'original',
+      language: 'grc',
+      isOriginal: "Greek",
     },
-    language: 'grc',
   },
   lxx: {
     info: {
       id: 'lxx',
       partialScope: 'ot',
       versificationModel: 'lxx',
+      language: 'grc',
     },
-    language: 'grc',
   },
 }
 
@@ -50,7 +52,7 @@ export const origLanguages = {
 
 export const getVersionStr = versionId => (
   origLangAndLXXVersions[versionId]
-    ? `${origLanguages[origLangAndLXXVersions[versionId].language]} (${versionId.toUpperCase()})`
+    ? `${origLanguages[origLangAndLXXVersions[versionId].info.language]} (${versionId.toUpperCase()})`
     : versionId.toUpperCase()
 )
 
@@ -386,6 +388,6 @@ export const getMorphPartDisplayInfo = ({ lang, morphPart, isPrefixOrSuffix, wor
 
 export const getMainWordPartIndex = wordParts => (wordParts ? (wordParts.length - (wordParts[wordParts.length - 1].match(/^S/) ? 2 : 1)) : null)
 
-export const getStrongs = wordInfo => (wordInfo ? (wordInfo.attributes.strong || '').replace(/^[a-z]+:/, '') : '')
+export const getStrongs = wordInfo => (wordInfo ? (wordInfo.strong || '').replace(/^[a-z]+:/, '') : '')
 
 export const getIsEntirelyPrefixAndSuffix = wordInfo => (wordInfo && !getStrongs(wordInfo))

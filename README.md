@@ -20,21 +20,41 @@ For more information on this project, see the [Bible Tags website](https://bible
   * import as much versionInfo data as possible from bible.com, find.bible, biblegateway
     * figure out litmus test verses to figure out versificationModel, partialScope, skipsUnlikelyOriginals
 
-* Ability to send in English verse in plaintext
+  * {/* https://github.com/translationCoreApps/usfm-js/tree/master/__tests__/resources */}
   * Show a, b or c after verse number when it is not complete by referencing the wordRange value returned from getCorrespondingVerseLocation (Eg. 12:3b)
-  * Ask Jesse how USFM handles languages which do not divide words by spaces + hyphens/maqephs/etc + whether we need a PR to usfm-js to distinguish this
+
+* Jesse
+  * Ask how USFM handles languages which do not divide words by spaces + hyphens/maqephs/etc + whether we need a PR to usfm-js to distinguish this. (Relates to the two-lemma words issue.) (Also, relates to space following ending marker bug mentioned below. That is, non-space-separating languages could just have all words on a single line, as would maqeph connected words OR newlines don't count and a space needs to come at the end of all /w lines which do have a space after them)
   * Ask Jesse if he wants a PR to support nested elements in usfm-js (http://ubsicap.github.io/usfm/characters/nesting.html)
   * Ask Jesse about usfm-js and footnotes, which are not presently parsed. Should they be?
   * Ask Jesse about usfm-js bug where a space following an ending marker is not counted as text, but just listed as nextChar. (Eg. "In the beginning G\\sc od\\sc* created.")
   * Jesse: \f vs \fe - what is the difference?
-* hide all API gets rid of the utility instance? (bug)
+  * Decide on live orig version names (talk to Jesse) and ids
+  * Decide on a lemma/strongs/etc system after talking with Jesse and Alan (and Andy and DeRouchie?)
+    * a, b, c, +
+    * extra digit
+    * james tauber's greek-lemma-mappings
+  * Explain uid idea for Greek (and Hebrew?)
+    * Indicate testament? Book?
+    * How would this look in Hebrew? Do we have manuscripts available? Will we?
+
+* If we go with the uid concept, then include uids in original version (and LXX) usfm (___Verses tables).
+  * Also, change ___Words table structure completely and put all info beyond the word and prefix in different add-on tables
+  * How would this change my tagSets?? (no longer wordnum-based in the orig?)
 * Send in multiple versions
+* Add in other original language version info
+// ~ is a non-breaking space!
+// // can be removed
+* Get rid of extra spaces I put in Gen 1:1 of oshb, or put them everywhere
+* Get rich text working
+* make verses partial verses where need be (using boundingVersion)
+* have word selection work for original only without tags
+* decide what to do when they click on a translation work and there are no tags
 * Entire chapter preload (chapter and tagSets queries)
 * utilize definitionsByPosition query for when wordnum supplied (so only a single back-and-forth is needed)
-* Decide on orig version names (talk to Jesse) and ids
-* Decide on a lemma/strongs/etc system after talking with Jesse and Alan (and Andy and DeRouchie?)
 * Get Greek NT working
 * Get LXX working
+* Deal with two word lemmas: Eg. באר שבע
 * infoCallback
 * Authentication
 * After I have graphql queries which receive arrays in return, see if my cache -> localstorage strategy works still

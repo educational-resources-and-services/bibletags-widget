@@ -203,6 +203,22 @@ export const getQueryVars = ({ queryInfo, queryVarSuffix='' }) => {
   return queryVars
 }
 
+export const getDataObjFromQueryVarSets = queryVarSets => {
+
+  const dataObj = {}
+
+  for(let id in queryVarSets) {
+    for(let key in queryVarSets[id].data) {
+      if(!dataObj[key]) {
+        dataObj[key] = {}
+      }
+      dataObj[key][id] = queryVarSets[id].data[key]
+    }
+  }
+
+  return dataObj
+}
+
 class Apollo extends React.PureComponent {
 
   render() {

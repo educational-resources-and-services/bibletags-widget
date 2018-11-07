@@ -245,11 +245,12 @@ const getGroupedVerseObjects = ({ filteredVerseObjects, regexes }) => {
                 ]
 
                 if(splitWordFixInfo.commonAncestorArray !== commonAncestorArray) {
-                  throw "USFM with nested markers not presently supported."
+                  throw new Error("USFM with nested markers not presently supported.")
                 }
 
                 return true
               }
+              return false
             })) {
               // add new entry with word1 and word2 info
               splitWordFixesInfo.push({
@@ -313,8 +314,6 @@ const getGroupedVerseObjects = ({ filteredVerseObjects, regexes }) => {
     const { wordPartsInfo, ancestorList, commonAncestorArray } = splitWordFixInfo
 
     wordPartsInfo.forEach(wordPartInfo => delete wordPartInfo.obj.type)
-
-    const commonAncestorArrayIndexesToSplice = []
 
     const newWordObj = {
       children: wordPartsInfo.map(({ obj, arrayContainingObj, childOfCommonAncestor }) => {

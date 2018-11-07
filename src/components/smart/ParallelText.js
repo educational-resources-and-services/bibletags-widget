@@ -25,14 +25,14 @@ class ParallelText extends React.Component {
   // }
 
   render() {
-    const { children, lang, style } = this.props 
+    const { children, language, style } = this.props 
     // const { something2 } = this.state 
 
     return (
       <Verse
-        className="hebrewFont"
+        className={`${language}Font`}
         style={{
-          ...(lang === 'he' ? { direction: 'rtl' } : {}),
+          ...(language === 'heb' ? { direction: 'rtl' } : {}),
           ...style,
         }}
       >
