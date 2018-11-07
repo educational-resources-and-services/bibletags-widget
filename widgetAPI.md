@@ -216,28 +216,24 @@ versions: [{
 }]
 ```
 
-- The appropriate original language text will be displayed before these `versions` in the widget. To *only* display the original language version, see the `originalLanguageVersion` parameter below.
+- The appropriate original language text will be displayed before these `versions` in the widget. To *only* display the original language version, see the `originalLanguageRef` parameter below.
 - Will retrieve original language verse(s) corresponding to the first version as versification can change between versions. If subsequent versions do not properly correspond, they will get ignored. Hence, it is highly recommended that the [getCorrespondingVerseLocations()](#getCorrespondingVerseLocations) function is used before calling this function on multiple versions.
 - The first version may only contain a single verse (i.e. `ref`). However, there are times when subsequent versions require multiple verses to cover the same content present in this single verse of the first version (due to versification descrepencies). In such cases, the additional verses (in full) should simply be added on to the `versions` array. See the final example in the examples section below.
 - `wordNum` will only be taken into account in the first ref within which it is found.
 - `usfm` may contain plain text. (See "General notes" above.)
-- You are required to supply either the `versions` or the `originalLanguageVersion` parameter, and may not supply both.
+- You are required to supply either the `versions` or the `originalLanguageRef` parameter, and may not supply both.
 
 ```javascript
-originalLanguageVersion: {
-	id!: String,
-	ref!: {
-		bookId!: Number,
-		chapter!: Number,
-		verse!: Number,
-		wordNum: Number,
-	},
+originalLanguageRef: {
+	bookId!: Number,
+	chapter!: Number,
+	verse!: Number,
+	wordNum: Number,
 }
 ```
 
 - Only use this parameter when desiring to display the original language version *alone*. To display translations in addition to the original language version, see the `versions` parameter above.
-- `id` should be set to either `uhb` (for the Hebrew Bible) or `bhp` (for the Greek New Testament).
-- You are required to supply either the `versions` or the `originalLanguageVersion` parameter, and may not supply both.
+- You are required to supply either the `versions` or the `originalLanguageRef` parameter, and may not supply both.
 
 ```javascript
 anchorEl: HTMLElement
