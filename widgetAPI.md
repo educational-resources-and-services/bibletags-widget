@@ -235,6 +235,7 @@ originalLanguageVersion: {
 }
 ```
 
+- Only use this parameter when desiring to display the original language version *alone*. To display translations in addition to the original language version, see the `versions` parameter above.
 - `id` should be set to either `uhb` (for the Hebrew Bible) or `bhp` (for the Greek New Testament).
 - You are required to supply either the `versions` or the `originalLanguageVersion` parameter, and may not supply both.
 
