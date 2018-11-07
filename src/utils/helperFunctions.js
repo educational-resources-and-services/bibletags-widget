@@ -16,32 +16,29 @@ window.location.hash
 
 export const getOrigLangVersionIdFromRef = ref => ref.bookId <= 39 ? 'oshb' : 'bhp'
 
-export const origLangAndLXXVersions = {
+export const origLangAndLXXVersionInfo = {
   oshb: {
-    info: {
-      id: 'oshb',
-      partialScope: 'ot',
-      versificationModel: 'original',
-      language: 'heb',
-      isOriginal: "Hebrew",
-    },
+    id: 'oshb',
+    name: 'Open Scriptures Hebrew Bible',
+    language: 'heb',
+    partialScope: 'ot',
+    versificationModel: 'original',
+    isOriginal: "Hebrew",
   },
   bhp: {
-    info: {
-      id: 'bhp',
-      partialScope: 'nt',
-      versificationModel: 'original',
-      language: 'grc',
-      isOriginal: "Greek",
-    },
+    id: 'bhp',
+    name: 'Bunning Heuristic Prototype Greek New Testament',
+    language: 'grc',
+    partialScope: 'nt',
+    versificationModel: 'original',
+    isOriginal: "Greek",
   },
   lxx: {
-    info: {
-      id: 'lxx',
-      partialScope: 'ot',
-      versificationModel: 'lxx',
-      language: 'grc',
-    },
+    id: 'lxx',
+    name: 'Rahlfs Septuagint',
+    language: 'grc',
+    partialScope: 'ot',
+    versificationModel: 'lxx',
   },
 }
 
@@ -51,8 +48,8 @@ export const origLanguages = {
 }
 
 export const getVersionStr = versionId => (
-  origLangAndLXXVersions[versionId]
-    ? `${origLanguages[origLangAndLXXVersions[versionId].info.language]} (${versionId.toUpperCase()})`
+  origLangAndLXXVersionInfo[versionId]
+    ? `${origLanguages[origLangAndLXXVersionInfo[versionId].language]} (${versionId.toUpperCase()})`
     : versionId.toUpperCase()
 )
 

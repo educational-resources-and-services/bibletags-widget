@@ -2,7 +2,7 @@ import React from 'react'
 // import i18n from '../../utils/i18n.js'
 import styled from 'styled-components'
 import { restoreCache, getDataObjFromQueryVarSets } from '../smart/Apollo'
-import { getPassageStr, origLangAndLXXVersions, getOrigLangVersionIdFromRef, origLanguages } from '../../utils/helperFunctions.js'
+import { getPassageStr, origLangAndLXXVersionInfo, getOrigLangVersionIdFromRef, origLanguages } from '../../utils/helperFunctions.js'
 import { getPiecesFromUSFM } from '../../utils/splitting.js'
 import { getCorrespondingVerseLocation, isValidRefInOriginal, getLocFromRef } from 'bibletags-versification'
 
@@ -159,7 +159,7 @@ class CompareView extends React.PureComponent {
     const { versions } = options
 
     return versions
-      .filter(version => !origLangAndLXXVersions[version.id])
+      .filter(version => !origLangAndLXXVersionInfo[version.id])
       .map(version => ({
         variables: { id: version.id },
         cacheKey: `VersionInfo:${version.id}`
@@ -191,16 +191,16 @@ class CompareView extends React.PureComponent {
       })
     }
   
-    if(origLangAndLXXVersions[baseVersion.id]) {
+    if(origLangAndLXXVersionInfo[baseVersion.id]) {
       if(isValidRefInOriginal(baseVersion.ref)) {
-        versionInfo[baseVersion.id] = origLangAndLXXVersions[baseVersion.id].info
+        versionInfo[baseVersion.id] = origLangAndLXXVersionInfo[baseVersion.id]
         origLangAndLXXVerseIds = [`${getLocFromRef(baseVersion.ref)}-${baseVersion.id}`]
         tagSetIds = []
       }
   
     } else {
       const origLangVersionId = getOrigLangVersionIdFromRef(baseVersion.ref)
-      const lookupVersionInfo = origLangAndLXXVersions[origLangVersionId].info
+      const lookupVersionInfo = origLangAndLXXVersionInfo[origLangVersionId]
       const origLangRefs = getCorrespondingVerseLocation({
         baseVersion,
         lookupVersionInfo,
@@ -213,7 +213,7 @@ class CompareView extends React.PureComponent {
         tagSetIds = []
   
         versions.forEach(version => {
-          if(!origLangAndLXXVersions[version.id]) {
+          if(!origLangAndLXXVersionInfo[version.id]) {
   
             const neededRefs = getCorrespondingVerseLocation({
               baseVersion,
@@ -244,7 +244,7 @@ class CompareView extends React.PureComponent {
     }
   
     if(includeLXX) {
-      const lookupVersionInfo = origLangAndLXXVersions['lxx'].info
+      const lookupVersionInfo = origLangAndLXXVersionInfo.lxx
       const neededRefs = getCorrespondingVerseLocation({
         baseVersion,
         lookupVersionInfo,
@@ -460,7 +460,7 @@ class CompareView extends React.PureComponent {
                       } */
 
                       // ;((options && options.versions) || []).forEach(version => {
-                      //   if(!origLangAndLXXVersions[version.versionId]) {
+                      //   if(!origLangAndLXXVersionInfo[version.versionId]) {
                       //     verses.push({
                       //       id: `${getLocFromRef(version.ref)}-${version.versionId}`,
                       //       pieces: [ version.plaintext ],

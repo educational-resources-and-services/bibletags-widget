@@ -3,7 +3,7 @@ import React from 'react'
 import { determineUILanguageCode, setUpI18n } from './utils/i18n.js'
 // import styled from 'styled-components'
 import { setUp, ready, updateHeight, report } from './utils/postMessage.js'
-import { origLangAndLXXVersions, hashParametersObject } from './utils/helperFunctions.js'
+import { origLangAndLXXVersionInfo, hashParametersObject } from './utils/helperFunctions.js'
 import { splitVerseIntoWords } from './utils/splitting.js'
 import Measure from 'react-measure'
 import Apollo, { restoreCache, client, getStaleState, setStaleTime, getQueryVars } from './components/smart/Apollo'
@@ -18,8 +18,8 @@ import versionInfoQuery from './data/queries/versionInfo'
 // const dev = !!window.location.href.match(/localhost/)
 
 const getVersionInfo = async id => {
-  if(origLangAndLXXVersions[id]) {
-    return origLangAndLXXVersions[id].info
+  if(origLangAndLXXVersionInfo[id]) {
+    return origLangAndLXXVersionInfo[id]
   }
 
   return await (
