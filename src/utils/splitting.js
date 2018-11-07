@@ -103,6 +103,13 @@ const getFilteredVerseObjects = unitObjs => unitObjs.filter(unitObj => {
       text,
     })
     delete unitObj.text
+
+  // swap out special spacing strings
+  } else if(text) {
+    unitObj.text = text
+      .replace(/~/g, "\u00A0")
+      .replace(/ \/\/ /g, " ")
+      .replace(/\/\//g, "")
   }
 
   // make consistent with marker objects to be created
