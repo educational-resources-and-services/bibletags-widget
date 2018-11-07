@@ -43,17 +43,17 @@ For more information on this project, see the [Bible Tags website](https://bible
   * How would this change my tagSets?? (no longer wordnum-based in the orig?)
 
 * Get rid of extra spaces I put in Gen 1:1 of oshb, or put them everywhere
-* make verses partial verses where need be (using boundingVersion)
 * have word selection work for original only without tags
 * decide what to do when they click on a translation work and there are no tags
-* Entire chapter preload (chapter and tagSets queries)
-* utilize definitionsByPosition query for when wordnum supplied (so only a single back-and-forth is needed)
 * Get Greek NT working
 * Get LXX working
 * Deal with two word lemmas: Eg. באר שבע
+* make verses partial verses where need be (using boundingVersion)
 * infoCallback
-* Authentication
+* Entire chapter preload (chapter and tagSets queries)
+* utilize definitionsByPosition query for when wordnum supplied (so only a single back-and-forth is needed)
 * After I have graphql queries which receive arrays in return, see if my cache -> localstorage strategy works still
+* Authentication
 * Get basic tagging functionality working
   * It needs to throw an error of some sort when a text if fed to the API with a different number of words from what was tagged
 * Set up ParallelComposite (texts weaved together, and not just one above the other)
@@ -64,7 +64,7 @@ For more information on this project, see the [Bible Tags website](https://bible
 * hideVerse
 * hideOriginal
 * addlOptions
-* Get usfm working, and add examples to the API docs
+* add usfm examples to the API docs
   * fetchVerseCallback
 * jumpToLocation
 * Search
