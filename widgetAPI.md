@@ -204,10 +204,10 @@ window.bibleTagsWidget.preload({
 #### Parameters
 
 ```javascript
-versions!: [{
+versions: [{
 	id!: String,
 	refs!: [{
-		usfm: String,
+		usfm!: String,
 		bookId!: Number,
 		chapter!: Number,
 		verse!: Number,
@@ -216,13 +216,27 @@ versions!: [{
 }]
 ```
 
-- **Not yet implemented**
 - Will retrieve verse(s) corresponding to the first version as versification can change between versions. If subsequent versions do not properly correspond, they will get ignored. Hence, it is highly recommended that the [getCorrespondingVerseLocations()](#getCorrespondingVerseLocations) function is used before calling this function on multiple versions.
 - The first version may only contain a single verse (i.e. `ref`). However, there are times when subsequent versions require multiple verses to cover the same content present in this single verse of the first version (due to versification descrepencies). In such cases, the additional verses (in full) should simply be added on to the `versions` array. See the final example in the examples section below.
 - `wordNum` will only be taken into account in the first ref within which it is found.
-- To only display the original language version, `versions` should contain a single object with its `id` set to one of the original language version ids (`uhb` or `bhp`), and the `usfm` parameter can be left undefined. This is the only case where `versions` should ever include an object with `id` set to an original language version.
-- For each version other than one of the original language versions, `usfm` is required.
+- The appropriate original language text will be displayed before these `versions` in the widget. To *only* display the original language version, see the `originalLanguageVersion` parameter below.
 - `usfm` may contain plain text. (See "General notes" above.)
+- You are required to supply either the `versions` or the `originalLanguageVersion` parameter, and may not supply both.
+
+```javascript
+originalLanguageVersion: {
+	id!: String,
+	ref!: {
+		bookId!: Number,
+		chapter!: Number,
+		verse!: Number,
+		wordNum: Number,
+	},
+}
+```
+
+- `id` should be set to either `uhb` (for the Hebrew Bible) or `bhp` (for the Greek New Testament).
+- You are required to supply either the `versions` or the `originalLanguageVersion` parameter, and may not supply both.
 
 ```javascript
 anchorEl: HTMLElement
