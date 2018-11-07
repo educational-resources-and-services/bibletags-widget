@@ -132,24 +132,24 @@ class CompareView extends React.PureComponent {
   state = {
     showSearchView: false,
     mode: 'separate',
-    wordNum: null,
+    wordLoc: null,  // in the original
   }
 
   static getDerivedStateFromProps({ options }, state) {
     let returnVal = null
 
-// Needs work to be valid with translations
-    if(state.wordNum === null && options) {
-      ;(options.versions || []).some(version => {
-        const { wordNum } = version.ref || []
-        if(typeof wordNum === 'number') {
-          returnVal = {
-            wordNum,
-          }
-        }
-        return returnVal
-      })
-    }
+// TODO: Needs work to be valid with translations
+    // if(state.wordLoc === null && options) {
+    //   ;(options.versions || []).some(version => {
+    //     const { wordNum } = version.ref || []
+    //     if(typeof wordNum === 'number') {
+    //       returnVal = {
+    //         wordLoc: wordNum ???? ,
+    //       }
+    //     }
+    //     return returnVal
+    //   })
+    // }
 
     return returnVal
   }
@@ -279,23 +279,30 @@ class CompareView extends React.PureComponent {
   
   hideSearchView = () => this.setState({ showSearchView: false })
   
-  updateWordNum = ({ wordNum, force }) => {
+  updateWordLoc = ({ versionId, wordLoc, force }) => {
     // Do not count it as a click if they have selected text
     if(!window.getSelection().isCollapsed && !force) return
 
-// Needs work to be valid with translations
-    if(wordNum === this.state.wordNum) {
-      this.setState({ wordNum: null })
+    if(!(origLangAndLXXVersionInfo[versionId] || {}).isOriginal) {
+      // They clicked on a translation word and we need to map it to the original
+      // language wordLoc.
+
+      // TODO
+      return
+    }
+
+    if(wordLoc === this.state.wordLoc) {
+      this.setState({ wordLoc: null })
       
     } else {
       restoreCache()
-      this.setState({ wordNum })
+      this.setState({ wordLoc })
     }
   }
 
   render() {
     const { options, show, back, style } = this.props 
-    const { showSearchView, wordNum: wordNumInState, mode } = this.state
+    const { showSearchView, wordLoc, mode } = this.state
     const { versions } = options
 
     if(!versions) return null
@@ -375,15 +382,15 @@ class CompareView extends React.PureComponent {
                         const { usfm } = verse[id] || {}
                         const pieces = getPiecesFromUSFM({ usfm, isOrigLangOrLXXVersion: true })
 
-                        const key = versionId === 'lxx' ? 1 : 0
+                        const idx = versionId === 'lxx' ? 1 : 0
 
-                        if(!preppedVersions[key]) {
-                          preppedVersions[key] = {
+                        if(!preppedVersions[idx]) {
+                          preppedVersions[idx] = {
                             id: versionId,
                             refs: [],
                           }
                         }
-                        preppedVersions[key].refs.push({
+                        preppedVersions[idx].refs.push({
                           loc,
                           pieces,
                         })
@@ -446,6 +453,17 @@ class CompareView extends React.PureComponent {
           // semiSelectedWordsInOriginal={semiSelectedWordsInOriginal}  // { bookId, chapter, verse, wordNums }
 
                       let selectedWordInfo = null
+                      if(wordLoc) {
+                        const { loc } = preppedVersions[0].refs[0]
+                        let wordNum = 1
+                        preppedVersions[0].refs[0].pieces.some(piece => {
+                          if(piece.type === "word" && wordLoc === `${loc}:${wordNum++}`) {
+                            selectedWordInfo = piece
+                            return true
+                          }
+                          return false
+                        })
+                      }
 
                       /* let selectedWordInfo = null
                       if(versePieces && wordNum !== null) {
@@ -511,13 +529,13 @@ class CompareView extends React.PureComponent {
                           <Parallel
                             versions={preppedVersions}
                             versionInfo={versionInfo}
-                            //wordNum={wordNum}
+                            wordLoc={wordLoc}
                             //boundsVersionId={versions[0].id}  // will base the bounds of the text off the full verse in this version
-                            updateWordNum={this.updateWordNum}
+                            updateWordLoc={this.updateWordLoc}
                           />
                           {!!selectedWordInfo &&
                             <Entry
-                              selectedWordInfo={selectedWordInfo}
+                              wordInfo={selectedWordInfo}
                             />
                           }
                         </React.Fragment>

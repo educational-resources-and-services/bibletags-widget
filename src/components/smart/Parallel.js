@@ -2,7 +2,7 @@ import React from 'react'
 // import i18n from '../../utils/i18n.js'
 import styled from 'styled-components'
 import { getVersionStr, getMainWordPartIndex, getGrammarColor,
-         getIsEntirelyPrefixAndSuffix } from '../../utils/helperFunctions.js'
+         getIsEntirelyPrefixAndSuffix, origLangAndLXXVersionInfo } from '../../utils/helperFunctions.js'
 
 import ParallelText from './ParallelText'
 // import ParallelComposite from './ParallelComposite'
@@ -41,8 +41,8 @@ const getWordText = word => {
 
 class Parallel extends React.Component {
 
-  getOriginalhebWord = ({ word, versionId, loc, wordNum, isSelected, isSemiSelected }) => {
-    const { updateWordNum } = this.props
+  getOriginalhebWord = ({ word, versionId, wordLoc, isSelected, isSemiSelected }) => {
+    const { updateWordLoc } = this.props
 
     const { text } = word
     const WordSpan = isSelected ? SelectedWord : (isSemiSelected ? SemiSelectedWord : Word)
@@ -54,8 +54,8 @@ class Parallel extends React.Component {
 
     return (
       <WordSpan
-        key={`${loc}:${wordNum}`}
-        onClick={updateWordNum.bind(this, { versionId, loc, wordNum })}
+        key={wordLoc}
+        onClick={updateWordLoc.bind(this, { versionId, wordLoc })}
       >
         {
           text.split('/').map((wordPart, wpIndex) => {
@@ -78,27 +78,27 @@ class Parallel extends React.Component {
   }
 
   // getOriginalgrcWord = word => {
-  //   const { updateWordNum } = this.props
-  //   const WordSpan = wordNum === thisWordNum ? SelectedWord : Word
+  //   const { updateWordLoc } = this.props
+  //   const WordSpan = isSelected ? SelectedWord : (isSemiSelected ? SemiSelectedWord : Word)
 
   //   return (
   //     <WordSpan
   //       key={idx}
-  //       onClick={updateWordNum.bind(this, { versionId, loc, wordNum })}
+  //       onClick={updateWordLoc.bind(this, { versionId, wordLoc })}
   //     >
   //       {word}
   //     </WordSpan>
   //   )
   // }
 
-  getTranslationWord = ({ word, versionId, loc, wordNum, isSelected }) => {
-    const { updateWordNum } = this.props
+  getTranslationWord = ({ word, versionId, wordLoc, isSelected }) => {
+    const { updateWordLoc } = this.props
     const WordSpan = isSelected ? SelectedWord : Word
 
     return (
       <WordSpan
-        key={`${loc}:${wordNum}`}
-        onClick={updateWordNum.bind(this, { versionId, loc, wordNum })}
+        key={wordLoc}
+        onClick={updateWordLoc.bind(this, { versionId, wordLoc })}
       >
         {getWordText(word)}
       </WordSpan>
@@ -116,15 +116,14 @@ class Parallel extends React.Component {
       const { type, text, children } = piece
 
       if(type === "word") {
-        wordNum++
-        const isSelected = selectedWordLocs.includes(wordNum)
-        const isSemiSelected = semiSelectedWordLocs.includes(wordNum)
+        const wordLoc = `${loc}:${wordNum++}`
+        const isSelected = selectedWordLocs.includes(wordLoc)
+        const isSemiSelected = semiSelectedWordLocs.includes(wordLoc)
 
         return this[thisVersionInfo.isOriginal ? `getOriginal${thisVersionInfo.language}Word` : `getTranslationWord`]({
           word: piece,
           versionId,
-          loc,
-          wordNum,
+          wordLoc,
           isSelected,
           isSemiSelected,
         })
@@ -161,10 +160,12 @@ class Parallel extends React.Component {
   }
 
   getJSXFromVersions = () => {
-    const { versions, versionInfo, wordNum } = this.props 
+    const { versions, wordLoc, versionInfo } = this.props 
 
     return versions.map(({ id: versionId, refs }) => {
-      const selectedWordLocs = []
+      const selectedWordLocs = origLangAndLXXVersionInfo[versionId] && wordLoc
+        ? [wordLoc]
+        : []
       const semiSelectedWordLocs = []
   
       return (
@@ -181,7 +182,6 @@ class Parallel extends React.Component {
         </ParallelGroup>
       )
     })
-
   }
 
   render() {
