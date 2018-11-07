@@ -32,12 +32,59 @@ const SemiSelectedWord = styled.span`
   color: #777;
 `
 
-const getWordText = word => {
-  const { text, children } = word
-  return text || children.map(child => getWordText(child)).join("")
+const getWordText = ({ wordPiece, idx }) => {
+  const { text, children, tag } = wordPiece
+
+  if(text && !tag) return text
+
+  return (
+    <span
+      key={idx}
+      {...getCSSFormatting(wordPiece)}
+    >
+      {text || children.map((child, idx) => getWordText({ wordPiece: child, idx }))}
+    </span>
+  )
 }
 
+const getCSSFormatting = piece => {
+  const { tag } = piece
 
+  const tagToStyles = {
+    nd: {
+      fontVariant: "small-caps",
+    },
+    em: {
+      fontStyle: "italic",
+    },
+    bd: {
+      fontWeight: "bold",
+    },
+    it: {
+      fontStyle: "italic",
+    },
+    bdit: {
+      fontWeight: "bold",
+      fontStyle: "italic",
+    },
+    no: {
+      fontVariant: "normal",
+      fontStyle: "normal",
+      fontWeight: "normal",
+      verticalAlign: "baseline",
+    },
+    sc: {
+      fontVariant: "small-caps",
+    },
+    sup: {
+      fontSize: ".83em",
+      position: "relative",
+      top: "-0.3em",
+    },
+  }
+
+  return tagToStyles[tag] ? { style: tagToStyles[tag] } : {}
+}
 
 class Parallel extends React.Component {
 
@@ -99,8 +146,9 @@ class Parallel extends React.Component {
       <WordSpan
         key={wordLoc}
         onClick={updateWordLoc.bind(this, { versionId, wordLoc })}
+        {...getCSSFormatting(word)}
       >
-        {getWordText(word)}
+        {getWordText({ wordPiece: word })}
       </WordSpan>
     )
   }
@@ -130,12 +178,20 @@ class Parallel extends React.Component {
 
       } else if(text) {
         return (
-          <span key={idx}>{text}</span>
+          <span
+            key={idx}
+            {...getCSSFormatting(piece)}
+          >
+            {text}
+          </span>
         )
 
       } else if(children) {
         return (
-          <span key={idx}>
+          <span
+            key={idx}
+            {...getCSSFormatting(piece)}
+          >
             {this.getJSXFromPieces({
               ...params,
               pieces: children,

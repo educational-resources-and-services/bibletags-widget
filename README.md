@@ -41,8 +41,8 @@ For more information on this project, see the [Bible Tags website](https://bible
 * If we go with the uid concept, then include uids in original version (and LXX) usfm (___Verses tables).
   * Also, change ___Words table structure completely and put all info beyond the word and prefix in different add-on tables
   * How would this change my tagSets?? (no longer wordnum-based in the orig?)
+
 * Get rid of extra spaces I put in Gen 1:1 of oshb, or put them everywhere
-* Get rich text working
 * make verses partial verses where need be (using boundingVersion)
 * have word selection work for original only without tags
 * decide what to do when they click on a translation work and there are no tags
