@@ -158,6 +158,8 @@ class CompareView extends React.PureComponent {
     const { options } = this.props 
     const { versions } = options
 
+    if(!versions) return []
+
     return versions
       .filter(version => !origLangAndLXXVersionInfo[version.id])
       .map(version => ({
@@ -168,16 +170,29 @@ class CompareView extends React.PureComponent {
 
   getVerseAndTagSetQueryVars = versionInfo => {
     const { options } = this.props 
-    const { versions, includeLXX } = options
+    const { versions, originalLanguageRef, includeLXX } = options
 
-    const baseVersion = {
-      ...versions[0],
-      ref: versions[0].refs[0],
-      info: versionInfo[versions[0].id],
-    }
-    delete baseVersion.refs
-
+    let baseVersion
     let origLangAndLXXVerseIds, tagSetIds
+
+    if(originalLanguageRef) {
+      const id = getOrigLangVersionIdFromRef(originalLanguageRef)
+
+      baseVersion = {
+        ref: originalLanguageRef,
+        info: origLangAndLXXVersionInfo[id],
+        id,
+      }
+
+    } else {
+      baseVersion = {
+         ...versions[0],
+         ref: versions[0].refs[0],
+         info: versionInfo[versions[0].id],
+       }
+      delete baseVersion.refs
+    }
+
     const commonRef = { ...baseVersion.ref }
   
     const updateCommonRef = refs => {
@@ -191,7 +206,7 @@ class CompareView extends React.PureComponent {
       })
     }
   
-    if(origLangAndLXXVersionInfo[baseVersion.id]) {
+    if(originalLanguageRef) {
       if(isValidRefInOriginal(baseVersion.ref)) {
         versionInfo[baseVersion.id] = origLangAndLXXVersionInfo[baseVersion.id]
         origLangAndLXXVerseIds = [`${getLocFromRef(baseVersion.ref)}-${baseVersion.id}`]
@@ -213,25 +228,22 @@ class CompareView extends React.PureComponent {
         tagSetIds = []
   
         versions.forEach(version => {
-          if(!origLangAndLXXVersionInfo[version.id]) {
-  
-            const neededRefs = getCorrespondingVerseLocation({
-              baseVersion,
-              lookupVersionInfo: versionInfo[version.id],
-            })
-  
-            if(neededRefs) {
-              updateCommonRef(neededRefs)
-  
-              const neededLocs = neededRefs.map(ref => getLocFromRef(ref))
-              const passedInLocs = version.refs.map(ref => getLocFromRef(ref))
-  
-              if(neededLocs.every(loc => passedInLocs.includes(loc))) {
-                tagSetIds = [
-                  ...tagSetIds,
-                  ...neededLocs.map(loc => `${loc}-${version.id}`),
-                ]
-              }
+          const neededRefs = getCorrespondingVerseLocation({
+            baseVersion,
+            lookupVersionInfo: versionInfo[version.id],
+          })
+
+          if(neededRefs) {
+            updateCommonRef(neededRefs)
+
+            const neededLocs = neededRefs.map(ref => getLocFromRef(ref))
+            const passedInLocs = version.refs.map(ref => getLocFromRef(ref))
+
+            if(neededLocs.every(loc => passedInLocs.includes(loc))) {
+              tagSetIds = [
+                ...tagSetIds,
+                ...neededLocs.map(loc => `${loc}-${version.id}`),
+              ]
             }
           }
         })
@@ -303,9 +315,9 @@ class CompareView extends React.PureComponent {
   render() {
     const { options, show, back, style } = this.props 
     const { showSearchView, wordLoc, mode } = this.state
-    const { versions } = options
+    const { versions, originalLanguageRef } = options
 
-    if(!versions) return null
+    if(!versions && !originalLanguageRef) return null
 
     const oneDayInTheFuture = Date.now() + (1000 * 60 * 60 * 24)
     const oneWeekInTheFuture = Date.now() + (1000 * 60 * 60 * 24 * 7)
@@ -324,7 +336,7 @@ class CompareView extends React.PureComponent {
 
             if(!versionInfoData.isAllLoaded()) return <Progress />
 
-            const { versionInfo } = getDataObjFromQueryVarSets(versionInfoData.queryVarSets)
+            const { versionInfo={} } = getDataObjFromQueryVarSets(versionInfoData.queryVarSets)
             const {
               commonRef,
               origLangAndLXXVerseIds,
@@ -397,7 +409,7 @@ class CompareView extends React.PureComponent {
                       })
 
                       // Add translations to preppedVersions
-                      versions.forEach(({ id, refs }) => {
+                      ;(versions || []).forEach(({ id, refs }) => {
                         if(id === 'lxx') return
 
                         const { wordDividerRegex } = versionInfo[id]
