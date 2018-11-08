@@ -216,11 +216,11 @@ class Parallel extends React.Component {
   }
 
   getJSXFromVersions = () => {
-    const { versions, wordLoc, versionInfo } = this.props 
+    const { versions, originalLanguageWordLoc, versionInfo } = this.props 
 
     return versions.map(({ id: versionId, refs }) => {
-      const selectedWordLocs = origLangAndLXXVersionInfo[versionId] && wordLoc
-        ? [wordLoc]
+      const selectedWordLocs = origLangAndLXXVersionInfo[versionId] && originalLanguageWordLoc
+        ? [originalLanguageWordLoc]
         : []
       const semiSelectedWordLocs = []
   

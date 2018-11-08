@@ -132,7 +132,8 @@ class CompareView extends React.PureComponent {
   state = {
     showSearchView: false,
     mode: 'separate',
-    wordLoc: null,  // in the original
+    originalLanguageWordLoc: null,  // in the original
+    translationWordLocAndVersionId: null
   }
 
   static getDerivedStateFromProps({ options }, state) {
@@ -291,6 +292,10 @@ class CompareView extends React.PureComponent {
   
   hideSearchView = () => this.setState({ showSearchView: false })
   
+  calculateOriginalLanguageWordLocFromTranslation = translationWordLocAndVersionId => {
+    return null
+  }
+  
   updateWordLoc = ({ versionId, wordLoc, force }) => {
     // Do not count it as a click if they have selected text
     if(!window.getSelection().isCollapsed && !force) return
@@ -299,22 +304,30 @@ class CompareView extends React.PureComponent {
       // They clicked on a translation word and we need to map it to the original
       // language wordLoc.
 
-      // TODO
-      return
+      wordLoc = this.calculateOriginalLanguageWordLocFromTranslation({
+        versionId,
+        wordLoc,
+      })
     }
 
-    if(wordLoc === this.state.wordLoc) {
-      this.setState({ wordLoc: null })
+    if(wordLoc === this.state.originalLanguageWordLoc) {
+      this.setState({
+        originalLanguageWordLoc: null,
+        translationWordLocAndVersionId: null,
+      })
       
     } else {
       restoreCache()
-      this.setState({ wordLoc })
+      this.setState({
+        originalLanguageWordLoc: wordLoc,
+        translationWordLocAndVersionId: null,
+      })
     }
   }
 
   render() {
     const { options, show, back, style } = this.props 
-    const { showSearchView, wordLoc, mode } = this.state
+    const { showSearchView, originalLanguageWordLoc, translationWordLocAndVersionId, mode } = this.state
     const { versions, originalLanguageRef } = options
 
     if(!versions && !originalLanguageRef) return null
@@ -464,17 +477,24 @@ class CompareView extends React.PureComponent {
           // selectedWordInOriginal={selectedWordInOriginal}  // { bookId, chapter, verse, wordNum }
           // semiSelectedWordsInOriginal={semiSelectedWordsInOriginal}  // { bookId, chapter, verse, wordNums }
 
+                      let calculatedOriginalLanguageWordLoc = originalLanguageWordLoc
+                      if(!originalLanguageWordLoc && translationWordLocAndVersionId) {
+                        calculatedOriginalLanguageWordLoc =
+                          this.calculateOriginalLanguageWordLocFromTranslation(translationWordLocAndVersionId)
+                      }
+
                       let selectedWordInfo = null
-                      if(wordLoc) {
+                      if(calculatedOriginalLanguageWordLoc) {
                         const { loc } = preppedVersions[0].refs[0]
                         let wordNum = 1
                         preppedVersions[0].refs[0].pieces.some(piece => {
-                          if(piece.type === "word" && wordLoc === `${loc}:${wordNum++}`) {
+                          if(piece.type === "word" && calculatedOriginalLanguageWordLoc === `${loc}:${wordNum++}`) {
                             selectedWordInfo = piece
                             return true
                           }
                           return false
                         })
+
                       }
 
                       /* let selectedWordInfo = null
@@ -541,7 +561,7 @@ class CompareView extends React.PureComponent {
                           <Parallel
                             versions={preppedVersions}
                             versionInfo={versionInfo}
-                            wordLoc={wordLoc}
+                            originalLanguageWordLoc={calculatedOriginalLanguageWordLoc}
                             //boundsVersionId={versions[0].id}  // will base the bounds of the text off the full verse in this version
                             updateWordLoc={this.updateWordLoc}
                           />
