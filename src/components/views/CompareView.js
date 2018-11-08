@@ -15,6 +15,7 @@ import Parallel from '../smart/Parallel'
 import Entry from '../smart/Entry'
 import SearchView from './SearchView'
 import Progress from '../basic/Progress'
+import NotTagged from '../basic/NotTagged'
 
 import versionInfoQuery from '../../data/queries/versionInfo'
 import verseQuery from '../../data/queries/verse'
@@ -397,14 +398,16 @@ class CompareView extends React.PureComponent {
                         )
                       }
 
-                      const { verse } = getDataObjFromQueryVarSets(verseData.queryVarSets)
-                      const { tagSet } = getDataObjFromQueryVarSets(tagSetData.queryVarSets)
+                      const { verse: versesById } = getDataObjFromQueryVarSets(verseData.queryVarSets)
+                      const { tagSet: tagSetsById } = getDataObjFromQueryVarSets(tagSetData.queryVarSets)
+
+                      const partiallyUnTagged = Object.values(tagSetsById).some(tagSet => !tagSet)
                       const preppedVersions = []
 
                       // Add orig languages and LXX to preppedVersions
                       origLangAndLXXVerseIds.forEach(id => {
                         const [ loc, versionId ] = id.split('-')
-                        const { usfm } = verse[id] || {}
+                        const { usfm } = versesById[id] || {}
                         const pieces = getPiecesFromUSFM({ usfm, isOrigLangOrLXXVersion: true })
 
                         const idx = versionId === 'lxx' ? 1 : 0
@@ -420,6 +423,8 @@ class CompareView extends React.PureComponent {
                           pieces,
                         })
                       })
+
+                      const originalLanguage = versionInfo[preppedVersions[0].id].language
 
                       // Add translations to preppedVersions
                       ;(versions || []).forEach(({ id, refs }) => {
@@ -545,7 +550,7 @@ class CompareView extends React.PureComponent {
                                       style={{
                                         textTransform: 'none',
                                       }}
-                                    >{origLanguages['grc']}</SwitchButtonText>
+                                    >{origLanguages[originalLanguage]}</SwitchButtonText>
                                     <DashedLine />
                                   </div>
                                 </SwitchButton>
@@ -565,6 +570,11 @@ class CompareView extends React.PureComponent {
                             //boundsVersionId={versions[0].id}  // will base the bounds of the text off the full verse in this version
                             updateWordLoc={this.updateWordLoc}
                           />
+                          {partiallyUnTagged &&
+                            <NotTagged
+                              language={originalLanguage}
+                            />
+                          }
                           {!!selectedWordInfo &&
                             <Entry
                               wordInfo={selectedWordInfo}

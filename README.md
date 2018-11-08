@@ -43,7 +43,6 @@ For more information on this project, see the [Bible Tags website](https://bible
   * How would this change my tagSets?? (no longer wordnum-based in the orig?)
 
 * Get rid of extra spaces I put in Gen 1:1 of oshb, or put them everywhere
-* have word selection work for original only without tags
 * decide what to do when they click on a translation work and there are no tags
 * Get Greek NT working
 * Get LXX working
@@ -55,6 +54,7 @@ For more information on this project, see the [Bible Tags website](https://bible
 * After I have graphql queries which receive arrays in return, see if my cache -> localstorage strategy works still
 * Authentication
 * Get basic tagging functionality working
+  * decide how to flag tags as unconfirmed
   * It needs to throw an error of some sort when a text if fed to the API with a different number of words from what was tagged
 * Set up ParallelComposite (texts weaved together, and not just one above the other)
 * Get working for other languages (uiWords query)
