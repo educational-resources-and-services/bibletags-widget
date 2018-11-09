@@ -43,9 +43,8 @@ For more information on this project, see the [Bible Tags website](https://bible
   * How would this change my tagSets?? (no longer wordnum-based in the orig?)
 
 * Get rid of extra spaces I put in Gen 1:1 of oshb, or put them everywhere
-* decide what to do when they click on a translation work and there are no tags
 * Get Greek NT working
-* Get LXX working
+* Get LXX working (uid's?? or different versions?)
 * Deal with two word lemmas: Eg. באר שבע
 * make verses partial verses where need be (using boundingVersion)
 * infoCallback
