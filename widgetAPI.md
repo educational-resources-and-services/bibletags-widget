@@ -571,9 +571,13 @@ callback: [{
 		bookId: Number,
 		chapter: Number,
 		verse: Number,
+		wordRange: [Number, Number | null],
 	}],
 }]
 ```
+
+- The `wordRange` parameter is an array with two elements: one integer indicating the start word number (>= 1) and a second integer indicating the end word number. The second element in the array may contain the value `null`, indicating that the word range extends to the end of the given verse.
+- If [getCorrespondingVerseLocations()](#getCorrespondingVerseLocations) is being called in preparation for calling [show()](#show), the `wordRange` parameter is irrelevant and can be ignored.
 
 #### Return value
 
@@ -593,7 +597,7 @@ const correspondingVerseLocations = await window.bibleTagsWidget.getCorrespondin
 			verse: 1,
 		},
 	},
-	lookupVersionIds: ["nasb", "niv"]
+	lookupVersionIds: ["nasb", "niv"],
 })
 // [
 // 	{
@@ -615,6 +619,86 @@ const correspondingVerseLocations = await window.bibleTagsWidget.getCorrespondin
 // ]
 ```
 
+```javascript
+const correspondingVerseLocations = await window.bibleTagsWidget.getCorrespondingVerseLocations({
+	baseVersion: {
+		id: "esv",
+		ref: {
+			bookId: 3,
+			chapter: 14,
+			verse: 55,
+		},
+	},
+	lookupVersionIds: ["syn"],
+})
+// [
+// 	{
+// 		id: "syn",
+// 		refs: [{
+// 			bookId: 3,
+// 			chapter: 14,
+// 			verse: 55,
+//			wordRange: [1, 8],
+// 		}],
+// 	},
+// ]
+```
+
+```javascript
+const correspondingVerseLocations = await window.bibleTagsWidget.getCorrespondingVerseLocations({
+	baseVersion: {
+		id: "esv",
+		ref: {
+			bookId: 3,
+			chapter: 14,
+			verse: 56,
+		},
+	},
+	lookupVersionIds: ["syn"],
+})
+// [
+// 	{
+// 		id: "syn",
+// 		refs: [{
+// 			bookId: 3,
+// 			chapter: 14,
+// 			verse: 55,
+//			wordRange: [9, null],
+// 		}],
+// 	},
+// ]
+```
+
+```javascript
+const correspondingVerseLocations = await window.bibleTagsWidget.getCorrespondingVerseLocations({
+	baseVersion: {
+		id: "syn",
+		ref: {
+			bookId: 3,
+			chapter: 14,
+			verse: 55,
+		},
+	},
+	lookupVersionIds: ["esv"],
+})
+// [
+// 	{
+// 		id: "esv",
+// 		refs: [
+//			{
+// 				bookId: 3,
+// 				chapter: 14,
+// 				verse: 55,
+// 			},
+//			{
+//				bookId: 3,
+//				chapter: 14,
+//				verse: 56,
+//			},
+//		],
+// 	},
+// ]
+```
 
 ## splitVerseIntoWords()
 
