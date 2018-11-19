@@ -595,7 +595,7 @@ const correspondingVerseLocations = await window.bibleTagsWidget.getCorrespondin
 			verse: 1,
 		},
 	},
-	lookupVersionIds: ["nasb", "niv"]
+	lookupVersionIds: ["nasb", "niv"],
 })
 // [
 // 	{
@@ -627,7 +627,7 @@ const correspondingVerseLocations = await window.bibleTagsWidget.getCorrespondin
 			verse: 55,
 		},
 	},
-	lookupVersionIds: ["syn"]
+	lookupVersionIds: ["syn"],
 })
 // [
 // 	{
@@ -652,7 +652,7 @@ const correspondingVerseLocations = await window.bibleTagsWidget.getCorrespondin
 			verse: 56,
 		},
 	},
-	lookupVersionIds: ["syn"]
+	lookupVersionIds: ["syn"],
 })
 // [
 // 	{
@@ -661,7 +661,7 @@ const correspondingVerseLocations = await window.bibleTagsWidget.getCorrespondin
 // 			bookId: 3,
 // 			chapter: 14,
 // 			verse: 55,
-//			wordRange: [9, 17 | null],
+//			wordRange: [9, null],
 // 		}],
 // 	},
 // ]
@@ -677,21 +677,23 @@ const correspondingVerseLocations = await window.bibleTagsWidget.getCorrespondin
 			verse: 55,
 		},
 	},
-	lookupVersionIds: ["esv"]
+	lookupVersionIds: ["esv"],
 })
 // [
 // 	{
 // 		id: "esv",
-// 		refs: [{
-// 			bookId: 3,
-// 			chapter: 14,
-// 			verse: 55,
-// 		}],
-//		[{
-//			bookId: 3,
-//			chapter: 14,
-//			verse: 56,
-//		}],
+// 		refs: [
+//			{
+// 				bookId: 3,
+// 				chapter: 14,
+// 				verse: 55,
+// 			},
+//			{
+//				bookId: 3,
+//				chapter: 14,
+//				verse: 56,
+//			},
+//		],
 // 	},
 // ]
 ```
