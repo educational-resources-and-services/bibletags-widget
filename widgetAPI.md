@@ -577,7 +577,7 @@ callback: [{
 ```
 
 - The `wordRange` parameter is an array with two elements: one integer indicating the start word number (>= 1) and a second integer indicating the end word number. The second element in the array may contain the value `null`, indicating that the word range extends to the end of the given verse.
-- If [getCorrespondingVerseLocations()](#getCorrespondingVerseLocations) is being called in preparation for calling [show()](#show), the `wordRange` parameter is irrelevant and cam be ignored.
+- If [getCorrespondingVerseLocations()](#getCorrespondingVerseLocations) is being called in preparation for calling [show()](#show), the `wordRange` parameter is irrelevant and can be ignored.
 
 #### Return value
 
