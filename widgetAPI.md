@@ -616,6 +616,7 @@ const correspondingVerseLocations = await window.bibleTagsWidget.getCorrespondin
 // 	}
 // ]
 ```
+
 ```javascript
 const correspondingVerseLocations = await window.bibleTagsWidget.getCorrespondingVerseLocations({
 	baseVersion: {
@@ -640,6 +641,7 @@ const correspondingVerseLocations = await window.bibleTagsWidget.getCorrespondin
 // 	},
 // ]
 ```
+
 ```javascript
 const correspondingVerseLocations = await window.bibleTagsWidget.getCorrespondingVerseLocations({
 	baseVersion: {
@@ -664,6 +666,7 @@ const correspondingVerseLocations = await window.bibleTagsWidget.getCorrespondin
 // 	},
 // ]
 ```
+
 ```javascript
 const correspondingVerseLocations = await window.bibleTagsWidget.getCorrespondingVerseLocations({
 	baseVersion: {
