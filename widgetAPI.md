@@ -21,6 +21,7 @@ General notes:
 - The `bookId` parameters must contain an integer between 1-66 (KJV ordering)
 - The `chapter` parameters must contain an integer between 1-150
 - The `verse` parameters must contain an integer between 0-176 (where 0 is used for psalm headings)
+- The `wordRange` parameters are arrays and must contain within square brackets an integer between 1-50 (the beginning of the range) followed by a comma, space, and then another integer (the end of the range) OR the word "null" if it is an open-ended (until the end of the verse) range.
 - The `usfm` parameters may contain [USFM 3](https://ubsicap.github.io/usfm/) format markers for some inline styles, footnotes and cross references. Plain text is also acceptable USFM, so long as it does not contain unescaped backslashes. Non-inline styles like chapter markers (\c), verse markers (\v) and paragraph markers (\p) will be ignored. 
 - `wordNum`-like parameters must be >= 1, representing the word number in the verse as split by `splitVerseIntoWords`.
 - Verse content (i.e. the `usfm` parameter) sent to the [show()](#show) function or `fetchVerseCallback`'s `contentCallback` will have its word count checked against the word count of the current tagging of this verse. If there is inconsistency, original language tagging will not be available while the inconsistency awaits review.
@@ -129,6 +130,7 @@ versions!: [{
 		bookId!: Number,
 		chapter!: Number,
 		verse: Number,
+		wordRange: [Number, Number] OR [Number, null],
 	}],
 }]
 ```
@@ -196,6 +198,36 @@ window.bibleTagsWidget.preload({
 		},
 	],
 	includeLXX: true,
+})
+```
+```javascript
+window.bibleTagsWidget.preload({
+	versions: [
+		{
+			id: "niv",
+			refs: [{
+				bookId: 40,
+          			chapter: 20,
+          			verse: 4,
+          			wordRange: [19, 23],
+			}],
+		},
+	],
+})
+```
+```javascript
+window.bibleTagsWidget.preload({
+	versions: [
+		{
+			id: "kjv",
+			refs: [{
+          			bookId:40,
+          			chapter: 17,
+          			verse: 14,
+          			wordRange: [20, null],
+			}],
+		},
+	],
 })
 ```
 
@@ -317,6 +349,7 @@ fetchVerseCallback: Function({
 		bookId: Number,
 		chapter: Number,
 		verse: Number,
+		wordRange: [Number, Number] OR [Number, null],
 	},
 	contentCallback: Function({
 		usfm!: String,
