@@ -21,7 +21,6 @@ General notes:
 - The `bookId` parameters must contain an integer between 1-66 (KJV ordering)
 - The `chapter` parameters must contain an integer between 1-150
 - The `verse` parameters must contain an integer between 0-176 (where 0 is used for psalm headings)
-- The `wordRange` parameters are arrays with two elements: one integer indicating the start word number (>= 1) and a second integer indicating the end word number. The second element in the array may contain the value `null`, indicating that the word range extends to the end of the given verse.
 - The `usfm` parameters may contain [USFM 3](https://ubsicap.github.io/usfm/) format markers for some inline styles, footnotes and cross references. Plain text is also acceptable USFM, so long as it does not contain unescaped backslashes. Non-inline styles like chapter markers (\c), verse markers (\v) and paragraph markers (\p) will be ignored. 
 - `wordNum`-like parameters must be >= 1, representing the word number in the verse as split by `splitVerseIntoWords`.
 - Verse content (i.e. the `usfm` parameter) sent to the [show()](#show) function or `fetchVerseCallback`'s `contentCallback` will have its word count checked against the word count of the current tagging of this verse. If there is inconsistency, original language tagging will not be available while the inconsistency awaits review.
@@ -547,6 +546,8 @@ window.bibleTagsWidget.hide()
 ## getCorrespondingVerseLocations()
 
 This function is useful when calling [show()](#show) with multiple versions. (See explanation in the `versions` parameter details.)
+- The `wordRange` parameters are arrays with two elements: one integer indicating the start word number (>= 1) and a second integer indicating the end word number. The second element in the array may contain the value `null`, indicating that the word range extends to the end of the given verse.
+- If [getCorrespondingVerseLocations()] is being called for [show()](#show), you can ignore the `wordRange` parameter.
 
 #### Parameters
 
