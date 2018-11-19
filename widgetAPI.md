@@ -616,7 +616,82 @@ const correspondingVerseLocations = await window.bibleTagsWidget.getCorrespondin
 // 	}
 // ]
 ```
-
+```javascript
+const correspondingVerseLocations = await window.bibleTagsWidget.getCorrespondingVerseLocations({
+	baseVersion: {
+		id: "esv",
+		ref: {
+			bookId: 3,
+			chapter: 14,
+			verse: 55,
+		},
+	},
+	lookupVersionIds: ["syn"]
+})
+// [
+// 	{
+// 		id: "syn",
+// 		refs: [{
+// 			bookId: 3,
+// 			chapter: 14,
+// 			verse: 55,
+//			wordRange: [1, 8],
+// 		}],
+// 	},
+// ]
+```
+```javascript
+const correspondingVerseLocations = await window.bibleTagsWidget.getCorrespondingVerseLocations({
+	baseVersion: {
+		id: "esv",
+		ref: {
+			bookId: 3,
+			chapter: 14,
+			verse: 56,
+		},
+	},
+	lookupVersionIds: ["syn"]
+})
+// [
+// 	{
+// 		id: "syn",
+// 		refs: [{
+// 			bookId: 3,
+// 			chapter: 14,
+// 			verse: 55,
+//			wordRange: [9, 17 | null],
+// 		}],
+// 	},
+// ]
+```
+```javascript
+const correspondingVerseLocations = await window.bibleTagsWidget.getCorrespondingVerseLocations({
+	baseVersion: {
+		id: "syn",
+		ref: {
+			bookId: 3,
+			chapter: 14,
+			verse: 55,
+		},
+	},
+	lookupVersionIds: ["esv"]
+})
+// [
+// 	{
+// 		id: "esv",
+// 		refs: [{
+// 			bookId: 3,
+// 			chapter: 14,
+// 			verse: 55,
+// 		}],
+//		[{
+//			bookId: 3,
+//			chapter: 14,
+//			verse: 56,
+//		}],
+// 	},
+// ]
+```
 
 ## splitVerseIntoWords()
 
