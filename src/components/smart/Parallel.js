@@ -169,7 +169,7 @@ class Parallel extends React.Component {
         const isSelected = selectedWordLocs.includes(wordLoc)
         const isSemiSelected = semiSelectedWordLocs.includes(wordLoc)
 
-        return this[thisVersionInfo.isOriginal ? `getOriginal${thisVersionInfo.language}Word` : `getTranslationWord`]({
+        return this[thisVersionInfo.isOriginal ? `getOriginal${thisVersionInfo.languageId}Word` : `getTranslationWord`]({
           word: piece,
           versionId,
           wordLoc,
@@ -231,7 +231,7 @@ class Parallel extends React.Component {
             primary={getVersionStr(versionId)}
           />
           <ParallelText
-            language={versionInfo[versionId].language}
+            languageId={versionInfo[versionId].languageId}
             style={ selectedWordLocs.length > 0 ? { color: '#CCC' } : null }
           >
             {this.getJSXFromRefs({ refs, versionId, selectedWordLocs, semiSelectedWordLocs })}

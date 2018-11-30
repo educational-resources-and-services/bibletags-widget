@@ -2,7 +2,7 @@ import React from 'react'
 // import i18n from '../../utils/i18n.js'
 import styled from 'styled-components'
 import { getStrongs, getIsEntirelyPrefixAndSuffix } from '../../utils/helperFunctions.js'
-import { getUILanguageCode } from '../../utils/i18n.js'
+import { getUILanguageId } from '../../utils/i18n.js'
 
 import SmartQuery from './SmartQuery'
 import Parsing from '../basic/Parsing'
@@ -32,11 +32,11 @@ class Entry extends React.Component {
   }
 
   render() {
-    const { wordInfo, language } = this.props 
+    const { wordInfo, languageId } = this.props 
 
     const isEntirelyPrefixAndSuffix = getIsEntirelyPrefixAndSuffix(wordInfo)
     const strongs = getStrongs(wordInfo)
-    const id = `${strongs}-${getUILanguageCode()}`
+    const id = `${strongs}-${getUILanguageId()}`
     const oneDayInTheFuture = Date.now() + (1000 * 60 * 60 * 24)
 
     return (
@@ -83,7 +83,7 @@ class Entry extends React.Component {
                       <EntryDetails
                         gloss={gloss}
                         pos={pos}
-                        language={language}
+                        languageId={languageId}
                       />
                     </EntrySection>
                     {/* <EntrySection bg="#EEE" style={{ flex: 1, paddingBottom: 45 }}>

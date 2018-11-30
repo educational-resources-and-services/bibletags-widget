@@ -70,7 +70,7 @@ containerEls: [HTMLElement]
 - Container elements with the css value of `position: static` will be changed to `position: relative`.
 
 ```javascript
-uiLanguageCode: String
+uiLanguageId: String
 ```
 
 - **Not yet implemented**
@@ -112,7 +112,7 @@ window.bibleTagsWidget.setUp({
 		document.getElementById('div1'),
 		document.getElementById('div2'),
 	],
-	uiLanguageCode: "spa",
+	uiLanguageId: "spa",
 })
 ```
 
@@ -294,7 +294,7 @@ includeLXX: Boolean
 - Only works with OT passages.
 
 ```javascript
-uiLanguageCode: String
+uiLanguageId: String
 ```
 
 - **Not yet implemented**

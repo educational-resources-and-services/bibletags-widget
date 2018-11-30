@@ -425,7 +425,7 @@ class CompareView extends React.PureComponent {
                         })
                       })
 
-                      const originalLanguage = versionInfo[preppedVersions[0].id].language
+                      const originalLanguageId = versionInfo[preppedVersions[0].id].languageId
 
                       // Add translations to preppedVersions
                       ;(versions || []).forEach(({ id, refs }) => {
@@ -551,7 +551,7 @@ class CompareView extends React.PureComponent {
                                       style={{
                                         textTransform: 'none',
                                       }}
-                                    >{getOrigLanguageText(originalLanguage)}</SwitchButtonText>
+                                    >{getOrigLanguageText(originalLanguageId)}</SwitchButtonText>
                                     <DashedLine />
                                   </div>
                                 </SwitchButton>
@@ -573,13 +573,13 @@ class CompareView extends React.PureComponent {
                           />
                           {partiallyUnTagged &&
                             <NotTagged
-                              language={originalLanguage}
+                              languageId={originalLanguageId}
                             />
                           }
                           {!!selectedWordInfo &&
                             <Entry
                               wordInfo={selectedWordInfo}
-                              language={originalLanguage}
+                              languageId={originalLanguageId}
                             />
                           }
                         </React.Fragment>

@@ -23,35 +23,35 @@
 */
 
 let translations = {}
-let uiLanguageCode = 'eng'
+let uiLanguageId = 'eng'
 
-export const determineUILanguageCode = ({ settings, options={} }) => {
-  let uiLanguageCode
+export const determineUILanguageId = ({ settings, options={} }) => {
+  let uiLanguageId
   try {
-    uiLanguageCode = options.uiLanguageCode
-      || settings.uiLanguageCode
+    uiLanguageId = options.uiLanguageId
+      || settings.uiLanguageId
       || localStorage.getItem(`bibleTags-uiLang-${options.versions && (options.versions[0] || {}).id}`)
-      || localStorage.getItem(`bibleTags-uiLang`)  // latest language code used
+      || localStorage.getItem(`bibleTags-uiLang`)  // latest languageId used
       || 'eng'  // presently unknown
   } catch(e) {
-    uiLanguageCode = 'eng'
+    uiLanguageId = 'eng'
   }
-  return uiLanguageCode
+  return uiLanguageId
 }
 
-// TODO: implement saveLatestUILanguageCode({ uiLanguageCode, versionId })
+// TODO: implement saveLatestUILanguageId({ uiLanguageId, versionId })
 // I need a postMessage sent back from the widget to set bibleTags-uiLang-[versionId]
 
 
 
-export const setUpI18n = async uiLangCode => {
-  uiLanguageCode = uiLangCode
+export const setUpI18n = async uiLangId => {
+  uiLanguageId = uiLangId
 
   await new Promise(resolve => setTimeout(resolve, 5000))
 
   /*
     To get proper ui language (if not english):
-      - change language = uiLanguageCode
+      - change language = uiLanguageId
       - fetch the language.json file + graphql:uiWords
         - once/day: on initial load, check the localstorage variable named lastLanguageFetch (or the like)
         - App component needs to render a spinner until this JSON is fetched
@@ -80,7 +80,7 @@ export const setUpI18n = async uiLangCode => {
   */
 }
 
-export const getUILanguageCode = () => uiLanguageCode
+export const getUILanguageId = () => uiLanguageId
 
 const i18n = (str, swaps={}, desc="") => 
   (

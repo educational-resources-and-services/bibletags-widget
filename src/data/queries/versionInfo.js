@@ -7,7 +7,7 @@ export default gql
     versionInfo(id: $id) {
       id
       name
-      language
+      languageId
       wordDividerRegex
       partialScope
       versificationModel

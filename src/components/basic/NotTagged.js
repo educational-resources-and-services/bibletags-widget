@@ -31,14 +31,14 @@ const InviteAction = styled.span`
 
 class Word extends React.Component {
   render() {
-    const { language } = this.props 
+    const { languageId } = this.props 
 
     return (
       <BoxContainer>
         <Box>
           <InfoLine>{i18n("Verse not yet tagged.")}</InfoLine>
           <InviteLine>
-            {i18n("Know {{language}}? ", { language: getOrigLanguageText(language) })}
+            {i18n("Know {{language}}? ", { language: getOrigLanguageText(languageId) })}
             <InviteAction
               onClick={() => alert('go tag')}
             >

@@ -21,7 +21,7 @@ export const getOrigLangAndLXXVersionInfo = () => ({
   uhb: {
     id: 'uhb',
     name: 'unfoldingWord Hebrew Bible',
-    language: 'heb',
+    languageId: 'heb',
     partialScope: 'ot',
     versificationModel: 'original',
     isOriginal: true,
@@ -29,7 +29,7 @@ export const getOrigLangAndLXXVersionInfo = () => ({
   ugnt: {
     id: 'ugnt',
     name: 'unfoldingWord Greek New Testament',
-    language: 'grc',
+    languageId: 'grc',
     partialScope: 'nt',
     versificationModel: 'original',
     isOriginal: true,
@@ -37,24 +37,24 @@ export const getOrigLangAndLXXVersionInfo = () => ({
   lxx: {
     id: 'lxx',
     name: 'Rahlfs Septuagint',
-    language: 'grc',
+    languageId: 'grc',
     partialScope: 'ot',
     versificationModel: 'lxx',
   },
 })
 
-export const getOrigLanguageText = language => {
+export const getOrigLanguageText = languageId => {
   return {
     heb: i18n("Hebrew"),
     grc: i18n("Greek"),
-  }[language]
+  }[languageId]
 }
 
 export const getVersionStr = versionId => {
   const origLangAndLXXVersionInfo = getOrigLangAndLXXVersionInfo()
 
   return origLangAndLXXVersionInfo[versionId]
-    ? `${getOrigLanguageText(origLangAndLXXVersionInfo[versionId].language)} (${versionId.toUpperCase()})`
+    ? `${getOrigLanguageText(origLangAndLXXVersionInfo[versionId].languageId)} (${versionId.toUpperCase()})`
     : versionId.toUpperCase()
 }
 
@@ -136,8 +136,8 @@ export const getBibleBookName = bookid => {
 
 }
 
-export const getPOSTerm = ({ language, posCode }) => (
-  language === 'heb' ? getHebrewPOSTerm(posCode) : getGreekPOSTerm(posCode)
+export const getPOSTerm = ({ languageId, posCode }) => (
+  languageId === 'heb' ? getHebrewPOSTerm(posCode) : getGreekPOSTerm(posCode)
 )
 
 export const getMorphPartDisplayInfo = ({ lang, morphPart, isPrefixOrSuffix, wordIsMultiPart }) => {

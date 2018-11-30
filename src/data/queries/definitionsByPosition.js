@@ -2,8 +2,8 @@ import gql from 'graphql-tag'
 
 export default gql
 `
-  query ($versionId: String!, $verseLoc: String!, $wordNum: Int!, $language: String!) {
-    definitionsByPosition(versionId: $versionId, verseLoc: $verseLoc, wordNum: $wordNum, language: $language) {
+  query ($versionId: String!, $verseLoc: String!, $wordNum: Int!, $languageId: String!) {
+    definitionsByPosition(versionId: $versionId, verseLoc: $verseLoc, wordNum: $wordNum, languageId: $languageId) {
       id
       lex
       lexUnique

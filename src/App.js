@@ -1,6 +1,6 @@
 import React from 'react'
 // import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider'
-import { determineUILanguageCode, setUpI18n } from './utils/i18n.js'
+import { determineUILanguageId, setUpI18n } from './utils/i18n.js'
 // import styled from 'styled-components'
 import { setUp, ready, updateHeight, report } from './utils/postMessage.js'
 import { getOrigLangAndLXXVersionInfo, getHashParameter } from './utils/helperFunctions.js'
@@ -60,7 +60,7 @@ const getVersionInfo = async id => {
 class App extends React.Component {
 
   state = {
-    uiLanguageCode: "eng",
+    uiLanguageId: "eng",
     options: {},
   }
 
@@ -74,13 +74,13 @@ class App extends React.Component {
   }
 
   setUpLanguage = async ({ settings, options }) => {
-    const uiLanguageCode = determineUILanguageCode({ settings, options })
+    const uiLanguageId = determineUILanguageId({ settings, options })
 
-    if(uiLanguageCode === this.state.uiLanguageCode) return 
+    if(uiLanguageId === this.state.uiLanguageId) return 
 
-    this.setState({ uiLanguageCode: null })
-    await setUpI18n(uiLanguageCode)
-    this.setState({ uiLanguageCode })
+    this.setState({ uiLanguageId: null })
+    await setUpI18n(uiLanguageId)
+    this.setState({ uiLanguageId })
   }
 
   postMessageListener = async event => {
@@ -200,7 +200,7 @@ class App extends React.Component {
   onResize = contentRect => updateHeight(contentRect.bounds.height)
 
   render() {
-    const { options, uiLanguageCode } = this.state
+    const { options, uiLanguageId } = this.state
 
     return (
       <Apollo>
@@ -215,7 +215,7 @@ class App extends React.Component {
                   ref={measureRef}
                   style={getHashParameter('utility') ? { visibility: "hidden" } : null}
                 >
-                  {uiLanguageCode !== null
+                  {uiLanguageId !== null
                     ?
                       <CompareView
                         options={options}

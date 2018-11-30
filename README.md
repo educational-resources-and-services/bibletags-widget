@@ -72,8 +72,6 @@ For more information on this project, see the [Bible Tags website](https://bible
 * Get rid of extra spaces I put in Gen 1:1 of uhb, or put them everywhere
 * Get Greek NT working
 * DB improvements
-  * Test and Commit
-
   - in widget, change language > languageId and versionInfo to version??
 
   * think through table structure for lxx
@@ -113,7 +111,7 @@ For more information on this project, see the [Bible Tags website](https://bible
 * Get working for other languages (uiWords query)
   * Should lang codes only be 3-digit? (i.e. no eng-gb?) Think about Chinese as another example
   * Think about different ways besides chap:verse that translations represent ref's
-* Test that uiLanguageCode works correctly
+* Test that uiLanguageId works correctly
 * hideVerse
 * hideOriginal
 * addlOptions

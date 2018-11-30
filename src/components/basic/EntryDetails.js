@@ -29,13 +29,13 @@ const PartOfSpeech = styled.div`
 
 class EntryDetails extends React.Component {
   render() {
-    const { gloss, pos, language } = this.props 
+    const { gloss, pos, languageId } = this.props 
 
     return (
       <DetailsLine>
         <Definition>{gloss}</Definition>
         <span> </span>
-        <PartOfSpeech>{pos.map(posCode => getPOSTerm({ language, posCode })).join(i18n(", ", {}, "list separator"))}</PartOfSpeech>
+        <PartOfSpeech>{pos.map(posCode => getPOSTerm({ languageId, posCode })).join(i18n(", ", {}, "list separator"))}</PartOfSpeech>
         {/* <IconButtonStyled
           aria-label="Lexicon"
           onClick={() => {}}
