@@ -6,13 +6,14 @@ import { BatchHttpLink } from "apollo-link-batch-http"
 import { from } from 'apollo-link'
 // import { ApolloLink, from } from 'apollo-link'
 import { InMemoryCache } from 'apollo-cache-inmemory'
-import { hashParametersObject } from '../../utils/helperFunctions.js'
+import { getHashParameter } from '../../utils/helperFunctions.js'
 // import { onFinish } from './AfterwareLink'
 
-const URI = hashParametersObject.data === 'local'
+const dataHashParameter = getHashParameter('data')
+const URI = dataHashParameter === 'local'
   ? "http://localhost:3001/graphql/"
   : (
-    hashParametersObject.data === 'staging'
+    dataHashParameter === 'staging'
       ? "https://api.staging.bibletags.org/graphql/"
       : "https://api.bibletags.org/graphql/"
   )

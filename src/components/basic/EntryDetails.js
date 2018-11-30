@@ -1,7 +1,7 @@
 import React from 'react'
 import i18n from '../../utils/i18n.js'
 import styled from 'styled-components'
-import { posTerms } from '../../utils/helperFunctions.js'
+import { getPOSTerm } from '../../utils/helperFunctions.js'
 
 // import IconButton from '@material-ui/core/IconButton'
 // import LibraryBooksIcon from '@material-ui/icons/LibraryBooks'
@@ -27,15 +27,15 @@ const PartOfSpeech = styled.div`
 //   vertical-align: middle;
 // `
 
-class EntryWord extends React.Component {
+class EntryDetails extends React.Component {
   render() {
-    const { gloss, pos } = this.props 
+    const { gloss, pos, language } = this.props 
 
     return (
       <DetailsLine>
         <Definition>{gloss}</Definition>
         <span> </span>
-        <PartOfSpeech>{pos.map(onePos => posTerms[onePos]).join(i18n(", ", {}, "list separator"))}</PartOfSpeech>
+        <PartOfSpeech>{pos.map(posCode => getPOSTerm({ language, posCode })).join(i18n(", ", {}, "list separator"))}</PartOfSpeech>
         {/* <IconButtonStyled
           aria-label="Lexicon"
           onClick={() => {}}
@@ -48,4 +48,4 @@ class EntryWord extends React.Component {
 
 }
 
-export default EntryWord
+export default EntryDetails

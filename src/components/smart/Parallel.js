@@ -1,8 +1,9 @@
 import React from 'react'
 // import i18n from '../../utils/i18n.js'
 import styled from 'styled-components'
-import { getVersionStr, getMainWordPartIndex, getGrammarColor,
-         getIsEntirelyPrefixAndSuffix, origLangAndLXXVersionInfo } from '../../utils/helperFunctions.js'
+import { getVersionStr, getMainWordPartIndex,
+         getIsEntirelyPrefixAndSuffix, getOrigLangAndLXXVersionInfo } from '../../utils/helperFunctions.js'
+import { getGrammarColor } from '../../utils/hebrewMorph.js'
 
 import ParallelText from './ParallelText'
 // import ParallelComposite from './ParallelComposite'
@@ -219,7 +220,7 @@ class Parallel extends React.Component {
     const { versions, originalLanguageWordLoc, versionInfo } = this.props 
 
     return versions.map(({ id: versionId, refs }) => {
-      const selectedWordLocs = origLangAndLXXVersionInfo[versionId] && originalLanguageWordLoc
+      const selectedWordLocs = getOrigLangAndLXXVersionInfo()[versionId] && originalLanguageWordLoc
         ? [originalLanguageWordLoc]
         : []
       const semiSelectedWordLocs = []

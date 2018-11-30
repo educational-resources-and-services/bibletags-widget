@@ -3,7 +3,7 @@ import React from 'react'
 import { determineUILanguageCode, setUpI18n } from './utils/i18n.js'
 // import styled from 'styled-components'
 import { setUp, ready, updateHeight, report } from './utils/postMessage.js'
-import { origLangAndLXXVersionInfo, hashParametersObject } from './utils/helperFunctions.js'
+import { getOrigLangAndLXXVersionInfo, getHashParameter } from './utils/helperFunctions.js'
 import { splitVerseIntoWords } from './utils/splitting.js'
 import Measure from 'react-measure'
 import Apollo, { restoreCache, client, getStaleState, setStaleTime, getQueryVars } from './components/smart/Apollo'
@@ -18,8 +18,9 @@ import versionInfoQuery from './data/queries/versionInfo'
 // const dev = !!window.location.href.match(/localhost/)
 
 const getVersionInfo = async id => {
-  if(origLangAndLXXVersionInfo[id]) {
-    return origLangAndLXXVersionInfo[id]
+  const versionInfo = getOrigLangAndLXXVersionInfo()[id]
+  if(versionInfo) {
+    return versionInfo
   }
 
   return await (
@@ -212,7 +213,7 @@ class App extends React.Component {
               <div ref={this.setRefEl}>
                 <div
                   ref={measureRef}
-                  style={hashParametersObject.utility ? { visibility: "hidden" } : null}
+                  style={getHashParameter('utility') ? { visibility: "hidden" } : null}
                 >
                   {uiLanguageCode !== null
                     ?

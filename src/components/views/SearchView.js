@@ -41,8 +41,8 @@ class SearchView extends React.PureComponent {
             {
               true  // check if the search originates from the NT (or OT)
                 ? [
-                  <SwitchButton id="nt" key="nt">{i18n("NT ({{nt_greek_version}})", { nt_greek_version: 'BHP' })}</SwitchButton>,
-                  <SwitchButton id="ot" key="ot">{i18n("OT ({{ot_greek_version}})", { ot_greek_version: 'WLC' })}</SwitchButton>,
+                  <SwitchButton id="nt" key="nt">{i18n("NT ({{nt_greek_version}})", { nt_greek_version: 'UGNT' })}</SwitchButton>,
+                  <SwitchButton id="ot" key="ot">{i18n("OT ({{ot_greek_version}})", { ot_greek_version: 'UHB' })}</SwitchButton>,
                   <SwitchButton id="both" key="both">{i18n("Both")}</SwitchButton>,
                 ]
                 : [

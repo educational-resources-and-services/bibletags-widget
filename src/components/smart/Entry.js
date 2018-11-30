@@ -32,7 +32,7 @@ class Entry extends React.Component {
   }
 
   render() {
-    const { wordInfo } = this.props 
+    const { wordInfo, language } = this.props 
 
     const isEntirelyPrefixAndSuffix = getIsEntirelyPrefixAndSuffix(wordInfo)
     const strongs = getStrongs(wordInfo)
@@ -68,7 +68,7 @@ class Entry extends React.Component {
                 )
               }
 
-              const { id, lemma, vocal, hits, gloss, pos } = definition
+              const { id, lex, vocal, hits, gloss, pos } = definition
 
               return (
                 <EntrySections>
@@ -76,13 +76,14 @@ class Entry extends React.Component {
                     <EntrySection bg="#BBB">
                       <EntryWord
                         id={id}
-                        lemma={lemma}
+                        lex={lex}
                         vocal={vocal}
                         hits={hits}
                       />
                       <EntryDetails
                         gloss={gloss}
                         pos={pos}
+                        language={language}
                       />
                     </EntrySection>
                     {/* <EntrySection bg="#EEE" style={{ flex: 1, paddingBottom: 45 }}>

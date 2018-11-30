@@ -6,8 +6,8 @@ export default gql
   query ($id: ID!) {
     definition(id: $id) {
       id
-      lemma
-      lemmaUnique
+      lex
+      lexUnique
       vocal
       hits
       gloss

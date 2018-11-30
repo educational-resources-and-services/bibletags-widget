@@ -9,7 +9,7 @@ const WordLine = styled.div`
   padding-right: 40px;
 `
 
-const Lemma = styled.div`
+const Lexeme = styled.div`
   font-size: 17px;
   display: inline-block;
   margin-right: 3px;
@@ -42,7 +42,7 @@ const Hits = styled.div`
 
 class EntryWord extends React.Component {
   render() {
-    const { id, lemma, vocal, hits } = this.props
+    const { id, lex, vocal, hits } = this.props
 
     const strongs = id
       .split('-')[0]  // get rid of -eng or the like
@@ -50,7 +50,7 @@ class EntryWord extends React.Component {
 
     return (
       <WordLine>
-        <Lemma className="hebFont">{lemma}</Lemma>
+        <Lexeme className="hebFont">{lex}</Lexeme>
         <span> </span>
         <Pronounciation>{vocal}</Pronounciation>
         <span> </span>

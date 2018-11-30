@@ -24,29 +24,83 @@ For more information on this project, see the [Bible Tags website](https://bible
   * Show a, b or c after verse number when it is not complete by referencing the wordRange value returned from getCorrespondingVerseLocation (Eg. 12:3b)
 
 * Jesse
+  * UGNT fixed? (36 adjectives without a type)
+  * Confirmed non-standard usage of strong attribute in usfm?
+
   * Ask how USFM handles languages which do not divide words by spaces + hyphens/maqephs/etc + whether we need a PR to usfm-js to distinguish this. (Relates to the two-lemma words issue.) (Also, relates to space following ending marker bug mentioned below. That is, non-space-separating languages could just have all words on a single line, as would maqeph connected words OR newlines don't count and a space needs to come at the end of all /w lines which do have a space after them)
-  * Ask Jesse if he wants a PR to support nested elements in usfm-js (http://ubsicap.github.io/usfm/characters/nesting.html)
-  * Ask Jesse about usfm-js and footnotes, which are not presently parsed. Should they be?
-  * Ask Jesse about usfm-js bug where a space following an ending marker is not counted as text, but just listed as nextChar. (Eg. "In the beginning G\\sc od\\sc* created.")
+    - christopher clap - prof translation world - spent a lot of time looking at word divisions. (run my stuff by him!)
+    - bruce mcclain - working on usfj.js @bruce.mc
+      - tell him needed fixes
+        * support nested elements in usfm-js (http://ubsicap.github.io/usfm/characters/nesting.html)
+        * footnotes are not presently parsed. Should they be?
+        * bug: a space following an ending marker is not counted as text, but just listed as nextChar. (Eg. "In the beginning G\\sc od\\sc* created.")
+    - zero-width joiner between prefixes
+    - all on a single line if no spaces between words
+  * ISO 639 1/2/3, or IETF ??
+    - use IETF https://unfoldingword.bible/ietf/
   * Jesse: \f vs \fe - what is the difference?
+    - ask Robert hunt @RobH-NZ
+    - Then, post an issue here if need be: https://github.com/ubsicap/usfm/issues
   * Decide on live orig version names (talk to Jesse) and ids
+    - Hebrew
+      - UHB
+    - Greek
+      - Open to me adding to the UGNT with this stuff
+      - Todd price (Greek textual critic) - but really busy right now
+      - Jonathan Robby (seeking open source critical text)
   * Decide on a lemma/strongs/etc system after talking with Jesse and Alan (and Andy and DeRouchie?)
     * a, b, c, +
     * extra digit
     * james tauber's greek-lemma-mappings
+    - map schemes into single id??
   * Explain uid idea for Greek (and Hebrew?)
-    * Indicate testament? Book?
     * How would this look in Hebrew? Do we have manuscripts available? Will we?
+
+  * Unasked
+    * How would we best handle באר שבע?
+    * What does the parsing widget replacement need?
+      - search
+      - indicate
+      - automatic vs suggested
+      - ...
 
 * If we go with the uid concept, then include uids in original version (and LXX) usfm (___Verses tables).
   * Also, change ___Words table structure completely and put all info beyond the word and prefix in different add-on tables
   * How would this change my tagSets?? (no longer wordnum-based in the orig?)
 
-* Get rid of extra spaces I put in Gen 1:1 of oshb, or put them everywhere
+* Check with Hebrew people how they would feel about me having the ketiv as the variant and the qere as the main word
+* Get rid of extra spaces I put in Gen 1:1 of uhb, or put them everywhere
 * Get Greek NT working
+* DB improvements
+  * Test and Commit
+
+  - in widget, change language > languageId and versionInfo to version??
+
+  * think through table structure for lxx
+  * think through table structure for crowd-sourcing
+
+  // TODO: I need a many-to-may relationship here, indicating synonyms and related words in a language agnostic way
+  // This relationship will be used for producing the language-specific definition rows each time these relationships
+  // or a gloss is updated.
+
+* Decide on code division
+  - what is Bible Tags and what is Biblearc? 
+    - Reading, for example
+      - in the Bible Tags app? if so, should Biblearc's reading also be open source and/or a widget
+  - what is open source?
+  - what is a widget?
+  - potential divisions
+    - widget-script
+    - widget
+    - data (includes search api)
+    - versification
+    - app
+* Use "Enhanced" Strong's (from Alan) for both Hebrew and Greek. Have the current a,b,c system in Hebrew be auto-translated into the Enhanced style.
+
 * Get LXX working (uid's?? or different versions?)
-* Deal with two word lemmas: Eg. באר שבע
+* Deal with two word lexemes: Eg. באר שבע
 * make verses partial verses where need be (using boundingVersion)
+* If I use UHB (instead of OSHB osis, then make sure to change ילך lexeme to הלך)
 * infoCallback
 * Entire chapter preload (chapter and tagSets queries)
 * utilize definitionsByPosition query for when wordnum supplied (so only a single back-and-forth is needed)
@@ -68,11 +122,9 @@ For more information on this project, see the [Bible Tags website](https://bible
 * jumpToLocation
 * Search
   * Inline + searchData
-  * Established Bible search languages to consider: json-ld, named attributes, url-query
     * Use same search language that Biblearc 3.0 will employ
-  * Canonical identification of lemmas
+  * Canonical identification of lexemes
     * https://www.academia.edu/35220175/Linking_Lexical_Resources_for_Biblical_Greek
-    * https://git.door43.org/Door43/UGNT/src/tw_occurrences/57-TIT.usfm#L19
 * Themes
 * set up thayers and bdb (as temp lexicon entry until I get English parsing data)
 * Make sure widget-script includes all API aspects it needs to so as to not require foreseeable changes.
@@ -94,6 +146,7 @@ For more information on this project, see the [Bible Tags website](https://bible
 
 Post-launch:
 
+* Develop color-highlighting system for Greek verbs (with Nate, others?)
 * Seek permission to get data sets for translations tagged to strongs and the like. Reference:
   * [STEP Bible](https://stepweb.atlassian.net/wiki/spaces/SUG/pages/12484619/Copyrights+Licences)
   * Blue Letter Bible
@@ -118,7 +171,7 @@ Post-launch:
 
 ## Open source alignment data
 
-If you are aware of any open source word alignment data (what we call Bible tags) for a particular Bible translation, please [bring it to our attention](https://bibletags.org/contact) and we will gladly make use of it. Both full alignment data, as well as data which simply includes the Strongs number or lemma for each word in the translation, are useful.
+If you are aware of any open source word alignment data (what we call Bible tags) for a particular Bible translation, please [bring it to our attention](https://bibletags.org/contact) and we will gladly make use of it. Both full alignment data, as well as data which simply includes the Strongs number, lexeme or lemma for each word in the translation, are useful.
 
 
 ## Contributing
@@ -249,18 +302,18 @@ npm install
 * Hebrew Bible
   * [UHB](https://git.door43.org/unfoldingWord/uhb)
   * License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
-  * Description: WLC text with lemmas and parsings from Unfolding Word
+  * Description: UHB text (based on the WLC)
 * Greek New Testament
   * [UGNT](https://git.door43.org/unfoldingWord/UGNT)
   * License: [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)
   * Compiled by Alan Bunning via the [Center for New Testament Restoration](https://greekcntr.org)
-    * Alan is currently adding parsing and lemma data to all variants
+    * Alan is currently adding parsing and lexical data to all variants
     * Alan aims to create a non-prototype computer generated version (early 2019?)
     * Alan's manuscript types: (1) full books (2) snippets (3) quoted by church fathers (4) foreign languages
-      * #1 and #2 currently considered in the `BHP`.
+      * #1 and #2 currently considered in the `UGNT`.
     * Alan is looking to land on an ID system for words that would allow for new variants to be added without complicating existing data.
       * Andy suggested using a 4-digit random unigue identifier for each unique word, explained in an email sent to Alan on Oct 25, 2018.
-    * Alan notes that punctuation and accents are somewhat up-in-the-air in the `BHP`, but hopes to refine and standardize them after the release of the computer generated version.
+    * Alan notes that punctuation and accents are somewhat up-in-the-air in the `UGNT`, but hopes to refine and standardize them after the release of the computer generated version.
 * Septuagint
   * [LXX](http://ccat.sas.upenn.edu/gopher/text/religion/biblical/lxxmorph/)
   * License: [Commercial use requires prior written consent](http://ccat.sas.upenn.edu/gopher/text/religion/biblical/lxxvar/0-readme.txt)

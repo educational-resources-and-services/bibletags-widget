@@ -2,7 +2,7 @@ import React from 'react'
 // import i18n from '../../utils/i18n.js'
 import styled from 'styled-components'
 import { restoreCache, getDataObjFromQueryVarSets } from '../smart/Apollo'
-import { getPassageStr, origLangAndLXXVersionInfo, getOrigLangVersionIdFromRef, origLanguages } from '../../utils/helperFunctions.js'
+import { getPassageStr, getOrigLangAndLXXVersionInfo, getOrigLangVersionIdFromRef, getOrigLanguageText } from '../../utils/helperFunctions.js'
 import { getPiecesFromUSFM } from '../../utils/splitting.js'
 import { getCorrespondingVerseLocation, isValidRefInOriginal, getLocFromRef } from 'bibletags-versification'
 
@@ -22,7 +22,7 @@ import verseQuery from '../../data/queries/verse'
 import tagSetQuery from '../../data/queries/tagSet'
 
 // const verse = {
-//   id: '0010101-wlc',
+//   id: '0010101-uhb',
 //   usfm: `
 //     \\w ב/רשית|strongs="H234" morph="HR/Ncfsa"\\w*
 //     \\w ברא|lemma="hi!"\\w*
@@ -78,15 +78,15 @@ import tagSetQuery from '../../data/queries/tagSet'
 
 // const word = {
 //   id: 'H234-eng',
-//   lemma: 'אַזְכָּרָה',
-//   lemmaUnique: true,
+//   lex: 'אַזְכָּרָה',
+//   lexUnique: true,
 //   vocal: 'ʼazkârâh',
 //   hits: 7,
 //   gloss: 'reminder',
 //   pos: ['N'],
 //   syn: [],
-//   rel: [{"lemma":"זָכַר","strongs":"G2142","hits":232,"gloss":"remember"}],
-//   lxx: [{"w":"ἀρχῇ","lemma":"ἀρχή","strongs":"G746","hits":236,"bhpHits":55}],
+//   rel: [{"lex":"זָכַר","strongs":"G2142","hits":232,"gloss":"remember"}],
+//   lxx: [{"w":"ἀρχῇ","lex":"ἀρχή","strongs":"G746","hits":236,"bhpHits":55}],
 //   lxxHits: [],
 // }
 
@@ -163,7 +163,7 @@ class CompareView extends React.PureComponent {
     if(!versions) return []
 
     return versions
-      .filter(version => !origLangAndLXXVersionInfo[version.id])
+      .filter(version => !getOrigLangAndLXXVersionInfo()[version.id])
       .map(version => ({
         variables: { id: version.id },
         cacheKey: `VersionInfo:${version.id}`
@@ -176,6 +176,7 @@ class CompareView extends React.PureComponent {
 
     let baseVersion
     let origLangAndLXXVerseIds, tagSetIds
+    const origLangAndLXXVersionInfo = getOrigLangAndLXXVersionInfo()
 
     if(originalLanguageRef) {
       const id = getOrigLangVersionIdFromRef(originalLanguageRef)
@@ -301,7 +302,7 @@ class CompareView extends React.PureComponent {
     // Do not count it as a click if they have selected text
     if(!window.getSelection().isCollapsed && !force) return
 
-    if(!(origLangAndLXXVersionInfo[versionId] || {}).isOriginal) {
+    if(!(getOrigLangAndLXXVersionInfo()[versionId] || {}).isOriginal) {
       // They clicked on a translation word and we need to map it to the original
       // language wordLoc.
 
@@ -401,7 +402,7 @@ class CompareView extends React.PureComponent {
                       const { verse: versesById } = getDataObjFromQueryVarSets(verseData.queryVarSets)
                       const { tagSet: tagSetsById } = getDataObjFromQueryVarSets(tagSetData.queryVarSets)
 
-                      const partiallyUnTagged = Object.values(tagSetsById).some(tagSet => !tagSet)
+                      const partiallyUnTagged = tagSetsById && Object.values(tagSetsById).some(tagSet => !tagSet.tags)
                       const preppedVersions = []
 
                       // Add orig languages and LXX to preppedVersions
@@ -550,7 +551,7 @@ class CompareView extends React.PureComponent {
                                       style={{
                                         textTransform: 'none',
                                       }}
-                                    >{origLanguages[originalLanguage]}</SwitchButtonText>
+                                    >{getOrigLanguageText(originalLanguage)}</SwitchButtonText>
                                     <DashedLine />
                                   </div>
                                 </SwitchButton>
@@ -578,6 +579,7 @@ class CompareView extends React.PureComponent {
                           {!!selectedWordInfo &&
                             <Entry
                               wordInfo={selectedWordInfo}
+                              language={originalLanguage}
                             />
                           }
                         </React.Fragment>

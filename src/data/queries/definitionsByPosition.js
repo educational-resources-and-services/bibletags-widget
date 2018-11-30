@@ -5,8 +5,8 @@ export default gql
   query ($versionId: String!, $verseLoc: String!, $wordNum: Int!, $language: String!) {
     definitionsByPosition(versionId: $versionId, verseLoc: $verseLoc, wordNum: $wordNum, language: $language) {
       id
-      lemma
-      lemmaUnique
+      lex
+      lexUnique
       vocal
       hits
       gloss

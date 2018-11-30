@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import i18n from '../../utils/i18n.js'
-import { origLanguages } from '../../utils/helperFunctions.js'
+import { getOrigLanguageText } from '../../utils/helperFunctions.js'
 
 const BoxContainer = styled.div`
   text-align: center;
@@ -38,7 +38,7 @@ class Word extends React.Component {
         <Box>
           <InfoLine>{i18n("Verse not yet tagged.")}</InfoLine>
           <InviteLine>
-            {i18n("Know {{language}}? ", { language: origLanguages[language] })}
+            {i18n("Know {{language}}? ", { language: getOrigLanguageText(language) })}
             <InviteAction
               onClick={() => alert('go tag')}
             >
