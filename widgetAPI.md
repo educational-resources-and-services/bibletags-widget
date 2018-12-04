@@ -32,23 +32,6 @@ General notes:
 #### Parameters
 
 ```javascript
-appId: String
-```
-
-- **Not yet implemented**
-- *Default: [domain of embedding website]*
-- A unique identifier for the app.
-- Used with `userId` to uniquely identify a user.
-- This value will be displayed to the end user in login management.
-
-```javascript
-userId: String
-```
-
-- **Not yet implemented**
-- any identifier unique to the `appId`
-
-```javascript
 theme: String
 ```
 
@@ -95,7 +78,6 @@ null
 
 ```javascript
 window.bibleTagsWidget.setUp({
-	userId: "3766",
 	containerEls: [
 		document.getElementById('div1'),
 		document.getElementById('div2'),
@@ -104,8 +86,6 @@ window.bibleTagsWidget.setUp({
 ```
 ```javascript
 window.bibleTagsWidget.setUp({
-	apiId: "https://biblearc.com",
-	userId: "3766",
 	theme: "dark",
 	offlineEnabled: true,
 	containerEls: [
@@ -325,7 +305,7 @@ fetchVerseCallback: Function({
 ```
 
 - **Not yet implemented**
-- Required for search (unless `searchData` is provided) and for USFM cross reference content.
+- Required for search (unless `searchCallback` is provided) and for USFM cross reference content.
 - The provided `fetchVerseCallback()` function must cause `contentCallback()` to be called in response.
 
 ```javascript
@@ -347,33 +327,16 @@ jumpToLocation: {
 - If `includeOptionForBasePassage` (*Default: true*) is true, then this option will likewise be available in the main options menu.
 
 ```javascript
-searchData: {
-	maxResults: Number,
-	callback!: Function({
-		searchString: String,
-		totalNumResults: Number,
-		resultsByVersion: [{
-			id: String,  // versionId
-			hits: [{
-				refs: [{
-					bookId: Number,
-					chapter: Number,
-					verse: Number,
-					wordNums: [Number],
-				}],
-			}],
-		}],
-	}),
-}
+searchCallback: Function({
+	searchString: String,
+})
 ```
 
 - **Not yet implemented**
-- When provided, `callback` is called instead of inline search results being presented.
-- `maxResults` (*Default: 100*) should be an integer between 1-500. 
-- `resultsByVersion` is returned with the following hierarchy: versions > hits > verses (i.e. `refs`) > words. All versions passed to the [show()](#show) function are included. Each hit is version-specific in terms of versification and word numbers, corresponding to an original language hit which was the basis of the search. There will only rarely be multiple verses per hit, in situations where the versification is highly problematic.
+- When provided, this function is called instead of inline search results being presented.
 
 ```javascript
-infoCallback: function({
+infoCallback: Function({
 	connectedWordNums: [Number],
 })
 ```
@@ -425,7 +388,7 @@ window.bibleTagsWidget.show({
 	containerElTargetScroll: {
 		x: 0,
 		y: 320,
-	}
+	},
 	margin: 20,
 	zIndex: 50,
 	hideVerse: true,
@@ -460,22 +423,17 @@ window.bibleTagsWidget.show({
 		}) => {
 			// Jump to the requested location.
 		},
-	}
-	searchData: {
-		maxResults: 50,
-		callback: ({
-			searchString,
-			totalNumResults,
-			resultsByVersion,
-		}) => {
-			// Display the search results however I like.
-		},
-	}
+	},
+	searchCallback: ({
+		searchString,
+	}) => {
+		// Run the search however I like.
+	},
 	infoCallback: ({
 		connectedWordNums,
 	}) => {
 		// Highlight all words in the `connectedWordNums` array.
-	}
+	},
 })
 // Returns: 2
 ```
