@@ -11,6 +11,7 @@ Include `<script src="https://cdn.bibletags.org/widget/widget-script-v0.js" id="
 
 - All API function contained in the `window.bibleTagsWidget` object.
 - Call the [window.bibleTagsWidget.show()](#show) function (with proper parameters) to display a text.
+- *Note: This widget uses cookies and HTML5 LocalStorage. It is your sole responsibility of embedding websites to comply with "The EU Cookie Law" and any other regulations.*
 
 
 ### Functions
