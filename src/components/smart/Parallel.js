@@ -125,19 +125,21 @@ class Parallel extends React.Component {
     )
   }
 
-  // getOriginalgrcWord = word => {
-  //   const { updateWordLoc } = this.props
-  //   const WordSpan = isSelected ? SelectedWord : (isSemiSelected ? SemiSelectedWord : Word)
+  getOriginalgrcWord = ({ word, versionId, wordLoc, isSelected, isSemiSelected }) => {
+    const { updateWordLoc } = this.props
 
-  //   return (
-  //     <WordSpan
-  //       key={idx}
-  //       onClick={updateWordLoc.bind(this, { versionId, wordLoc })}
-  //     >
-  //       {word}
-  //     </WordSpan>
-  //   )
-  // }
+    const { text } = word
+    const WordSpan = isSelected ? SelectedWord : (isSemiSelected ? SemiSelectedWord : Word)
+
+    return (
+      <WordSpan
+        key={wordLoc}
+        onClick={updateWordLoc.bind(this, { versionId, wordLoc })}
+      >
+        {text}
+      </WordSpan>
+    )
+  }
 
   getTranslationWord = ({ word, versionId, wordLoc, isSelected }) => {
     const { updateWordLoc } = this.props
