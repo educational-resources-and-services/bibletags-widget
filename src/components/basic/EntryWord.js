@@ -42,7 +42,7 @@ const Hits = styled.div`
 
 class EntryWord extends React.Component {
   render() {
-    const { id, lex, vocal, hits } = this.props
+    const { id, lex, vocal, hits, languageId } = this.props
 
     const strongs = id
       .split('-')[0]  // get rid of -eng or the like
@@ -50,7 +50,7 @@ class EntryWord extends React.Component {
 
     return (
       <WordLine>
-        <Lexeme className="hebFont">{lex}</Lexeme>
+        <Lexeme className={`${languageId}Font`}>{lex}</Lexeme>
         <span> </span>
         <Pronounciation>{vocal}</Pronounciation>
         <span> </span>

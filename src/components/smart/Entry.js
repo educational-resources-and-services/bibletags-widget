@@ -79,6 +79,7 @@ class Entry extends React.Component {
                         lex={lex}
                         vocal={vocal}
                         hits={hits}
+                        languageId={languageId}
                       />
                       <EntryDetails
                         gloss={gloss}
