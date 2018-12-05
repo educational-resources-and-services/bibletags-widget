@@ -9,6 +9,15 @@ body {
   src: url(SILEOTSR.woff);
 }
 
+@font-face {
+  font-family: SBLGreek;
+  src: url(SBL_grk.woff);
+}
+
 .hebFont {
   font-family: EzraSILSRW, sans-serif;
+}
+
+.grcFont {
+  font-family: SBLGreek, serif;
 }
