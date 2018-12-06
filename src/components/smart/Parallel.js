@@ -158,15 +158,50 @@ class Parallel extends React.Component {
 
   getJSXFromPieces = params => {
     const { versionInfo } = this.props
-    const { versionId, loc, pieces, selectedWordLocs, semiSelectedWordLocs } = params
+    const { versionId, loc, pieces, wordRanges, selectedWordLocs, semiSelectedWordLocs } = params
 
     const thisVersionInfo = versionInfo[versionId]
+    const wordRangeArrays = wordRanges && wordRanges.map(wordRange => (
+      wordRange.split('-').map(wordRangeInt => (
+        wordRangeInt === "1" ? 0 : parseInt(wordRangeInt || 1000, 10)
+      ))
+    ))
+
     let wordNum = 1
 
     return pieces.map((piece, idx) => {
       const { type, text, children } = piece
 
-      if(type === "word") {
+      if(children) {
+        return (
+          <span
+            key={idx}
+            {...getCSSFormatting(piece)}
+          >
+            {this.getJSXFromPieces({
+              ...params,
+              pieces: children,
+            })}
+          </span>
+        )
+
+      } else if(  // we are outside of wordRanges
+        wordRangeArrays
+        && !wordRangeArrays.some(wordRangeArray => (
+          (
+            wordNum > wordRangeArray[0]
+            || (
+              wordNum === wordRangeArray[0]
+              && type === "word"
+            )
+          )
+          && wordNum <= wordRangeArray[1]
+        ))
+      ) {
+        if(type === "word") wordNum++
+        return null
+
+      } else if(type === "word") {
         const wordLoc = `${loc}:${wordNum++}`
         const isSelected = selectedWordLocs.includes(wordLoc)
         const isSemiSelected = semiSelectedWordLocs.includes(wordLoc)
@@ -189,30 +224,17 @@ class Parallel extends React.Component {
           </span>
         )
 
-      } else if(children) {
-        return (
-          <span
-            key={idx}
-            {...getCSSFormatting(piece)}
-          >
-            {this.getJSXFromPieces({
-              ...params,
-              pieces: children,
-            })}
-          </span>
-        )
-
       } else {
-        return <span key={idx} />
+        return null
       }
     })
   }
 
   getJSXFromRefs = ({ refs, ...otherProps }) => {
-    return refs.map(({ pieces, loc }, idx) => {
+    return refs.map(({ pieces, loc, wordRanges }, idx) => {
       return (
         <React.Fragment key={idx}>
-          {this.getJSXFromPieces({ pieces, loc, ...otherProps })}
+          {this.getJSXFromPieces({ pieces, loc, wordRanges, ...otherProps })}
         </React.Fragment>
       )
     })
