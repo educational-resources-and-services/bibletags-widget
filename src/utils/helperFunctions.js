@@ -1,6 +1,7 @@
 import i18n from './i18n.js'
 import { getHebrewPOSTerm, getHebrewMorphPartDisplayInfo } from './hebrewMorph.js'
 import { getGreekPOSTerm, getGreekMorphPartDisplayInfo } from './greekMorph.js'
+import { getRefFromLoc } from 'bibletags-versification'
 
 const hashParametersObject = {}
 window.location.hash
@@ -58,9 +59,68 @@ export const getVersionStr = versionId => {
     : versionId.toUpperCase()
 }
 
-export const getPassageStr = ({ bookId, chapter, verse }) => (
-  getBibleBookName(bookId) + (chapter == null ? `` : (` ${chapter}` + (verse == null ? `` : `:${verse}`)))
-)
+export const getPassageStr = ({ refs, skipBookName }) => {
+  let info = {}
+
+  refs.forEach(ref => {
+    const { wordRanges } = ref
+    const { bookId, chapter, verse } = ref.loc ? getRefFromLoc(ref.loc) : ref
+
+    if(info.book === undefined) {
+      info.book = skipBookName ? "" : getBibleBookName(bookId)
+    }
+      
+    if(chapter != null) {
+      if(!info.chapter && !info.start_chapter) {
+        info.chapter = chapter
+      } else if((info.chapter || info.start_chapter) !== chapter) {
+        info.start_chapter = info.start_chapter || info.chapter
+        info.end_chapter = chapter
+        delete info.chapter
+      }
+    }
+
+    if(verse != null) {
+      let verseText
+      if(wordRanges) {
+        verseText = wordRanges[0].substr(0,1) === '1'
+          ? i18n("{{verse}}a", { verse })
+          : i18n("{{verse}}b", { verse })
+      } else {
+        verseText = verse
+      }
+      if(!info.verse && !info.start_verse) {
+        info.verse = verseText
+      } else {
+        info.start_verse = info.start_verse || info.verse
+        info.end_verse = verseText
+        delete info.verse
+      }
+    }
+  })
+
+  if(info.start_chapter && info.start_verse) {
+    return i18n("{{book}} {{start_chapter}}:{{start_verse}}–{{end_chapter}}:{{end_verse}}", info).trim()
+  }
+
+  if(info.chapter && info.start_verse) {
+    return i18n("{{book}} {{chapter}}:{{start_verse}}–{{end_verse}}", info).trim()
+  }
+
+  if(info.start_chapter) {
+    return i18n("{{book}} {{start_chapter}}–{{end_chapter}}", info).trim()
+  }
+
+  if(info.verse) {
+    return i18n("{{book}} {{chapter}}:{{verse}}", info).trim()
+  }
+
+  if(info.chapter) {
+    return i18n("{{book}} {{chapter}}", info).trim()
+  }
+
+  return info.book || ""
+}
 
 export const getBibleBookName = bookid => {
 

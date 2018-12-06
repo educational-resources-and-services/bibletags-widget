@@ -1,7 +1,7 @@
 import React from 'react'
 import i18n from '../../utils/i18n.js'
 import styled from 'styled-components'
-import { getVersionStr, getMainWordPartIndex,
+import { getVersionStr, getPassageStr, getMainWordPartIndex,
          getIsEntirelyPrefixAndSuffix, getOrigLangAndLXXVersionInfo } from '../../utils/helperFunctions.js'
 import { getGrammarColor } from '../../utils/hebrewMorph.js'
 
@@ -31,6 +31,11 @@ const SelectedWord = styled.span`
 const SemiSelectedWord = styled.span`
   cursor: pointer;
   color: #777;
+`
+
+const VersionPassageStr = styled.span`
+  font-weight: bold;
+  color: black;
 `
 
 const getWordText = ({ wordPiece, idx }) => {
@@ -262,18 +267,32 @@ class Parallel extends React.Component {
   }
 
   getJSXFromVersions = () => {
-    const { versions, originalLanguageWordLoc, versionInfo } = this.props 
+    const { versions, originalLanguageWordLoc, versionInfo, hasMisalignment } = this.props 
 
     return versions.map(({ id: versionId, refs }) => {
       const selectedWordLocs = getOrigLangAndLXXVersionInfo()[versionId] && originalLanguageWordLoc
         ? [originalLanguageWordLoc]
         : []
       const semiSelectedWordLocs = []
+
+      const headings = [
+        <span key="primary">
+          {getVersionStr(versionId)}
+          {hasMisalignment &&
+            <React.Fragment>
+              {i18n(" ", {}, "word separator")}
+              <VersionPassageStr>
+                {getPassageStr({ refs, skipBookName: true })}
+              </VersionPassageStr>
+            </React.Fragment>
+          }
+        </span>
+      ]
   
       return (
         <ParallelGroup key={versionId}>
           <ParallelHeader
-            primary={getVersionStr(versionId)}
+            headings={headings}
           />
           <ParallelText
             languageId={versionInfo[versionId].languageId}
@@ -288,7 +307,6 @@ class Parallel extends React.Component {
 
   render() {
     const { versions } = this.props 
-
 
     return (
       <ParallelContainer>

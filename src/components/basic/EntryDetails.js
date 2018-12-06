@@ -23,6 +23,10 @@ const PartOfSpeech = styled.div`
   display: inline-block;
 `
 
+const SelectedPOS = styled.span`
+  color: black;
+`
+
 // const IconButtonStyled = styled(IconButton)`
 //   margin: -100px 0 !important;
 //   vertical-align: middle;
@@ -37,12 +41,9 @@ class EntryDetails extends React.Component {
         const posTerm = getPOSTerm({ languageId, posCode })
         return posCode === morphPos
           ? (
-            <span
-              style={{ color: "#000" }}
-              key={posCode}
-            >
+            <SelectedPOS key={posCode}>
               {posTerm}
-            </span>
+            </SelectedPOS>
           )
           : posTerm
       })

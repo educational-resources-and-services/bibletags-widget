@@ -25,81 +25,105 @@ For more information on this project, see the [Bible Tags website](https://bible
 
 * Jesse
   * UGNT fixed? (36 adjectives without a type)
+    - https://git.door43.org/unfoldingWord/UGNT/issues/117
   * Confirmed non-standard usage of strong attribute in usfm?
 
   * Ask how USFM handles languages which do not divide words by spaces + hyphens/maqephs/etc + whether we need a PR to usfm-js to distinguish this. (Relates to the two-lemma words issue.) (Also, relates to space following ending marker bug mentioned below. That is, non-space-separating languages could just have all words on a single line, as would maqeph connected words OR newlines don't count and a space needs to come at the end of all /w lines which do have a space after them)
     - christopher clap - prof translation world - spent a lot of time looking at word divisions. (run my stuff by him!)
-    - bruce mcclain - working on usfj.js @bruce.mc
+    - bruce mcclain - working on usfm-js @bruce.mc I WROTE HIM ON SLACK after creating two issues
       - tell him needed fixes
-        * support nested elements in usfm-js (http://ubsicap.github.io/usfm/characters/nesting.html)
+        * https://github.com/translationCoreApps/usfm-js/issues/50
+        * support nested elements in usfm-js (http://ubsicap.github.io/usfm/characters/nesting.html) https://github.com/translationCoreApps/usfm-js/issues/51
         * footnotes are not presently parsed. Should they be?
         * bug: a space following an ending marker is not counted as text, but just listed as nextChar. (Eg. "In the beginning G\\sc od\\sc* created.")
     - zero-width joiner between prefixes
     - all on a single line if no spaces between words
   * ISO 639 1/2/3, or IETF ??
     - use IETF https://unfoldingword.bible/ietf/
-  * Jesse: \f vs \fe - what is the difference?
-    - ask Robert hunt @RobH-NZ
-    - Then, post an issue here if need be: https://github.com/ubsicap/usfm/issues
-  * Decide on live orig version names (talk to Jesse) and ids
-    - Hebrew
-      - UHB
-    - Greek
-      - Open to me adding to the UGNT with this stuff
-      - Todd price (Greek textual critic) - but really busy right now
-      - Jonathan Robby (seeking open source critical text)
-  * Decide on a lemma/strongs/etc system after talking with Jesse and Alan (and Andy and DeRouchie?)
+  - Greek
+    - Open to me adding to the UGNT with this stuff
+    - Todd price (Greek textual critic) - but really busy right now
+    - Jonathan Robby (seeking open source critical text)
+  * Decide on a lemma/strongs/etc system for both Hebrew and Greek
     * a, b, c, +
+      - is `a` originally the naked strongs? Not necessarily!
     * extra digit
-    * james tauber's greek-lemma-mappings
-    - map schemes into single id??
-  * Explain uid idea for Greek (and Hebrew?)
-    * How would this look in Hebrew? Do we have manuscripts available? Will we?
+      - Have the current a,b,c system in Hebrew be auto-translated into the Enhanced style.
+    * decimal - WINNER
 
   * Unasked
     * How would we best handle באר שבע?
     * What does the parsing widget replacement need?
       - search
-      - indicate
-      - automatic vs suggested
-      - ...
+      - suggest change
+      - automatic change ?
+      - mass change
 
-* If we go with the uid concept, then include uids in original version (and LXX) usfm (___Verses tables).
-  * Also, change ___Words table structure completely and put all info beyond the word and prefix in different add-on tables
-  * How would this change my tagSets?? (no longer wordnum-based in the orig?)
-
-* Check with Hebrew people how they would feel about me having the ketiv as the variant and the qere as the main word
-* Get rid of extra spaces I put in Gen 1:1 of uhb, or put them everywhere
-* Get Greek NT working
-* DB improvements
-  - in widget, change language > languageId and versionInfo to version??
-
-  * think through table structure for lxx
-  * think through table structure for crowd-sourcing
-
-  // TODO: I need a many-to-may relationship here, indicating synonyms and related words in a language agnostic way
-  // This relationship will be used for producing the language-specific definition rows each time these relationships
-  // or a gloss is updated.
+* tagging
+  - "Verse not yet tagged." / "Verse not fully tagged." / "Verse not confirmed."
+  - End data needs to be completely determinable by re-evaluating all data
+    - So if we discover a bad user, all his data can be thrown out and everything re-processed
+    - watch out for multiple submissions from different accounts but the same IP
+    - watch out for tons of submissions all at once
+  - tags for verse get submitted...
+    - STEP 0: 
+      - if same user previously submitted this verse,
+        - discount their previous submission
+    - STEP 1: 
+      - check consistency with existing non auto-tags
+        - if match
+          - confirm tagging
+          - increase the rating of both this tagger and the previous
+        - if conflict, decrease the rating of both
+      - if high user reputation,
+        - auto-confirm all non-conflicts
+      - else
+        - mark non-confirmed
+    - STEP 2: 
+      - if any tags changed,
+        - update affected tables/rows
+          - lxx tagged
+            - Definition - lxx
+          - gloss change
+            - DefinitionByLanguage - syn, rel
+          - DefinitionByLanguage - lexEntry ?
+          - uhbTagSet - tags
+          - ugntTagSet - tags
+          - WordTranslation - translation, hits
+    - STEP 3: 
+      - attempt to auto-tag untagged words
+  - derived data
+    - immediate
+    - only necessary tables/rows updates
 
 * Decide on code division
   - what is Bible Tags and what is Biblearc? 
     - Reading, for example
       - in the Bible Tags app? if so, should Biblearc's reading also be open source and/or a widget
-  - what is open source?
-  - what is a widget?
   - potential divisions
     - widget-script
     - widget
     - data (includes search api)
     - versification
     - app
-* Use "Enhanced" Strong's (from Alan) for both Hebrew and Greek. Have the current a,b,c system in Hebrew be auto-translated into the Enhanced style.
 
-* Get LXX working (uid's?? or different versions?)
-* Deal with two word lexemes: Eg. באר שבע
-* make verses partial verses where need be (using boundingVersion)
-* If I use UHB (instead of OSHB osis, then make sure to change ילך lexeme to הלך)
+* Alan
+  * Are two word lexemes an issue in Greek?
+  * After we have solid ground and/or data...
+    * Greek
+      * include uids in original version usfm (___Verses tables).
+      * Import greek definitions
+      * Get LXX working (uid's?? or different versions?)
+    * Hebrew
+      * include uids in original version usfm (___Verses tables).
+      * Deal with two word lexemes: Eg. באר שבע
+      * If I use UHB (instead of OSHB osis, then make sure to change ילך lexeme to הלך)
+
+
+* USFM of UHB needs to keep words separated by makeph and half-words (words with two lemmas) on the same line
+* Get rid of extra spaces I put in Gen 1:1 of uhb, or put them everywhere (usfm-js fixes)
 * infoCallback
+* Rethink through how tagSets are requseted and delivered via graphql, given `wordsHash` and `WordHashesSetSubmission`
 * Entire chapter preload (chapter and tagSets queries)
 * utilize definitionsByPosition query for when wordnum supplied (so only a single back-and-forth is needed)
 * After I have graphql queries which receive arrays in return, see if my cache -> localstorage strategy works still
@@ -107,6 +131,9 @@ For more information on this project, see the [Bible Tags website](https://bible
 * Get basic tagging functionality working
   * decide how to flag tags as unconfirmed
   * It needs to throw an error of some sort when a text if fed to the API with a different number of words from what was tagged
+* When inserting unknown length items (words, etc), make sure the string is not too long for the column.
+* Flag where there are too many verses with seemingly different editions
+* Create a dummy User for each import (thus, each source can have a unique rating)
 * Set up ParallelComposite (texts weaved together, and not just one above the other)
 * Get working for other languages (uiWords query)
   * Should lang codes only be 3-digit? (i.e. no eng-gb?) Think about Chinese as another example
@@ -144,6 +171,9 @@ For more information on this project, see the [Bible Tags website](https://bible
 
 Post-launch:
 
+* Implement synonyms and related words
+  * Create DB tables with many-to-many relationships to hold this information
+  * Utilize open source data already existing on this *OR* develop an algorithm to get a rough listing and have volunteer scholars edit it.
 * Develop color-highlighting system for Greek verbs (with Nate, others?)
 * Seek permission to get data sets for translations tagged to strongs and the like. Reference:
   * [STEP Bible](https://stepweb.atlassian.net/wiki/spaces/SUG/pages/12484619/Copyrights+Licences)
@@ -312,11 +342,18 @@ npm install
     * Alan is looking to land on an ID system for words that would allow for new variants to be added without complicating existing data.
       * Andy suggested using a 4-digit random unigue identifier for each unique word, explained in an email sent to Alan on Oct 25, 2018.
     * Alan notes that punctuation and accents are somewhat up-in-the-air in the `UGNT`, but hopes to refine and standardize them after the release of the computer generated version.
-* Septuagint
+
+
+### Septuagint
+
+* Text
   * [LXX](http://ccat.sas.upenn.edu/gopher/text/religion/biblical/lxxmorph/)
   * License: [Commercial use requires prior written consent](http://ccat.sas.upenn.edu/gopher/text/religion/biblical/lxxvar/0-readme.txt)
   * This [BHS-LXX parallel](http://ccat.sas.upenn.edu/gopher/text/religion/biblical/parallel/) is perfect for deriving both verse alignment and LXX tags.
   * Open Scripture's [GreekResources](https://github.com/openscriptures/GreekResources) will likely also be helpful.
+* Deuterocanonical books not included in LXX search results
+  * While such results can certainly be useful to the study of the canonical books and their vocabulary, they nonetheless go beyond the scope of this project and will not be included in search results or translation statistics.
+
 
 
 ### Versification ( [bibletags-versification](https://github.com/educational-resources-and-services/bibletags-versification) )

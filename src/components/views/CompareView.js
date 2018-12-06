@@ -210,7 +210,7 @@ class CompareView extends React.PureComponent {
         if(commonRef.chapter !== ref.chapter) {
           delete commonRef.chapter
           delete commonRef.verse
-        } else if(commonRef.verse !== ref.verse) {
+        } else if(commonRef.verse !== ref.verse || ref.wordRanges) {
           delete commonRef.verse
         }
       })
@@ -301,13 +301,13 @@ class CompareView extends React.PureComponent {
       }
     }
   
-    const hasMisallignment = commonRef.verse == null  // TODO: this needs to take wordRange into account also
+    const hasMisalignment = commonRef.verse == null
   
     return {
       commonRef,
       origLangAndLXXVerseIds,
       tagSetIds,
-      hasMisallignment,
+      hasMisalignment,
       wordRangesByVerseId,
     }
   } 
@@ -376,7 +376,7 @@ class CompareView extends React.PureComponent {
               commonRef,
               origLangAndLXXVerseIds,
               tagSetIds,
-              hasMisallignment,
+              hasMisalignment,
               wordRangesByVerseId,
             } = this.getVerseAndTagSetQueryVars(versionInfo)
 
@@ -408,8 +408,8 @@ class CompareView extends React.PureComponent {
                               back={back}
                               title={
                                 <div>
-                                  {getPassageStr(commonRef)}
-                                  {hasMisallignment &&
+                                  {getPassageStr({ refs: [commonRef] })}
+                                  {hasMisalignment &&
                                     <span>TODO: Icon</span>
                                   }
                                 </div>
@@ -554,8 +554,8 @@ class CompareView extends React.PureComponent {
                             back={back}
                             title={
                               <div>
-                                {getPassageStr(commonRef)}
-                                {hasMisallignment &&
+                                {getPassageStr({ refs: [commonRef] })}
+                                {hasMisalignment &&
                                   <span>TODO: Icon</span>
                                 }
                               </div>
@@ -592,8 +592,8 @@ class CompareView extends React.PureComponent {
                             versions={preppedVersions}
                             versionInfo={versionInfo}
                             originalLanguageWordLoc={calculatedOriginalLanguageWordLoc}
-                            //boundsVersionId={versions[0].id}  // will base the bounds of the text off the full verse in this version
                             updateWordLoc={this.updateWordLoc}
+                            hasMisalignment={hasMisalignment}
                           />
                           {partiallyUnTagged &&
                             <NotTagged

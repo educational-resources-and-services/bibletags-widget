@@ -9,20 +9,26 @@ const Primary = styled.div`
   color: #777;
 `
 
-const Secondary = styled.div`
+const Secondary = styled.span`
   font-size: 11px;
-  display: inline-block;
-  margin-left: 4px;
 `
 
 class ParallelHeader extends React.Component {
   render() {
-    const { primary, secondary } = this.props 
+    const { headings } = this.props 
+
+    const preppedHeadings = headings
+      .reduce((accumulator, value, index) => [
+        ...accumulator,
+        <span key={index}>{i18n(" + ", {}, "combination character")}</span>,
+        value,
+      ], [])
+      .slice(1)
 
     return (
       <Primary>
-        {primary}
-        {secondary && <Secondary>{i18n("+ {{secondary}}", { secondary })}</Secondary>}
+        {preppedHeadings[0]}
+        <Secondary>{preppedHeadings.slice(1)}</Secondary>
       </Primary>
     )
   }

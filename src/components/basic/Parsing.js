@@ -13,9 +13,7 @@ const ParsingPart = styled.span`
 `
 
 const Plus = styled.span`
-  display: inline-block;
   color: black;
-  margin: 0 3px;
 `
 
 class Parsing extends React.Component {
@@ -38,7 +36,7 @@ class Parsing extends React.Component {
               style={{ color }}
             >
               {idx > 0 && (
-                <Plus>{i18n("+", {}, "", "grammar")}</Plus>
+                <Plus>{i18n(" + ", {}, "combination character")}</Plus>
               )}
               {str}
             </ParsingPart>
