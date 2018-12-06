@@ -177,6 +177,13 @@ class CompareView extends React.PureComponent {
     let baseVersion
     let origLangAndLXXVerseIds, tagSetIds
     const origLangAndLXXVersionInfo = getOrigLangAndLXXVersionInfo()
+    const wordRangesByVerseId = {}
+
+    const addToWordRangesByVerseId = ({ refs, versionId }) => {
+      refs.forEach(ref => {
+        wordRangesByVerseId[`${getLocFromRef(ref)}-${versionId}`] = ref.wordRanges
+      })
+    }
 
     if(originalLanguageRef) {
       const id = getOrigLangVersionIdFromRef(originalLanguageRef)
@@ -228,6 +235,10 @@ class CompareView extends React.PureComponent {
         versionInfo[origLangVersionId] = lookupVersionInfo
         updateCommonRef(origLangRefs)
         origLangAndLXXVerseIds = origLangRefs.map(ref => `${getLocFromRef(ref)}-${origLangVersionId}`)
+        addToWordRangesByVerseId({
+          refs: origLangRefs,
+          versionId: origLangVersionId,
+        })
         tagSetIds = []
   
         versions.forEach(version => {
@@ -240,6 +251,10 @@ class CompareView extends React.PureComponent {
             updateCommonRef(neededRefs)
 
             const neededLocs = neededRefs.map(ref => getLocFromRef(ref))
+            addToWordRangesByVerseId({
+              refs: neededRefs,
+              versionId: version.id,
+            })
             const passedInLocs = version.refs.map(ref => getLocFromRef(ref))
 
             if(neededLocs.every(loc => passedInLocs.includes(loc))) {
@@ -269,7 +284,11 @@ class CompareView extends React.PureComponent {
         versionInfo.lxx = lookupVersionInfo
         updateCommonRef(neededRefs)
         const neededIds = neededRefs.map(ref => `${getLocFromRef(ref)}-lxx`)
-  
+        addToWordRangesByVerseId({
+          refs: neededRefs,
+          versionId: 'lxx',
+        })
+
         origLangAndLXXVerseIds = [
           ...origLangAndLXXVerseIds,
           ...neededIds,
@@ -289,6 +308,7 @@ class CompareView extends React.PureComponent {
       origLangAndLXXVerseIds,
       tagSetIds,
       hasMisallignment,
+      wordRangesByVerseId,
     }
   } 
   
@@ -357,6 +377,7 @@ class CompareView extends React.PureComponent {
               origLangAndLXXVerseIds,
               tagSetIds,
               hasMisallignment,
+              wordRangesByVerseId,
             } = this.getVerseAndTagSetQueryVars(versionInfo)
 
             return (
@@ -422,6 +443,7 @@ class CompareView extends React.PureComponent {
                         preppedVersions[idx].refs.push({
                           loc,
                           pieces,
+                          wordRanges: wordRangesByVerseId[id],
                         })
                       })
 
@@ -436,8 +458,9 @@ class CompareView extends React.PureComponent {
                         refs.forEach(ref => {
 
                           const loc = getLocFromRef(ref)
+                          const verseId = `${loc}-${id}`
 
-                          if(tagSetIds.includes(`${loc}-${id}`)) {
+                          if(tagSetIds.includes(verseId)) {
 
                             const { usfm } = ref
 
@@ -459,6 +482,7 @@ class CompareView extends React.PureComponent {
                             version.refs.push({
                               loc,
                               pieces: getPiecesFromUSFM({ usfm, wordDividerRegex }),
+                              wordRanges: wordRangesByVerseId[verseId],
                             })
                           }
                         })

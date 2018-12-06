@@ -216,7 +216,7 @@ class Parallel extends React.Component {
           })
         ]
 
-        if(wordRangeArrays.some(wordRangeArray => (
+        if(wordRangeArrays && wordRangeArrays.some(wordRangeArray => (
           wordNum-1 === wordRangeArray[0]
         ))) {
           componentGroup.unshift(
@@ -224,7 +224,7 @@ class Parallel extends React.Component {
           )
         }
 
-        if(wordRangeArrays.some((wordRangeArray, wordRangeArrayIndex) => (
+        if(wordRangeArrays && wordRangeArrays.some((wordRangeArray, wordRangeArrayIndex) => (
           wordNum-1 === wordRangeArray[1]
           && wordRangeArrayIndex === wordRangeArrays.length-1
         ))) {
