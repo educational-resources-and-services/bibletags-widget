@@ -45,6 +45,7 @@ class Entry extends React.Component {
           <Parsing
             isEntirelyPrefixAndSuffix={isEntirelyPrefixAndSuffix}
             morph={wordInfo.morph}
+            languageId={languageId}
           />
         }
         {!isEntirelyPrefixAndSuffix && strongs &&

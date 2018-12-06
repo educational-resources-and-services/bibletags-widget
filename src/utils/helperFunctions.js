@@ -141,7 +141,7 @@ export const getPOSTerm = ({ languageId, posCode }) => (
 )
 
 export const getMorphPartDisplayInfo = ({ lang, morphPart, isPrefixOrSuffix, wordIsMultiPart }) => {
-  return ['H','A'].includes(lang) ? getHebrewMorphPartDisplayInfo({ lang, morphPart, isPrefixOrSuffix, wordIsMultiPart }) : getGreekMorphPartDisplayInfo({ morphPart, isPrefixOrSuffix })
+  return ['H','A'].includes(lang) ? getHebrewMorphPartDisplayInfo({ lang, morphPart, isPrefixOrSuffix, wordIsMultiPart }) : getGreekMorphPartDisplayInfo({ morphPart })
 }
 
 export const getMainWordPartIndex = wordParts => (wordParts ? (wordParts.length - (wordParts[wordParts.length - 1].match(/^S/) ? 2 : 1)) : null)

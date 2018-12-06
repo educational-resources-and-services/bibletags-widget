@@ -20,13 +20,24 @@ const Plus = styled.span`
 
 class Parsing extends React.Component {
   render() {
-    let { morph, isEntirelyPrefixAndSuffix } = this.props 
+    let { morph, isEntirelyPrefixAndSuffix, languageId } = this.props 
 
     if(!morph) return null
 
-    const lang = morph.substr(0,1)
-    const morphParts = morph.substr(1).split('/')
-    const mainPartIdx = getMainWordPartIndex(morphParts)
+    let lang
+    let morphParts
+    let mainPartIdx
+
+    if(languageId === 'heb') {
+      lang = morph.substr(0,1)
+      morphParts = morph.substr(1).split('/')
+      mainPartIdx = getMainWordPartIndex(morphParts)
+      
+    } else {
+      lang = morph.substr(0,2)
+      morphParts = [ morph.substr(3) ]
+      mainPartIdx = 0
+    }
 
     return (
       <ParsingContainer>

@@ -238,7 +238,7 @@ export const getHebrewMorphPartDisplayInfo = ({ lang, morphPart, isPrefixOrSuffi
   }
 
   return {
-    str: morphStrs.join(' '),
+    str: morphStrs.join(i18n(" ", {}, "word separator")),
     color,
   }
 }
