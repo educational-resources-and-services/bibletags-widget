@@ -1,7 +1,8 @@
 import React from 'react'
 // import i18n from '../../utils/i18n.js'
 import styled from 'styled-components'
-import { getStrongs, getIsEntirelyPrefixAndSuffix } from '../../utils/helperFunctions.js'
+import { getStrongs, getIsEntirelyPrefixAndSuffix, getMainWordPartIndex } from '../../utils/helperFunctions.js'
+import { getNormalizedGreekPOSCode } from '../../utils/greekMorph.js'
 import { getUILanguageId } from '../../utils/i18n.js'
 
 import SmartQuery from './SmartQuery'
@@ -38,13 +39,38 @@ class Entry extends React.Component {
     const strongs = getStrongs(wordInfo)
     const id = `${strongs}-${getUILanguageId()}`
     const oneDayInTheFuture = Date.now() + (1000 * 60 * 60 * 24)
+    const { morph } = wordInfo || {}
+
+    let morphLang
+    let morphParts
+    let mainPartIdx
+    let morphPos
+
+    if(morph) {
+
+      if(languageId === 'heb') {
+        morphLang = morph.substr(0,1)
+        morphParts = morph.substr(1).split('/')
+        mainPartIdx = getMainWordPartIndex(morphParts)
+        morphPos = morphParts[mainPartIdx].substr(0,1)
+
+      } else {
+        morphLang = morph.substr(0,2)
+        morphParts = [ morph.substr(3) ]
+        mainPartIdx = 0
+        morphPos = getNormalizedGreekPOSCode(morph.substr(3,2))
+      }
+      
+    }
 
     return (
       <div>
         {wordInfo && 
           <Parsing
             isEntirelyPrefixAndSuffix={isEntirelyPrefixAndSuffix}
-            morph={wordInfo.morph}
+            morphLang={morphLang}
+            morphParts={morphParts}
+            mainPartIdx={mainPartIdx}
             languageId={languageId}
           />
         }
@@ -85,6 +111,7 @@ class Entry extends React.Component {
                       <EntryDetails
                         gloss={gloss}
                         pos={pos}
+                        morphPos={morphPos}
                         languageId={languageId}
                       />
                     </EntrySection>

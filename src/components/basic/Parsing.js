@@ -1,7 +1,7 @@
 import React from 'react'
 import i18n from '../../utils/i18n.js'
 import styled from 'styled-components'
-import { getMainWordPartIndex, getMorphPartDisplayInfo } from '../../utils/helperFunctions.js'
+import { getMorphPartDisplayInfo } from '../../utils/helperFunctions.js'
 
 const ParsingContainer = styled.div`
   padding: 10px 15px 15px;
@@ -20,24 +20,9 @@ const Plus = styled.span`
 
 class Parsing extends React.Component {
   render() {
-    let { morph, isEntirelyPrefixAndSuffix, languageId } = this.props 
+    let { morphLang, morphParts, mainPartIdx, isEntirelyPrefixAndSuffix, languageId } = this.props 
 
-    if(!morph) return null
-
-    let lang
-    let morphParts
-    let mainPartIdx
-
-    if(languageId === 'heb') {
-      lang = morph.substr(0,1)
-      morphParts = morph.substr(1).split('/')
-      mainPartIdx = getMainWordPartIndex(morphParts)
-      
-    } else {
-      lang = morph.substr(0,2)
-      morphParts = [ morph.substr(3) ]
-      mainPartIdx = 0
-    }
+    if(!morphParts) return null
 
     return (
       <ParsingContainer>
@@ -45,7 +30,7 @@ class Parsing extends React.Component {
 
           const isPrefixOrSuffix = isEntirelyPrefixAndSuffix || idx !== mainPartIdx
           const wordIsMultiPart = morphParts.length > 1
-          const { str, color } = getMorphPartDisplayInfo({ lang, morphPart, isPrefixOrSuffix, wordIsMultiPart })
+          const { str, color } = getMorphPartDisplayInfo({ morphLang, morphPart, isPrefixOrSuffix, wordIsMultiPart })
 
           return (
             <ParsingPart

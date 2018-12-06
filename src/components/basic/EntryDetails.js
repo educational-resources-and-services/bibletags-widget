@@ -19,6 +19,7 @@ const Definition = styled.div`
 
 const PartOfSpeech = styled.div`
   font-size: 14px;
+  color: rgba(0,0,0,.3);
   display: inline-block;
 `
 
@@ -29,13 +30,34 @@ const PartOfSpeech = styled.div`
 
 class EntryDetails extends React.Component {
   render() {
-    const { gloss, pos, languageId } = this.props 
+    const { gloss, pos, morphPos, languageId } = this.props 
+
+    const posArray = pos
+      .map(posCode => {
+        const posTerm = getPOSTerm({ languageId, posCode })
+        return posCode === morphPos
+          ? (
+            <span
+              style={{ color: "#000" }}
+              key={posCode}
+            >
+              {posTerm}
+            </span>
+          )
+          : posTerm
+      })
+      .reduce((accumulator, value, index) => [
+        ...accumulator,
+        <span key={index}>{i18n(", ", {}, "list separator")}</span>,
+        value,
+      ], [])
+      .slice(1)
 
     return (
       <DetailsLine>
         <Definition>{gloss}</Definition>
         <span> </span>
-        <PartOfSpeech>{pos.map(posCode => getPOSTerm({ languageId, posCode })).join(i18n(", ", {}, "list separator"))}</PartOfSpeech>
+        <PartOfSpeech>{posArray}</PartOfSpeech>
         {/* <IconButtonStyled
           aria-label="Lexicon"
           onClick={() => {}}

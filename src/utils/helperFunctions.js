@@ -140,8 +140,8 @@ export const getPOSTerm = ({ languageId, posCode }) => (
   languageId === 'heb' ? getHebrewPOSTerm(posCode) : getGreekPOSTerm(posCode)
 )
 
-export const getMorphPartDisplayInfo = ({ lang, morphPart, isPrefixOrSuffix, wordIsMultiPart }) => {
-  return ['H','A'].includes(lang) ? getHebrewMorphPartDisplayInfo({ lang, morphPart, isPrefixOrSuffix, wordIsMultiPart }) : getGreekMorphPartDisplayInfo({ morphPart })
+export const getMorphPartDisplayInfo = ({ morphLang, morphPart, isPrefixOrSuffix, wordIsMultiPart }) => {
+  return ['H','A'].includes(morphLang) ? getHebrewMorphPartDisplayInfo({ morphLang, morphPart, isPrefixOrSuffix, wordIsMultiPart }) : getGreekMorphPartDisplayInfo({ morphPart })
 }
 
 export const getMainWordPartIndex = wordParts => (wordParts ? (wordParts.length - (wordParts[wordParts.length - 1].match(/^S/) ? 2 : 1)) : null)

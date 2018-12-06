@@ -179,7 +179,7 @@ const pushPersonGenderNumber = ({ morphStrs, morphPartLetters }) => {
   pushTerm({ morphStrs, term: grammarTerms.number[morphPartLetters[2]] })
 }
 
-export const getHebrewMorphPartDisplayInfo = ({ lang, morphPart, isPrefixOrSuffix, wordIsMultiPart }) => {
+export const getHebrewMorphPartDisplayInfo = ({ morphLang, morphPart, isPrefixOrSuffix, wordIsMultiPart }) => {
 
   const morphPartLetters = morphPart.split("")
   const morphStrs = []
@@ -221,7 +221,7 @@ export const getHebrewMorphPartDisplayInfo = ({ lang, morphPart, isPrefixOrSuffi
       break
 
     case 'V':
-      pushTerm({ morphStrs, term: grammarTerms[`stem${lang}`][morphPartLetters[1]] })
+      pushTerm({ morphStrs, term: grammarTerms[`stem${morphLang}`][morphPartLetters[1]] })
       if(['r','s'].includes(morphPartLetters[2])) {
         pushTerm({ morphStrs, term: grammarTerms.aspect[morphPartLetters[2]] })
         pushGenderNumberState({ morphStrs, morphPartLetters: morphPartLetters.slice(3) })

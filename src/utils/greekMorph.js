@@ -46,7 +46,7 @@ const posTypeTerms = {
   IE: i18n("exclamation", {}, "", "grammar"),
   ID: i18n("directive", {}, "", "grammar"),
   IR: i18n("response", {}, "", "grammar"),
-  PI: i18n("improper preposition", {}, "", "grammar"),
+  PI: i18n("improper-preposition", {}, "", "grammar"),
   DO: i18n("correlative", {}, "", "grammar"),
   CC: i18n("coordinating", {}, "", "grammar"),
   CS: i18n("subordinating", {}, "", "grammar"),
@@ -105,7 +105,9 @@ const morphTerms = [
 ]
 
 
-export const getGreekPOSTerm = posCode => (posTerms[posCode] || posTerms[posCode.substr(0,1)] || "")
+export const getNormalizedGreekPOSCode = posCode => (posTerms[posCode] !== undefined ? posCode : posCode.substr(0,1))
+
+export const getGreekPOSTerm = posCode => (posTerms[getNormalizedGreekPOSCode(posCode)] || "")
 
 export const getGreekPOSTypeTerm = posCode => (posTypeTerms[posCode] || "")
 
