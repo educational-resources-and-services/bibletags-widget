@@ -1,5 +1,5 @@
 import React from 'react'
-// import i18n from '../../utils/i18n.js'
+import i18n from '../../utils/i18n.js'
 import styled from 'styled-components'
 import { getVersionStr, getMainWordPartIndex,
          getIsEntirelyPrefixAndSuffix, getOrigLangAndLXXVersionInfo } from '../../utils/helperFunctions.js'
@@ -206,13 +206,34 @@ class Parallel extends React.Component {
         const isSelected = selectedWordLocs.includes(wordLoc)
         const isSemiSelected = semiSelectedWordLocs.includes(wordLoc)
 
-        return this[thisVersionInfo.isOriginal ? `getOriginal${thisVersionInfo.languageId}Word` : `getTranslationWord`]({
-          word: piece,
-          versionId,
-          wordLoc,
-          isSelected,
-          isSemiSelected,
-        })
+        const componentGroup = [
+          this[thisVersionInfo.isOriginal ? `getOriginal${thisVersionInfo.languageId}Word` : `getTranslationWord`]({
+            word: piece,
+            versionId,
+            wordLoc,
+            isSelected,
+            isSemiSelected,
+          })
+        ]
+
+        if(wordRangeArrays.some(wordRangeArray => (
+          wordNum-1 === wordRangeArray[0]
+        ))) {
+          componentGroup.unshift(
+            <span key={idx}>{i18n("…", {}, "ellipsis")}</span>
+          )
+        }
+
+        if(wordRangeArrays.some((wordRangeArray, wordRangeArrayIndex) => (
+          wordNum-1 === wordRangeArray[1]
+          && wordRangeArrayIndex === wordRangeArrays.length-1
+        ))) {
+          componentGroup.push(
+            <span key={idx}>{i18n("…", {}, "ellipsis")}</span>
+          )
+        }
+
+        return componentGroup
 
       } else if(text) {
         return (
