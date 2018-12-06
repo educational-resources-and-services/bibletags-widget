@@ -22,7 +22,7 @@ General notes:
 - The `bookId` parameters must contain an integer between 1-66 (KJV ordering)
 - The `chapter` parameters must contain an integer between 1-150
 - The `verse` parameters must contain an integer between 0-176 (where 0 is used for psalm headings)
-- The `usfm` parameters may contain [USFM 3](https://ubsicap.github.io/usfm/) format markers for some inline styles, footnotes and cross references. Plain text is also acceptable USFM, so long as it does not contain unescaped backslashes. Non-inline styles like chapter markers (\c), verse markers (\v) and paragraph markers (\p) will be ignored. 
+- The `usfm` parameters may contain [USFM 3](https://ubsicap.github.io/usfm/) format markers for some inline styles, footnotes and cross references. Plain text is also acceptable USFM, so long as it does not contain unescaped backslashes. Non-inline styles like chapter markers (\c), verse markers (\v) and paragraph markers (\p) will be ignored. Also, [nesting](http://ubsicap.github.io/usfm/characters/nesting.html) is not presently supported.
 - `wordNum`-like parameters must be >= 1, representing the word number in the verse as split by `splitVerseIntoWords`.
 - Verse content (i.e. the `usfm` parameter) sent to the [show()](#show) function or `fetchVerseCallback`'s `contentCallback` will have its word count checked against the word count of the current tagging of this verse. If there is inconsistency, original language tagging will not be available while the inconsistency awaits review.
 

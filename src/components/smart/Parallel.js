@@ -49,7 +49,7 @@ const getWordText = ({ wordPiece, idx }) => {
 }
 
 const getCSSFormatting = piece => {
-  const { tag } = piece
+  const tag = (piece.tag || "").replace(/^\+/, '')
 
   const tagToStyles = {
     nd: {
