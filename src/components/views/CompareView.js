@@ -461,8 +461,9 @@ class CompareView extends React.PureComponent {
 
                           const loc = getLocFromRef(ref)
                           const verseId = `${loc}-${id}`
+                          const tagSetId = `${verseId}-ab8d7UdE`
 
-                          if(tagSetIds.includes(verseId)) {
+                          if(tagSetIds.includes(tagSetId)) {
 
                             const { usfm } = ref
 
@@ -549,6 +550,7 @@ class CompareView extends React.PureComponent {
                       //     })
                       //   }
                       // })
+                      console.log('versions', preppedVersions)
 
                       return (
                         <React.Fragment>
