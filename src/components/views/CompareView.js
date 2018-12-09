@@ -35,7 +35,7 @@ import tagSetQuery from '../../data/queries/tagSet'
 // }
 
 // const tagSet = {
-//   id: '01001001-esv',
+//   id: '01001001-esv-isu3iDj',
 //   tags: [
 //     {
 //       o: ["|1|1"],
@@ -260,7 +260,7 @@ class CompareView extends React.PureComponent {
             if(neededLocs.every(loc => passedInLocs.includes(loc))) {
               tagSetIds = [
                 ...tagSetIds,
-                ...neededLocs.map(loc => `${loc}-${version.id}`),
+                ...neededLocs.map(loc => `${loc}-${version.id}-ab8d7UdE`),
               ]
             }
           }
@@ -283,7 +283,7 @@ class CompareView extends React.PureComponent {
       if(neededRefs) {
         versionInfo.lxx = lookupVersionInfo
         updateCommonRef(neededRefs)
-        const neededIds = neededRefs.map(ref => `${getLocFromRef(ref)}-lxx`)
+        const neededIds = neededRefs.map(ref => `${getLocFromRef(ref)}-lxx-ab8d7UdE`)
         addToWordRangesByVerseId({
           refs: neededRefs,
           versionId: 'lxx',
@@ -423,7 +423,9 @@ class CompareView extends React.PureComponent {
                       const { verse: versesById } = getDataObjFromQueryVarSets(verseData.queryVarSets)
                       const { tagSet: tagSetsById } = getDataObjFromQueryVarSets(tagSetData.queryVarSets)
 
-                      const partiallyUnTagged = tagSetsById && Object.values(tagSetsById).some(tagSet => !tagSet.tags)
+                      const hasIncompleteTags = !tagSetsById || Object.values(tagSetsById).some(tagSet => tagSet.status === 'incomplete')
+                      const hasUnconfirmedTags = tagSetsById && Object.values(tagSetsById).some(tagSet => tagSet.status === 'unconfirmed')
+
                       const preppedVersions = []
 
                       // Add orig languages and LXX to preppedVersions
@@ -595,7 +597,7 @@ class CompareView extends React.PureComponent {
                             updateWordLoc={this.updateWordLoc}
                             hasMisalignment={hasMisalignment}
                           />
-                          {partiallyUnTagged &&
+                          {hasIncompleteTags &&
                             <NotTagged
                               languageId={originalLanguageId}
                             />
