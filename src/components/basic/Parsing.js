@@ -18,7 +18,7 @@ const Plus = styled.span`
 
 class Parsing extends React.Component {
   render() {
-    let { morphLang, morphParts, mainPartIdx, isEntirelyPrefixAndSuffix, languageId } = this.props 
+    let { morphLang, morphParts, mainPartIdx, isEntirelyPrefixAndSuffix } = this.props 
 
     if(!morphParts) return null
 

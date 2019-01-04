@@ -71,7 +71,7 @@ class Entry extends React.Component {
             morphLang={morphLang}
             morphParts={morphParts}
             mainPartIdx={mainPartIdx}
-            languageId={languageId}
+            //languageId={languageId}
           />
         }
         {!isEntirelyPrefixAndSuffix && strongs &&
