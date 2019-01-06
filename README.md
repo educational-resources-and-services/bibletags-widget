@@ -125,6 +125,7 @@ For more information on this project, see the [Bible Tags website](https://bible
   - THEN: set user id to [uuid]@bibletags.org (with uuid stored in their localStorage)
   * Need some sanity with the fact verseId means two different things!! 01001001 and 01001001-esv
 
+ATTENTION!! There have been changes made to bibletags-widget-script and thus a new version needs to be created/used.
 
   - change getCorrespondingVerseLocations and show API (original is base version when 2+ translations) and use newer versification code
 
