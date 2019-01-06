@@ -353,7 +353,7 @@ const getGroupedVerseObjects = ({ filteredVerseObjects, regexes }) => {
 export const getPiecesFromUSFM = ({ usfm='', wordDividerRegex, isOrigLangOrLXXVersion }) => {
 
   const usfmWithoutChapterAndVerse = usfm.replace(/^(?:.|\r\n|\r|\n)*\\c [0-9]+(?:.|\r\n|\r|\n)*\\v [0-9]+ */g, '')
-  const { verseObjects } = usfmJS.toJSON(`\\c 1 \\v 1 ${usfmWithoutChapterAndVerse}`).chapters["1"]["1"]
+  const { verseObjects=[] } = usfmJS.toJSON(`\\c 1 \\v 1 ${usfmWithoutChapterAndVerse || '-'}`).chapters["1"]["1"]
 
   if(isOrigLangOrLXXVersion) return verseObjects
 
@@ -376,7 +376,7 @@ export const getPiecesFromUSFM = ({ usfm='', wordDividerRegex, isOrigLangOrLXXVe
   return groupedVerseObjects
 }
 
-export const splitVerseIntoWords = ({ ref: { usfm }, wordDividerRegex }={}) => {
+export const splitVerseIntoWords = ({ usfm, wordDividerRegex }={}) => {
 
   const getWords = unitObjs => {
     let words = []

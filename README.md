@@ -21,7 +21,6 @@ For more information on this project, see the [Bible Tags website](https://bible
     * figure out litmus test verses to figure out versificationModel, partialScope, skipsUnlikelyOriginals
 
   * {/* https://github.com/translationCoreApps/usfm-js/tree/master/__tests__/resources */}
-  * Show a, b or c after verse number when it is not complete by referencing the wordRange value returned from getCorrespondingVerseLocation (Eg. 12:3b)
 
 * Jesse
   * UGNT fixed? (36 adjectives without a type)
@@ -122,9 +121,23 @@ For more information on this project, see the [Bible Tags website](https://bible
 
 * USFM of UHB needs to keep words separated by makeph and half-words (words with two lemmas) on the same line
 * Get rid of extra spaces I put in Gen 1:1 of uhb, or put them everywhere (usfm-js fixes)
-* infoCallback
 * Rethink through how tagSets are requseted and delivered via graphql, given `wordsHash` and `WordHashesSetSubmission`
+
+  - have setUp always called when the app is loaded
+  - THEN: set user id to [uuid]@bibletags.org (with uuid stored in their localStorage)
+  * Need some sanity with the fact verseId means two different things!! 01001001 and 01001001-esv
+
+
+  - change getCorrespondingVerseLocations and show API (original is base version when 2+ translations) and use newer versification code
+
 * Entire chapter preload (chapter and tagSets queries)
+
+* Check in with Bruce McClean - will they make the fix?
+
+* Hebrew
+  * I will be adding in the slot ids to Hebrew with a book prefix (01, 02, etc) and three more digits, to the edition of the Hebrew we will be publishing as a part of the Hebrew parsing project.
+* Greek
+  * Add in temporary ids for now. `x-id="u8Et"` in usfm
 * utilize definitionsByPosition query for when wordnum supplied (so only a single back-and-forth is needed)
 * After I have graphql queries which receive arrays in return, see if my cache -> localstorage strategy works still
 * Authentication
@@ -133,6 +146,7 @@ For more information on this project, see the [Bible Tags website](https://bible
   * It needs to throw an error of some sort when a text if fed to the API with a different number of words from what was tagged
 * When inserting unknown length items (words, etc), make sure the string is not too long for the column.
 * Flag where there are too many verses with seemingly different editions
+* infoCallback
 * Create a dummy User for each import (thus, each source can have a unique rating)
 * Set up ParallelComposite (texts weaved together, and not just one above the other)
 * Get working for other languages (uiWords query)
@@ -151,6 +165,7 @@ For more information on this project, see the [Bible Tags website](https://bible
   * Canonical identification of lexemes
     * https://www.academia.edu/35220175/Linking_Lexical_Resources_for_Biblical_Greek
 * Themes
+* Google analytics??
 * set up thayers and bdb (as temp lexicon entry until I get English parsing data)
 * Make sure widget-script includes all API aspects it needs to so as to not require foreseeable changes.
 * Indicate in API which pieces are and are not yet implemented

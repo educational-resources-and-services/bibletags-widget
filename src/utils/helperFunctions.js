@@ -1,7 +1,9 @@
+import md5 from 'md5'
 import i18n from './i18n.js'
 import { getHebrewPOSTerm, getHebrewMorphPartDisplayInfo } from './hebrewMorph.js'
 import { getGreekPOSTerm, getGreekMorphPartDisplayInfo } from './greekMorph.js'
 import { getRefFromLoc } from 'bibletags-versification'
+import { splitVerseIntoWords } from './splitting.js'
 
 const hashParametersObject = {}
 window.location.hash
@@ -15,6 +17,17 @@ window.location.hash
   })
 
 export const getHashParameter = param => hashParametersObject[param]
+
+const authInfoObject = {}
+export const getAuthInfo = () => ({ ...authInfoObject })
+export const setAuthInfo = params => {
+  const validKeys = [ "embeddingAppId", "fetchingEmbeddingApp", "userId" ]
+  for(let key in params) {
+    if(validKeys.includes(key)) {
+      authInfoObject[key] = params[key]
+    }
+  }
+}
 
 export const getOrigLangVersionIdFromRef = ref => ref.bookId <= 39 ? 'uhb' : 'ugnt'
 
@@ -209,3 +222,40 @@ export const getMainWordPartIndex = wordParts => (wordParts ? (wordParts.length 
 export const getStrongs = wordInfo => (wordInfo ? (wordInfo.strong || '').replace(/^[a-z]+:/, '') : '')
 
 export const getIsEntirelyPrefixAndSuffix = wordInfo => (wordInfo && !getStrongs(wordInfo))
+
+const hexToBase64 = hex => btoa(hex.match(/\w{2}/g).map(a => String.fromCharCode(parseInt(a, 16))).join(""))
+
+// FYI: maximum length of 32-digit base16 (hex) is 22-digits, though it is buffered to 24 digits with ='s
+const hash64 = str => hexToBase64(md5(str))
+
+export const getWordsHash = ({ usfm, wordDividerRegex }) => {
+
+  const words = splitVerseIntoWords({
+    usfm,
+    wordDividerRegex,
+  })
+
+  // The following line gets me a base64 2-digit hash for each word. This
+  // leaves 4096 possible values for each word which makes the likelihood
+  // of two different word sets with the same hash values very, very low.
+  // Two different editions of a single text would need to have all the same
+  // words except one, and that one word switch would only have a 1/4096
+  // chance of getting an equivelant hash.
+  return words.map(word => hash64(word).substr(0,2)).join('')
+}
+
+export const getWordHashes = ({ usfm, wordDividerRegex }) => {
+
+  const words = splitVerseIntoWords({
+    usfm,
+    wordDividerRegex,
+  })
+
+  return words.map((word, index) => ({
+    wordNumberInVerse: index + 1,
+    hash: hash64(word),
+    withBeforeHash: hash64(JSON.stringify(words.slice(index === 0 ? 0 : index-1, index+1))),
+    withAfterHash: hash64(JSON.stringify(words.slice(index, index+2))),
+    withBeforeAndAfterHash: hash64(JSON.stringify(words.slice(index === 0 ? 0 : index-1, index+2))),
+  }))
+}

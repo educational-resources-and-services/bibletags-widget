@@ -4,8 +4,8 @@ import tagSet_fields from '../fragments/tagSet_fields'
 // eslint-disable-next-line
 export default gql
 `
-  query ($id: ID!) {
-    tagSet(id: $id) {
+  mutation ($input: WordHashesSetInput!) {
+    submitWordHashesSet(input: $input) {
       ${tagSet_fields}
     }
   }

@@ -1,12 +1,10 @@
 import React from 'react'
 // import i18n from '../../utils/i18n.js'
 import styled from 'styled-components'
-import { restoreCache, getDataObjFromQueryVarSets } from '../smart/Apollo'
-import { getPassageStr, getOrigLangAndLXXVersionInfo, getOrigLangVersionIdFromRef, getOrigLanguageText } from '../../utils/helperFunctions.js'
-import { getPiecesFromUSFM } from '../../utils/splitting.js'
-import { getCorrespondingVerseLocation, isValidRefInOriginal, getLocFromRef } from 'bibletags-versification'
+import { restoreCache } from '../smart/Apollo'
+import { getPassageStr, getOrigLangAndLXXVersionInfo, getOrigLanguageText } from '../../utils/helperFunctions.js'
 
-import SmartQueries from '../smart/SmartQueries'
+import CompareData from '../smart/CompareData'
 import View from '../basic/View'
 import Bar from '../basic/Bar'
 import SwitchButtons from '../basic/SwitchButtons'
@@ -14,92 +12,7 @@ import SwitchButton from '../basic/SwitchButton'
 import Parallel from '../smart/Parallel'
 import Entry from '../smart/Entry'
 import SearchView from './SearchView'
-import Progress from '../basic/Progress'
 import NotTagged from '../basic/NotTagged'
-
-import versionInfoQuery from '../../data/queries/versionInfo'
-import verseQuery from '../../data/queries/verse'
-import tagSetQuery from '../../data/queries/tagSet'
-
-// const verse = {
-//   id: '0010101-uhb',
-//   usfm: `
-//     \\w ב/רשית|strongs="H234" morph="HR/Ncfsa"\\w*
-//     \\w ברא|lemma="hi!"\\w*
-//     \\w אלוהים\\w*,
-//     \\w את\\w*
-//     \\w ה/שמים\\w*
-//     \\w ו/את\\w*
-//     \\w ה/ארץ\\w*
-//   `.replace(/\s+/g, ' ')
-// }
-
-// const tagSet = {
-//   id: '01001001-esv-isu3iDj',
-//   tags: [
-//     {
-//       o: ["|1|1"],
-//       t: [1]
-//     },
-//     {
-//       o: ["|1|2"],
-//       t: [3]
-//     },
-//     {
-//       o: ["|2"],
-//       t: [5]
-//     },
-//     {
-//       o: ["|3"],
-//       t: [4]
-//     },
-//     {
-//       o: ["|5|1"],
-//       t: [6]
-//     },
-//     {
-//       o: ["|5|2"],
-//       t: [6]
-//     },
-//     {
-//       o: ["|6|1"],
-//       t: [8]
-//     },
-//     {
-//       o: ["|7|1"],
-//       t: [9]
-//     },
-//     {
-//       o: ["|7|2"],
-//       t: [10]
-//     },
-//   ]
-// }
-
-// const word = {
-//   id: 'H234-eng',
-//   lex: 'אַזְכָּרָה',
-//   lexUnique: true,
-//   vocal: 'ʼazkârâh',
-//   hits: 7,
-//   gloss: 'reminder',
-//   pos: ['N'],
-//   syn: [],
-//   rel: [{"lex":"זָכַר","strongs":"G2142","hits":232,"gloss":"remember"}],
-//   lxx: [{"w":"ἀρχῇ","lex":"ἀρχή","strongs":"G746","hits":236,"bhpHits":55}],
-//   lxxHits: [],
-// }
-
-// const translations = {
-//   id: 'H234-esv',
-//   tr: [{"son":299,"sons":56}],
-// }
-
-// const lexEntry = {
-//   id: 'H234-eng',
-//   usfm: 'About the word...',
-// }
-
 
 const DoubleLine = styled.div`
   width: 20px;
@@ -156,162 +69,6 @@ class CompareView extends React.PureComponent {
     return returnVal
   }
 
-  getVersionInfoQuerySets = () => {
-    const { options } = this.props 
-    const { versions } = options
-
-    if(!versions) return []
-
-    return versions
-      .filter(version => !getOrigLangAndLXXVersionInfo()[version.id])
-      .map(version => ({
-        variables: { id: version.id },
-        cacheKey: `VersionInfo:${version.id}`
-      }))
-  }
-
-  getVerseAndTagSetQueryVars = versionInfo => {
-    const { options } = this.props 
-    const { versions, originalLanguageRef, includeLXX } = options
-
-    let baseVersion
-    let origLangAndLXXVerseIds, tagSetIds
-    const origLangAndLXXVersionInfo = getOrigLangAndLXXVersionInfo()
-    const wordRangesByVerseId = {}
-
-    const addToWordRangesByVerseId = ({ refs, versionId }) => {
-      refs.forEach(ref => {
-        wordRangesByVerseId[`${getLocFromRef(ref)}-${versionId}`] = ref.wordRanges
-      })
-    }
-
-    if(originalLanguageRef) {
-      const id = getOrigLangVersionIdFromRef(originalLanguageRef)
-
-      baseVersion = {
-        ref: originalLanguageRef,
-        info: origLangAndLXXVersionInfo[id],
-        id,
-      }
-
-    } else {
-      baseVersion = {
-         ...versions[0],
-         ref: versions[0].refs[0],
-         info: versionInfo[versions[0].id],
-       }
-      delete baseVersion.refs
-    }
-
-    const commonRef = { ...baseVersion.ref }
-  
-    const updateCommonRef = refs => {
-      refs.forEach(ref => {
-        if(commonRef.chapter !== ref.chapter) {
-          delete commonRef.chapter
-          delete commonRef.verse
-        } else if(commonRef.verse !== ref.verse || ref.wordRanges) {
-          delete commonRef.verse
-        }
-      })
-    }
-  
-    if(originalLanguageRef) {
-      if(isValidRefInOriginal(baseVersion.ref)) {
-        versionInfo[baseVersion.id] = origLangAndLXXVersionInfo[baseVersion.id]
-        origLangAndLXXVerseIds = [`${getLocFromRef(baseVersion.ref)}-${baseVersion.id}`]
-        tagSetIds = []
-      }
-  
-    } else {
-      const origLangVersionId = getOrigLangVersionIdFromRef(baseVersion.ref)
-      const lookupVersionInfo = origLangAndLXXVersionInfo[origLangVersionId]
-      const origLangRefs = getCorrespondingVerseLocation({
-        baseVersion,
-        lookupVersionInfo,
-      })
-
-      if(origLangRefs) {
-        versionInfo[origLangVersionId] = lookupVersionInfo
-        updateCommonRef(origLangRefs)
-        origLangAndLXXVerseIds = origLangRefs.map(ref => `${getLocFromRef(ref)}-${origLangVersionId}`)
-        addToWordRangesByVerseId({
-          refs: origLangRefs,
-          versionId: origLangVersionId,
-        })
-        tagSetIds = []
-  
-        versions.forEach(version => {
-          const neededRefs = getCorrespondingVerseLocation({
-            baseVersion,
-            lookupVersionInfo: versionInfo[version.id],
-          })
-
-          if(neededRefs) {
-            updateCommonRef(neededRefs)
-
-            const neededLocs = neededRefs.map(ref => getLocFromRef(ref))
-            addToWordRangesByVerseId({
-              refs: neededRefs,
-              versionId: version.id,
-            })
-            const passedInLocs = version.refs.map(ref => getLocFromRef(ref))
-
-            if(neededLocs.every(loc => passedInLocs.includes(loc))) {
-              tagSetIds = [
-                ...tagSetIds,
-                ...neededLocs.map(loc => `${loc}-${version.id}-ab8d7UdE`),
-              ]
-            }
-          }
-        })
-      }
-    }
-
-    if(!origLangAndLXXVerseIds || !tagSetIds) {
-      // TODO: indicate bad params
-      return null
-    }
-  
-    if(includeLXX) {
-      const lookupVersionInfo = origLangAndLXXVersionInfo.lxx
-      const neededRefs = getCorrespondingVerseLocation({
-        baseVersion,
-        lookupVersionInfo,
-      })
-  
-      if(neededRefs) {
-        versionInfo.lxx = lookupVersionInfo
-        updateCommonRef(neededRefs)
-        const neededIds = neededRefs.map(ref => `${getLocFromRef(ref)}-lxx-ab8d7UdE`)
-        addToWordRangesByVerseId({
-          refs: neededRefs,
-          versionId: 'lxx',
-        })
-
-        origLangAndLXXVerseIds = [
-          ...origLangAndLXXVerseIds,
-          ...neededIds,
-        ]
-  
-        tagSetIds = [
-          ...tagSetIds,
-          ...neededIds,
-        ]
-      }
-    }
-  
-    const hasMisalignment = commonRef.verse == null
-  
-    return {
-      commonRef,
-      origLangAndLXXVerseIds,
-      tagSetIds,
-      hasMisalignment,
-      wordRangesByVerseId,
-    }
-  } 
-  
   hideSearchView = () => this.setState({ showSearchView: false })
   
   calculateOriginalLanguageWordLocFromTranslation = translationWordLocAndVersionId => {
@@ -354,271 +111,145 @@ class CompareView extends React.PureComponent {
 
     if(!versions && !originalLanguageRef) return null
 
-    const oneDayInTheFuture = Date.now() + (1000 * 60 * 60 * 24)
-    const oneWeekInTheFuture = Date.now() + (1000 * 60 * 60 * 24 * 7)
-
     return (
       <View
         show={show}
         style={style}
       >
-        <SmartQueries
-          query={versionInfoQuery}
-          querySets={this.getVersionInfoQuerySets()}
-          staleTime={oneDayInTheFuture}
+        <CompareData
+          options={options}
+          back={back}
         >
-          {versionInfoData => {
+          {({
+            commonRef,
+            hasMisalignment,
+            originalLanguageId,
+            preppedVersions,
+            versionInfo,
+            hasIncompleteTags,
+          }) => {
 
-            if(!versionInfoData.isAllLoaded()) return <Progress />
 
-            const { versionInfo={} } = getDataObjFromQueryVarSets(versionInfoData.queryVarSets)
-            const {
-              commonRef,
-              origLangAndLXXVerseIds,
-              tagSetIds,
-              hasMisalignment,
-              wordRangesByVerseId,
-            } = this.getVerseAndTagSetQueryVars(versionInfo)
+            /* let wordNum = wordNumInState
+
+            if(verse && wordNum) {
+              const versePieces = verse && usfmToJSON(verse.usfm)
+              const numWords = versePieces.filter(verseWord => verseWord.parts).length
+
+              if(wordNum < 1 || wordNum > numWords) {
+                wordNum = null
+              }
+
+            }
+
+            const versePieces = verse && usfmToJSON(verse.usfm) */
+
+            // selectedWordInOriginal={selectedWordInOriginal}  // { bookId, chapter, verse, wordNum }
+            // semiSelectedWordsInOriginal={semiSelectedWordsInOriginal}  // { bookId, chapter, verse, wordNums }
+
+            let calculatedOriginalLanguageWordLoc = originalLanguageWordLoc
+            if(!originalLanguageWordLoc && translationWordLocAndVersionId) {
+              calculatedOriginalLanguageWordLoc =
+                this.calculateOriginalLanguageWordLocFromTranslation(translationWordLocAndVersionId)
+            }
+
+            let selectedWordInfo = null
+            if(calculatedOriginalLanguageWordLoc) {
+              const { loc } = preppedVersions[0].refs[0]
+              let wordNum = 1
+              preppedVersions[0].refs[0].pieces.some(piece => {
+                if(piece.type === "word" && calculatedOriginalLanguageWordLoc === `${loc}:${wordNum++}`) {
+                  selectedWordInfo = piece
+                  return true
+                }
+                return false
+              })
+
+            }
+
+            /* let selectedWordInfo = null
+            if(versePieces && wordNum !== null) {
+              let wNum = 1
+              versePieces.some(verseWord => {
+                if(verseWord.parts && wordNum === wNum++) {
+                  selectedWordInfo = verseWord
+                  return true
+                }
+                return false
+              })
+            } */
+
+            // ;((options && options.versions) || []).forEach(version => {
+            //   if(!origLangAndLXXVersionInfo[version.versionId]) {
+            //     verses.push({
+            //       id: `${getLocFromRef(version.ref)}-${version.versionId}`,
+            //       pieces: [ version.plaintext ],
+            //     })
+            //   }
+            // })
 
             return (
-              <SmartQueries
-                query={verseQuery}
-                querySets={origLangAndLXXVerseIds.map(id => ({
-                  variables: { id },
-                  cacheKey: `Verse:${id}`,
-                }))}
-                staleTime={oneWeekInTheFuture}
-              >
-                {verseData => (
-                  
-                  <SmartQueries
-                    query={tagSetQuery}
-                    querySets={tagSetIds.map(id => ({
-                      variables: { id },
-                      cacheKey: `TagSet:${id}`,
-                    }))}
-                    staleTime={oneDayInTheFuture}
-                  >
-                    {tagSetData => {
-
-                      if(!verseData.isAllLoaded() || !tagSetData.isAllLoaded()) {
-                        return (
-                          <React.Fragment>
-                            <Bar
-                              back={back}
-                              title={
-                                <div>
-                                  {getPassageStr({ refs: [commonRef] })}
-                                  {hasMisalignment &&
-                                    <span>TODO: Icon</span>
-                                  }
-                                </div>
-                              }
-                            />
-                            <Progress />
-                          </React.Fragment>
-                        )
+              <React.Fragment>
+                <Bar
+                  back={back}
+                  title={
+                    <div>
+                      {getPassageStr({ refs: [commonRef] })}
+                      {hasMisalignment &&
+                        <span>TODO: Icon</span>
                       }
-
-                      const { verse: versesById } = getDataObjFromQueryVarSets(verseData.queryVarSets)
-                      const { tagSet: tagSetsById } = getDataObjFromQueryVarSets(tagSetData.queryVarSets)
-
-                      const hasIncompleteTags = !tagSetsById || Object.values(tagSetsById).some(tagSet => tagSet.status === 'incomplete')
-                      const hasUnconfirmedTags = tagSetsById && Object.values(tagSetsById).some(tagSet => tagSet.status === 'unconfirmed')
-
-                      const preppedVersions = []
-
-                      // Add orig languages and LXX to preppedVersions
-                      origLangAndLXXVerseIds.forEach(id => {
-                        const [ loc, versionId ] = id.split('-')
-                        const { usfm } = versesById[id] || {}
-                        const pieces = getPiecesFromUSFM({ usfm, isOrigLangOrLXXVersion: true })
-
-                        const idx = versionId === 'lxx' ? 1 : 0
-
-                        if(!preppedVersions[idx]) {
-                          preppedVersions[idx] = {
-                            id: versionId,
-                            refs: [],
-                          }
-                        }
-                        preppedVersions[idx].refs.push({
-                          loc,
-                          pieces,
-                          wordRanges: wordRangesByVerseId[id],
-                        })
-                      })
-
-                      const originalLanguageId = versionInfo[preppedVersions[0].id].languageId
-
-                      // Add translations to preppedVersions
-                      ;(versions || []).forEach(({ id, refs }) => {
-                        if(id === 'lxx') return
-
-                        const { wordDividerRegex } = versionInfo[id]
-
-                        refs.forEach(ref => {
-
-                          const loc = getLocFromRef(ref)
-                          const verseId = `${loc}-${id}`
-                          const tagSetId = `${verseId}-ab8d7UdE`
-
-                          if(tagSetIds.includes(tagSetId)) {
-
-                            const { usfm } = ref
-
-                            let version
-                            if(!preppedVersions.some(preppedVersion => {
-                              if(preppedVersion.id === id) {
-                                version = preppedVersion
-                                return true
-                              }
-                              return false
-                            })) {
-                              version = {
-                                id,
-                                refs: [],
-                              }
-                              preppedVersions.push(version)
-                            }
-
-                            version.refs.push({
-                              loc,
-                              pieces: getPiecesFromUSFM({ usfm, wordDividerRegex }),
-                              wordRanges: wordRangesByVerseId[verseId],
-                            })
-                          }
-                        })
-                      })
-
-
-
-                      /* let wordNum = wordNumInState
-
-                      if(verse && wordNum) {
-                        const versePieces = verse && usfmToJSON(verse.usfm)
-                        const numWords = versePieces.filter(verseWord => verseWord.parts).length
-
-                        if(wordNum < 1 || wordNum > numWords) {
-                          wordNum = null
-                        }
-
-                      }
-
-                      const versePieces = verse && usfmToJSON(verse.usfm) */
-
-          // selectedWordInOriginal={selectedWordInOriginal}  // { bookId, chapter, verse, wordNum }
-          // semiSelectedWordsInOriginal={semiSelectedWordsInOriginal}  // { bookId, chapter, verse, wordNums }
-
-                      let calculatedOriginalLanguageWordLoc = originalLanguageWordLoc
-                      if(!originalLanguageWordLoc && translationWordLocAndVersionId) {
-                        calculatedOriginalLanguageWordLoc =
-                          this.calculateOriginalLanguageWordLocFromTranslation(translationWordLocAndVersionId)
-                      }
-
-                      let selectedWordInfo = null
-                      if(calculatedOriginalLanguageWordLoc) {
-                        const { loc } = preppedVersions[0].refs[0]
-                        let wordNum = 1
-                        preppedVersions[0].refs[0].pieces.some(piece => {
-                          if(piece.type === "word" && calculatedOriginalLanguageWordLoc === `${loc}:${wordNum++}`) {
-                            selectedWordInfo = piece
-                            return true
-                          }
-                          return false
-                        })
-
-                      }
-
-                      /* let selectedWordInfo = null
-                      if(versePieces && wordNum !== null) {
-                        let wNum = 1
-                        versePieces.some(verseWord => {
-                          if(verseWord.parts && wordNum === wNum++) {
-                            selectedWordInfo = verseWord
-                            return true
-                          }
-                          return false
-                        })
-                      } */
-
-                      // ;((options && options.versions) || []).forEach(version => {
-                      //   if(!origLangAndLXXVersionInfo[version.versionId]) {
-                      //     verses.push({
-                      //       id: `${getLocFromRef(version.ref)}-${version.versionId}`,
-                      //       pieces: [ version.plaintext ],
-                      //     })
-                      //   }
-                      // })
-                      console.log('versions', preppedVersions)
-
-                      return (
-                        <React.Fragment>
-                          <Bar
-                            back={back}
-                            title={
-                              <div>
-                                {getPassageStr({ refs: [commonRef] })}
-                                {hasMisalignment &&
-                                  <span>TODO: Icon</span>
-                                }
-                              </div>
-                            }
-                          >
-                            {false &&
-                              <SwitchButtons
-                                selectedId={mode}
-                                setSelectedId={mode => this.setState({ mode })}
-                              >
-                                <SwitchButton id="separate">
-                                  <DoubleLine />
-                                </SwitchButton>
-                                <SwitchButton id="greekBased">
-                                  <div>
-                                    <SwitchButtonText
-                                      style={{
-                                        textTransform: 'none',
-                                      }}
-                                    >{getOrigLanguageText(originalLanguageId)}</SwitchButtonText>
-                                    <DashedLine />
-                                  </div>
-                                </SwitchButton>
-                                <SwitchButton id="translationBased">
-                                  <div>
-                                    <SwitchButtonText>ESV</SwitchButtonText>
-                                    <DashedLine />
-                                  </div>
-                                </SwitchButton>
-                              </SwitchButtons>
-                            }
-                          </Bar>
-                          <Parallel
-                            versions={preppedVersions}
-                            versionInfo={versionInfo}
-                            originalLanguageWordLoc={calculatedOriginalLanguageWordLoc}
-                            updateWordLoc={this.updateWordLoc}
-                            hasMisalignment={hasMisalignment}
-                          />
-                          {hasIncompleteTags &&
-                            <NotTagged
-                              languageId={originalLanguageId}
-                            />
-                          }
-                          {!!selectedWordInfo &&
-                            <Entry
-                              wordInfo={selectedWordInfo}
-                              languageId={originalLanguageId}
-                            />
-                          }
-                        </React.Fragment>
-                      )
-                    }}
-                  </SmartQueries>
-                )}
-              </SmartQueries>
+                    </div>
+                  }
+                >
+                  {false &&
+                    <SwitchButtons
+                      selectedId={mode}
+                      setSelectedId={mode => this.setState({ mode })}
+                    >
+                      <SwitchButton id="separate">
+                        <DoubleLine />
+                      </SwitchButton>
+                      <SwitchButton id="greekBased">
+                        <div>
+                          <SwitchButtonText
+                            style={{
+                              textTransform: 'none',
+                            }}
+                          >{getOrigLanguageText(originalLanguageId)}</SwitchButtonText>
+                          <DashedLine />
+                        </div>
+                      </SwitchButton>
+                      <SwitchButton id="translationBased">
+                        <div>
+                          <SwitchButtonText>ESV</SwitchButtonText>
+                          <DashedLine />
+                        </div>
+                      </SwitchButton>
+                    </SwitchButtons>
+                  }
+                </Bar>
+                <Parallel
+                  versions={preppedVersions}
+                  versionInfo={versionInfo}
+                  originalLanguageWordLoc={calculatedOriginalLanguageWordLoc}
+                  updateWordLoc={this.updateWordLoc}
+                  hasMisalignment={hasMisalignment}
+                />
+                {hasIncompleteTags &&
+                  <NotTagged
+                    languageId={originalLanguageId}
+                  />
+                }
+                {!!selectedWordInfo &&
+                  <Entry
+                    wordInfo={selectedWordInfo}
+                    languageId={originalLanguageId}
+                  />
+                }
+              </React.Fragment>
             )
           }}
-        </SmartQueries>
+        </CompareData>
         <SearchView
           options={options}
           show={showSearchView}
