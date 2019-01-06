@@ -3,7 +3,8 @@ import React from 'react'
 import { Mutation } from "react-apollo"
 import { getDataObjFromQueryVarSets } from './Apollo'
 import { getPassageStr, getOrigLangAndLXXVersionInfo, getOrigLangVersionIdFromRef,
-         getAuthInfo, getWordsHash, getWordHashes } from '../../utils/helperFunctions.js'
+         getWordsHash, getWordHashes } from '../../utils/helperFunctions.js'
+import { getEmbeddingAppId } from '../../utils/auth.js'
 import { getPiecesFromUSFM } from '../../utils/splitting.js'
 import { getCorrespondingVerseLocation, isValidRefInOriginal, getLocFromRef } from 'bibletags-versification'
 
@@ -371,7 +372,7 @@ class CompareData extends React.PureComponent {
                               if(tagSet.status === 'none') {
                                 const [ loc, versionId, wordsHash ] = tagSet.id.split('-')
                                 const verseId = `${loc}-${versionId}`
-                                const { embeddingAppId=0 } = getAuthInfo()
+                                const embeddingAppId = getEmbeddingAppId() || 0
                                 const wordHashes = getWordHashes({
                                   usfm: verionsUsfmByVerseId[verseId] || '',
                                   wordDividerRegex: versionInfo[versionId].wordDividerRegex,

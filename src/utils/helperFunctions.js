@@ -18,17 +18,6 @@ window.location.hash
 
 export const getHashParameter = param => hashParametersObject[param]
 
-const authInfoObject = {}
-export const getAuthInfo = () => ({ ...authInfoObject })
-export const setAuthInfo = params => {
-  const validKeys = [ "embeddingAppId", "fetchingEmbeddingApp", "userId" ]
-  for(let key in params) {
-    if(validKeys.includes(key)) {
-      authInfoObject[key] = params[key]
-    }
-  }
-}
-
 export const getOrigLangVersionIdFromRef = ref => ref.bookId <= 39 ? 'uhb' : 'ugnt'
 
 export const getOrigLangAndLXXVersionInfo = () => ({
@@ -226,7 +215,7 @@ export const getIsEntirelyPrefixAndSuffix = wordInfo => (wordInfo && !getStrongs
 const hexToBase64 = hex => btoa(hex.match(/\w{2}/g).map(a => String.fromCharCode(parseInt(a, 16))).join(""))
 
 // FYI: maximum length of 32-digit base16 (hex) is 22-digits, though it is buffered to 24 digits with ='s
-const hash64 = str => hexToBase64(md5(str))
+export const hash64 = str => hexToBase64(md5(str))
 
 export const getWordsHash = ({ usfm, wordDividerRegex }) => {
 

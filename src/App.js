@@ -3,7 +3,8 @@ import React from 'react'
 import { determineUILanguageId, setUpI18n } from './utils/i18n.js'
 // import styled from 'styled-components'
 import { setUp, ready, updateHeight, report } from './utils/postMessage.js'
-import { getOrigLangAndLXXVersionInfo, getHashParameter, getAuthInfo, setAuthInfo } from './utils/helperFunctions.js'
+import { getOrigLangAndLXXVersionInfo, getHashParameter } from './utils/helperFunctions.js'
+import { setEmbeddingAppId, getDeviceId } from './utils/auth.js'
 import { splitVerseIntoWords } from './utils/splitting.js'
 import Measure from 'react-measure'
 import Apollo, { restoreCache, client, getStaleState, setStaleTime, getQueryVars } from './components/smart/Apollo'
@@ -14,48 +15,10 @@ import Bar from './components/basic/Bar'
 import Progress from './components/basic/Progress'
 
 import versionInfoQuery from './data/queries/versionInfo'
-import embeddingAppQuery from './data/queries/embeddingApp'
 
 // const dev = !!window.location.href.match(/localhost/)
 
 const compareViewStyle = { position: 'relative' }
-
-const setEmbeddingAppId = ({ uri }) => {
-
-  const { embeddingAppId, fetchingEmbeddingApp } = getAuthInfo()
-
-  if(!embeddingAppId && !fetchingEmbeddingApp) {
-
-    setAuthInfo({ fetchingEmbeddingApp: true })
-
-    return client.query({
-      query: embeddingAppQuery,
-      variables: {
-        uri,
-      },
-      fetchPolicy: "cache-first",
-    })
-      .then(queryInfo => {
-        const { embeddingApp } = getQueryVars({ queryInfo }).data
-
-        setAuthInfo({
-          fetchingEmbeddingApp: false,
-          ...(
-            embeddingApp
-              ? {
-                embeddingAppId: parseInt(embeddingApp.id, 10),
-              }
-              : {}
-          )
-        })
-      })
-      .catch(err => {
-        setAuthInfo({ fetchingEmbeddingApp: false })
-        throw err
-      })
-
-  }
-}
 
 const getVersionInfo = async id => {
   const versionInfo = getOrigLangAndLXXVersionInfo()[id]
