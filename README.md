@@ -121,9 +121,7 @@ For more information on this project, see the [Bible Tags website](https://bible
 
 * USFM of UHB needs to keep words separated by makeph and half-words (words with two lemmas) on the same line
 * Get rid of extra spaces I put in Gen 1:1 of uhb, or put them everywhere (usfm-js fixes)
-* Rethink through how tagSets are requseted and delivered via graphql, given `wordsHash` and `WordHashesSetSubmission`
 
-  - have setUp always called when the app is loaded
   - THEN: set user id to [uuid]@bibletags.org (with uuid stored in their localStorage)
   * Need some sanity with the fact verseId means two different things!! 01001001 and 01001001-esv
 

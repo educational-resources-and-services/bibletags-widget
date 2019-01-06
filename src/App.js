@@ -137,6 +137,9 @@ class App extends React.Component {
     
     switch(data.action) {
 
+      case '-':  // used to fetch and set the embeddingAppId only
+        break
+
       case 'setUp':
         this.setUpLanguage({ settings })
 
