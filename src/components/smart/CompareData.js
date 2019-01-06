@@ -382,7 +382,7 @@ class CompareData extends React.PureComponent {
                                   submitWordHashesSet({
                                     variables: {
                                       input: {
-                                        verseId: loc,
+                                        loc,
                                         versionId,
                                         wordsHash,
                                         embeddingAppId,
