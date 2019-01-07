@@ -122,11 +122,7 @@ For more information on this project, see the [Bible Tags website](https://bible
 * USFM of UHB needs to keep words separated by makeph and half-words (words with two lemmas) on the same line
 * Get rid of extra spaces I put in Gen 1:1 of uhb, or put them everywhere (usfm-js fixes)
 
-  * Need some sanity with the fact verseId means two different things!! 01001001 and 01001001-esv
-
 ATTENTION!! There have been changes made to bibletags-widget-script and thus a new version needs to be created/used.
-
-  - change getCorrespondingVerseLocations and show API (original is base version when 2+ translations) and use newer versification code
 
 * Entire chapter preload (chapter and tagSets queries)
 
@@ -184,6 +180,7 @@ ATTENTION!! There have been changes made to bibletags-widget-script and thus a n
 
 Post-launch:
 
+* Have error messages written to console on invalid API calls
 * Implement synonyms and related words
   * Create DB tables with many-to-many relationships to hold this information
   * Utilize open source data already existing on this *OR* develop an algorithm to get a rough listing and have volunteer scholars edit it.

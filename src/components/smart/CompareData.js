@@ -6,7 +6,7 @@ import { getPassageStr, getOrigLangAndLXXVersionInfo, getOrigLangVersionIdFromRe
          getWordsHash, getWordHashes } from '../../utils/helperFunctions.js'
 import { getEmbeddingAppId } from '../../utils/auth.js'
 import { getPiecesFromUSFM } from '../../utils/splitting.js'
-import { getCorrespondingVerseLocation, isValidRefInOriginal, getLocFromRef } from 'bibletags-versification'
+import { getCorrespondingRefs, isValidRefInOriginal, getLocFromRef } from 'bibletags-versification/src/versification'
 
 import SmartQueries from './SmartQueries'
 import Bar from '../basic/Bar'
@@ -21,9 +21,8 @@ class CompareData extends React.PureComponent {
 
   getVersionInfoQuerySets = () => {
     const { options } = this.props 
-    const { versions } = options
-
-    if(!versions) return []
+    const { version, multipleVersions } = options
+    const versions = version ? [ version ] : multipleVersions.versions || []
 
     return versions
       .filter(version => !getOrigLangAndLXXVersionInfo()[version.id])
@@ -35,10 +34,11 @@ class CompareData extends React.PureComponent {
 
   getVerseAndTagSetQueryVars = versionInfo => {
     const { options } = this.props 
-    const { versions, originalLanguageRef, includeLXX } = options
+    const { version, multipleVersions, includeLXX } = options
+    const { originalLanguageRef } = multipleVersions || {}
+    const versions = version ? [ version ] : multipleVersions.versions || []
 
-    let baseVersion
-    let origLangAndLXXVerseIds, tagSetIds
+    let baseVersion, origLangAndLXXVerseIds, tagSetIds, origLangVersionId, origLangRefs
     const origLangAndLXXVersionInfo = getOrigLangAndLXXVersionInfo()
     const infoByVerseId = {}
 
@@ -49,11 +49,11 @@ class CompareData extends React.PureComponent {
 
     const addWordRangesToInfoByVerseId = ({ refs, versionId }) => {
       refs.forEach(ref => {
-        getOrMakeInfo(`${getLocFromRef(ref)}-${versionId}`).wordRanges = ref.wordRanges
+        getOrMakeInfo(`${getLocFromRef(ref).split(':')[0]}-${versionId}`).wordRanges = ref.wordRanges
       })
     }
 
-    if(originalLanguageRef) {
+    if(multipleVersions) {
       const id = getOrigLangVersionIdFromRef(originalLanguageRef)
 
       baseVersion = {
@@ -64,11 +64,10 @@ class CompareData extends React.PureComponent {
 
     } else {
       baseVersion = {
-         ...versions[0],
-         ref: versions[0].refs[0],
-         info: versionInfo[versions[0].id],
+         ...version,
+         ref: version.ref,
+         info: versionInfo[version.id],
        }
-      delete baseVersion.refs
     }
 
     const commonRef = { ...baseVersion.ref }
@@ -83,18 +82,17 @@ class CompareData extends React.PureComponent {
         }
       })
     }
-  
-    if(originalLanguageRef) {
+
+    if(multipleVersions) {
       if(isValidRefInOriginal(baseVersion.ref)) {
         versionInfo[baseVersion.id] = origLangAndLXXVersionInfo[baseVersion.id]
         origLangAndLXXVerseIds = [`${getLocFromRef(baseVersion.ref)}-${baseVersion.id}`]
-        tagSetIds = []
       }
-  
+
     } else {
-      const origLangVersionId = getOrigLangVersionIdFromRef(baseVersion.ref)
+      origLangVersionId = getOrigLangVersionIdFromRef(baseVersion.ref)
       const lookupVersionInfo = origLangAndLXXVersionInfo[origLangVersionId]
-      const origLangRefs = getCorrespondingVerseLocation({
+      origLangRefs = getCorrespondingRefs({
         baseVersion,
         lookupVersionInfo,
       })
@@ -102,55 +100,56 @@ class CompareData extends React.PureComponent {
       if(origLangRefs) {
         versionInfo[origLangVersionId] = lookupVersionInfo
         updateCommonRef(origLangRefs)
-        origLangAndLXXVerseIds = origLangRefs.map(ref => `${getLocFromRef(ref)}-${origLangVersionId}`)
+        origLangAndLXXVerseIds = origLangRefs.map(ref => `${getLocFromRef(ref).split(':')[0]}-${origLangVersionId}`)
         addWordRangesToInfoByVerseId({
           refs: origLangRefs,
           versionId: origLangVersionId,
         })
-        tagSetIds = []
-  
-        versions.forEach(version => {
-          const neededRefs = getCorrespondingVerseLocation({
-            baseVersion,
-            lookupVersionInfo: versionInfo[version.id],
-          })
-
-          if(neededRefs) {
-            updateCommonRef(neededRefs)
-
-            const neededLocs = neededRefs.map(ref => getLocFromRef(ref))
-            addWordRangesToInfoByVerseId({
-              refs: neededRefs,
-              versionId: version.id,
-            })
-            const passedInLocs = version.refs.map(ref => getLocFromRef(ref))
-
-            if(neededLocs.every(loc => passedInLocs.includes(loc))) {
-
-              version.refs.forEach(ref => {
-                const loc = getLocFromRef(ref)
-                if(neededLocs.includes(loc)) {
-                  const verseId = `${loc}-${version.id}`
-                  const info = getOrMakeInfo(verseId)
-                  info.wordsHash = info.wordsHash || getWordsHash({
-                    usfm: ref.usfm,
-                    wordDividerRegex: versionInfo[version.id].wordDividerRegex,
-                  })
-                }
-              })
-
-              tagSetIds = [
-                ...tagSetIds,
-                ...neededLocs.map(loc => {
-                  const verseId = `${loc}-${version.id}`
-                  return `${verseId}-${getOrMakeInfo(verseId).wordsHash}`
-                }),
-              ]
-            }
-          }
-        })
       }
     }
+
+    tagSetIds = []
+    versions.forEach(version => {
+      const versionRefs = version.refs || [ version.ref ]
+      const neededRefs = getCorrespondingRefs({
+        baseVersion,
+        lookupVersionInfo: versionInfo[version.id],
+      })
+
+      if(neededRefs) {
+        updateCommonRef(neededRefs)
+
+        const neededLocs = neededRefs.map(ref => getLocFromRef(ref).split(':')[0])
+        addWordRangesToInfoByVerseId({
+          refs: neededRefs,
+          versionId: version.id,
+        })
+        const passedInLocs = versionRefs.map(ref => getLocFromRef(ref))
+
+        if(neededLocs.every(loc => passedInLocs.includes(loc))) {
+
+          versionRefs.forEach(ref => {
+            const loc = getLocFromRef(ref)
+            if(neededLocs.includes(loc)) {
+              const verseId = `${loc}-${version.id}`
+              const info = getOrMakeInfo(verseId)
+              info.wordsHash = info.wordsHash || getWordsHash({
+                usfm: ref.usfm,
+                wordDividerRegex: versionInfo[version.id].wordDividerRegex,
+              })
+            }
+          })
+
+          tagSetIds = [
+            ...tagSetIds,
+            ...neededLocs.map(loc => {
+              const verseId = `${loc}-${version.id}`
+              return `${verseId}-${getOrMakeInfo(verseId).wordsHash}`
+            }),
+          ]
+        }
+      }
+    })
 
     if(!origLangAndLXXVerseIds || !tagSetIds) {
       // TODO: indicate bad params
@@ -159,15 +158,34 @@ class CompareData extends React.PureComponent {
   
     if(includeLXX) {
       const lookupVersionInfo = origLangAndLXXVersionInfo.lxx
-      const neededRefs = getCorrespondingVerseLocation({
-        baseVersion,
-        lookupVersionInfo,
-      })
-  
-      if(neededRefs) {
+      let neededRefs = []
+
+      if(multipleVersions) {
+        neededRefs = getCorrespondingRefs({
+          baseVersion,
+          lookupVersionInfo,
+        })
+
+      } else {
+        origLangRefs.forEach(ref => {
+          neededRefs = [
+            neededRefs,
+            ...(getCorrespondingRefs({
+              baseVersion: {
+                ref,
+                info: origLangAndLXXVersionInfo[origLangVersionId],
+                id: origLangVersionId,
+              },
+              lookupVersionInfo,
+            }) || []),
+          ]
+        })
+      }
+
+      if(neededRefs && neededRefs.length > 0) {
         versionInfo.lxx = lookupVersionInfo
         updateCommonRef(neededRefs)
-        const neededIds = neededRefs.map(ref => `${getLocFromRef(ref)}-lxx-xx`)
+        const neededIds = neededRefs.map(ref => `${getLocFromRef(ref).split(':')[0]}-lxx-xx`)
         addWordRangesToInfoByVerseId({
           refs: neededRefs,
           versionId: 'lxx',
@@ -198,7 +216,8 @@ class CompareData extends React.PureComponent {
   
   render() {
     const { options, back, children } = this.props 
-    const { versions } = options
+    const { version, multipleVersions } = options
+    const versions = version ? [ version ] : multipleVersions.versions || []
 
     if(this.data) return children(this.data)
 
@@ -284,8 +303,8 @@ class CompareData extends React.PureComponent {
                           ) {
 
                             const verionsUsfmByVerseId = {}
-                            versions.forEach(version => version.refs.forEach(ref => {
-                              verionsUsfmByVerseId[`${getLocFromRef(ref).replace(/:.*$/, '')}-${version.id}`] = ref.usfm
+                            versions.forEach(version => (version.refs || [version.ref]).forEach(ref => {
+                              verionsUsfmByVerseId[`${getLocFromRef(ref).split(':')[0]}-${version.id}`] = ref.usfm
                             }))
 
                             Object.values(tagSetsById).forEach(tagSet => {
@@ -347,12 +366,12 @@ class CompareData extends React.PureComponent {
                           const originalLanguageId = versionInfo[preppedVersions[0].id].languageId
 
                           // Add translations to preppedVersions
-                          ;(versions || []).forEach(({ id, refs }) => {
+                          versions.forEach(({ id, ref, refs }) => {
                             if(id === 'lxx') return
 
                             const { wordDividerRegex } = versionInfo[id]
 
-                            refs.forEach(ref => {
+                            ;(refs || [ref]).forEach(ref => {
 
                               const loc = getLocFromRef(ref)
                               const verseId = `${loc}-${id}`

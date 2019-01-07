@@ -107,9 +107,9 @@ class CompareView extends React.PureComponent {
   render() {
     const { options, show, back, style } = this.props 
     const { showSearchView, originalLanguageWordLoc, translationWordLocAndVersionId, mode } = this.state
-    const { versions, originalLanguageRef } = options
+    const { version, multipleVersions } = options
 
-    if(!versions && !originalLanguageRef) return null
+    if(!version && !multipleVersions) return null
 
     return (
       <View

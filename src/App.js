@@ -3,12 +3,12 @@ import React from 'react'
 import { determineUILanguageId, setUpI18n } from './utils/i18n.js'
 // import styled from 'styled-components'
 import { setUp, ready, updateHeight, report } from './utils/postMessage.js'
-import { getOrigLangAndLXXVersionInfo, getHashParameter } from './utils/helperFunctions.js'
+import { getOrigLangAndLXXVersionInfo, getHashParameter, getOrigLangVersionIdFromRef } from './utils/helperFunctions.js'
 import { setEmbeddingAppId } from './utils/auth.js'
 import { splitVerseIntoWords } from './utils/splitting.js'
 import Measure from 'react-measure'
 import Apollo, { restoreCache, client, getStaleState, setStaleTime, getQueryVars } from './components/smart/Apollo'
-import { getCorrespondingVerseLocation } from 'bibletags-versification'
+import { getCorrespondingRefs } from 'bibletags-versification/src/versification'
 
 import CompareView from './components/views/CompareView'
 import Bar from './components/basic/Bar'
@@ -100,10 +100,11 @@ class App extends React.Component {
     
     switch(data.action) {
 
-      case '-':  // used to fetch and set the embeddingAppId only
+      case '-': {  // used to fetch and set the embeddingAppId only
         break
+      }
 
-      case 'setUp':
+      case 'setUp': {
         this.setUpLanguage({ settings })
 
         const { versionIdsToUse } = settings
@@ -111,18 +112,37 @@ class App extends React.Component {
         ;(versionIdsToUse || []).forEach(versionId => getVersionInfo(versionId))
 
         break
+      }
 
-      case 'preload':
-        this.setUpLanguage({ settings, options })
+      case 'preload': {
+        const { version, originalLanguageRef } = options
 
-        this.setState({ options })
+        if(!version === !originalLanguageRef) break  // invalid parameters
+
+        const preloadOptions = version
+          ? options
+          : {
+            multipleVersions: {
+              originalLanguageRef,
+            }
+          }
+        
+        this.setUpLanguage({
+          settings,
+          options: preloadOptions,
+        })
+
+        this.setState({ options: preloadOptions })
 
         break
+      }
 
-      case 'show':
-        if(this.readyStatus >= 1) break   // only single show call allowed
+      case 'show': {
+        if(this.readyStatus >= 1) break  // only single show call allowed
+        
+        const { version, multipleVersions, maxHeight } = options
 
-        const { maxHeight } = options
+        if(!version === !multipleVersions) break  // invalid parameters
 
         this.setUpLanguage({ settings, options })
 
@@ -136,43 +156,72 @@ class App extends React.Component {
         this.readyStatus = 1
         
         break
+      }
         
-      case 'getCorrespondingVerseLocations':
+      case 'getCorrespondingLocations': {
 
-        let { baseVersion, lookupVersionIds } = options
+        const { originalLanguageRef, lookupVersionIds } = options
         const lookupVersionInfos = []
-        const verseLocations = []
+        const versions = []
 
-        await Promise.all([
-          (async () => {
-            baseVersion.info = await getVersionInfo(baseVersion.id)
-          })(),
-          ...lookupVersionIds.map(async (versionId, index) => {
+        const baseVersion = {
+          ref: originalLanguageRef,
+          info: getOrigLangAndLXXVersionInfo()[getOrigLangVersionIdFromRef(originalLanguageRef)],
+        }
+
+        await Promise.all(
+          lookupVersionIds.map(async (versionId, index) => {
             lookupVersionInfos[index] = await getVersionInfo(versionId)
-          }),
-        ])
+          })
+        )
 
         lookupVersionInfos.forEach(lookupVersionInfo => {
-          verseLocations.push({
+          versions.push({
             id: lookupVersionInfo.id,
-            refs: getCorrespondingVerseLocation({ baseVersion, lookupVersionInfo }),
+            refs: getCorrespondingRefs({ baseVersion, lookupVersionInfo }),
           })
         })
 
         report({
-          action: 'reportCorrespondingVerseLocations',
+          action: 'reportCorrespondingLocations',
           payload: {
             actionIndex,
-            verseLocations,
+            versions,
           },
         })
 
         break
+      }
 
-      case 'splitVerseIntoWords':
+      case 'getOriginalLanguageRef': {
+
+        const { version } = options
+
+        const baseVersion = {
+          ref: version.ref,
+          info: await getVersionInfo(version.id),
+        }
+
+        const lookupVersionInfo = getOrigLangAndLXXVersionInfo()[getOrigLangVersionIdFromRef(version.ref)]
+
+        const ref = getCorrespondingRefs({ baseVersion, lookupVersionInfo })
+
+        report({
+          action: 'reportOriginalLanguageRef',
+          payload: {
+            actionIndex,
+            ref,
+          },
+        })
+
+        break
+      }
+
+      case 'splitVerseIntoWords': {
 
         const { version={} } = options
-        const { id, usfm } = version
+        const { id, ref={} } = version
+        const { usfm } = ref
         let words = null
 
         if(id) {
@@ -195,10 +244,12 @@ class App extends React.Component {
         })
 
         break
+      }
 
-      default:
+      default: {
         console.log('unknown postMessage', data)
         break
+      }
     }
   }
 

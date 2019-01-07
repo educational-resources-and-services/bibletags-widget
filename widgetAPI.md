@@ -23,7 +23,7 @@ General notes:
 - The `chapter` parameters must contain an integer between 1-150
 - The `verse` parameters must contain an integer between 0-176 (where 0 is used for psalm headings)
 - The `usfm` parameters may contain [USFM 3](https://ubsicap.github.io/usfm/) format markers for some inline styles, footnotes and cross references. Plain text is also acceptable USFM, so long as it does not contain unescaped backslashes. Non-inline styles like chapter markers (\c), verse markers (\v) and paragraph markers (\p) will be ignored. Also, [nesting](http://ubsicap.github.io/usfm/characters/nesting.html) is not presently supported.
-- `wordNum`-like parameters must be >= 1, representing the word number in the verse as split by `splitVerseIntoWords`.
+- The `wordNum` parameters must be >= 1, representing the word number in the verse as split by `splitVerseIntoWords`. The inclusion of this parameter will cause that word to be initially selected.
 - Verse content (i.e. the `usfm` parameter) sent to the [show()](#show) function or `fetchVerseCallback`'s `contentCallback` will have its word count checked against the word count of the current tagging of this verse. If there is inconsistency, original language tagging will not be available while the inconsistency awaits review.
 
 ## setUp()
@@ -104,16 +104,31 @@ Useful for having original language data prefetched from the server.
 #### Parameters
 
 ```javascript
-versions!: [{
+version: {
 	id!: String,
-	refs!: [{
+	ref!: {
 		bookId!: Number,
 		chapter!: Number,
 		verse: Number,
-	}],
-}]
+	},
+}
 ```
 
+- The corresponding original language text will be prefetched. To directly specify an original language reference to be prefetched, use the `originalLanguageRef` parameter below.
+- You are required to supply either the `version` or the `originalLanguageRef` parameter, and may not supply both.
+- To preload an entire chapter, leave `verse` undefined.
+
+
+```javascript
+originalLanguageRef: {
+	bookId!: Number,
+	chapter!: Number,
+	verse: Number,
+}
+```
+
+- The appropriate original language text will be prefetched.
+- You are required to supply either the `version` or the `originalLanguageRef` parameter, and may not supply both.
 - To preload an entire chapter, leave `verse` undefined.
 
 ```javascript
@@ -134,48 +149,22 @@ null
 
 ```javascript
 window.bibleTagsWidget.preload({
-	versions: [
-		{
-			id: "esv",
-			refs: [{
-				bookId: 1,
-				chapter: 1,
-				verse: 1,
-			}],
-		},
-	],
+	version: {
+		id: "esv",
+		refs: [{
+			bookId: 1,
+			chapter: 1,
+			verse: 1,
+		}],
+	},
 })
 ```
 ```javascript
 window.bibleTagsWidget.preload({
-	versions: [
-		{
-			id: "esv",
-			refs: [
-				{
-					bookId: 1,
-					chapter: 1,
-				},
-				{
-					bookId: 1,
-					chapter: 2,
-				},
-			],
-		},
-		{
-			id: "nasb",
-			refs: [
-				{
-					bookId: 1,
-					chapter: 1,
-				},
-				{
-					bookId: 1,
-					chapter: 2,
-				},
-			],
-		},
-	],
+	originalLanguageRef: {
+		bookId: 1,
+		chapter: 1,
+	},
 	includeLXX: true,
 })
 ```
@@ -185,36 +174,48 @@ window.bibleTagsWidget.preload({
 #### Parameters
 
 ```javascript
-versions: [{
+version: {
 	id!: String,
-	refs!: [{
+	ref!: {
 		usfm!: String,
 		bookId!: Number,
 		chapter!: Number,
 		verse!: Number,
 		wordNum: Number,
-	}],
-}]
-```
-
-- The appropriate original language text will be displayed before these `versions` in the widget. To *only* display the original language version, see the `originalLanguageRef` parameter below.
-- Will retrieve original language verse(s) corresponding to the first version as versification can change between versions. If subsequent versions do not properly correspond, they will get ignored. Hence, it is highly recommended that the [getCorrespondingVerseLocations()](#getCorrespondingVerseLocations) function is used before calling this function on multiple versions.
-- The first version may only contain a single verse (i.e. `ref`). However, there are times when subsequent versions require multiple verses to cover the same content present in this single verse of the first version (due to versification descrepencies). In such cases, the additional verses (in full) should simply be added on to the `versions` array. See the final example in the examples section below.
-- `wordNum` will only be taken into account in the first ref within which it is found.
-- `usfm` may contain plain text. (See "General notes" above.)
-- You are required to supply either the `versions` or the `originalLanguageRef` parameter, and may not supply both.
-
-```javascript
-originalLanguageRef: {
-	bookId!: Number,
-	chapter!: Number,
-	verse!: Number,
-	wordNum: Number,
+	},
 }
 ```
 
-- Only use this parameter when desiring to display the original language version *alone*. To display translations in addition to the original language version, see the `versions` parameter above.
-- You are required to supply either the `versions` or the `originalLanguageRef` parameter, and may not supply both.
+- The appropriate original language text will automatically be displayed in the widget along with this `version`. To *only* display the original language version, or to display multiple translations along with the original, see the `multipleVersions` parameter below.
+- `usfm` may contain plain text. (See "General notes" above.)
+- You are required to supply either the `version` or the `multipleVersions` parameter, and may not supply both.
+
+
+```javascript
+multipleVersions: {
+	originalLanguageRef!: {
+		bookId!: Number,
+		chapter!: Number,
+		verse!: Number,
+		wordNum: Number,
+	},
+	versions: [{
+		id!: String,
+		refs!: [{
+			usfm!: String,
+			bookId!: Number,
+			chapter!: Number,
+			verse!: Number,
+		}],
+	}]
+}
+```
+
+- The appropriate original language text specified by `originalLanguageRef` will be displayed in the widget along with the `versions`. To *only* display the original language text, simply do not include the `versions` parameter.
+- Note that different versions may have divergent versification models. For this reason, `bookId`, `chapter` and `verse` are required both for the `originalLanguageRef` as well as for all `versions` and must correspond to one another in content. If any of the `versions` do not properly correspond, they will get ignored. Hence, it is highly recommended that the [getCorrespondingLocations()](#getCorrespondingLocations) function be used to determine the proper verse(s) to send for each version.
+- While the `originalLanguageRef` only allows for a single verse, multiple `refs` might be provided for each version. This is because there are times when a single verse in the original corresponds to multiple verses in a translation. In such cases, the additional verses (in full) should simply be added on to the `refs` array. *See the final example in the examples section below.*
+- `usfm` may contain plain text. (See "General notes" above.)
+- You are required to supply either the `version` or the `multipleVersions` parameter, and may not supply both.
 
 ```javascript
 anchorEl: HTMLElement
@@ -302,7 +303,7 @@ fetchVerseCallback: Function({
 	contentCallback: Function({
 		usfm!: String,
 	}),
-}),
+})
 ```
 
 - **Not yet implemented**
@@ -359,31 +360,31 @@ Number
 
 ```javascript
 window.bibleTagsWidget.show({
-	versions: [{
+	version: {
 		id: "esv",
-		refs: [{
+		ref: {
 			usfm: "In the beginning, God created the heavens and the earth.",
 			bookId: 1,
 			chapter: 1,
 			verse: 1,
-		}],
-	}],
+		},
+	},
 	anchorEl: theHTMLElementWhichTheWidgetShouldBeAdjacentTo,
 })
 // Returns: 1
 ```
 ```javascript
 window.bibleTagsWidget.show({
-	versions: [{
+	version: {
 		id: "esv",
-		refs: [{
+		ref: {
 			usfm: "In the beginning, God created the heavens and the earth.",
 			bookId: 1,
 			chapter: 1,
 			verse: 1,
 			wordNum: 3,
-		}],
-	}],
+		},
+	},
 	anchorEl: theHTMLElementWhichTheWidgetShouldBeAdjacentTo,
 	containerEl: theHTMLElementInWhichTheWidgetShouldScroll,
 	containerElTargetScroll: {
@@ -440,34 +441,41 @@ window.bibleTagsWidget.show({
 ```
 ```javascript
 window.bibleTagsWidget.show({
-	versions: [
-		{
-			id: "esv",
-			refs: [{
-				usfm: "For he chose us in him before the creation of the world to be holy and blameless in his sight. In love",
-				bookId: 49,
-				chapter: 1,
-				verse: 4,
-			}],
+	multipleVersions: {
+		originalLanguageRef: {
+			bookId: 49,
+			chapter: 1,
+			verse: 4,
 		},
-		{
-			id: "exb",
-			[
-				{
-					usfm: "That is, in Christ, he chose us before the world was made so that we would be his holy people—people without blame before him.",
+		versions: [
+			{
+				id: "esv",
+				refs: [{
+					usfm: "For he chose us in him before the creation of the world to be holy and blameless in his sight. In love",
 					bookId: 49,
 					chapter: 1,
 					verse: 4,
-				},
-				{
-					usfm: "Because of his love, God had already decided to make us his own children through Jesus Christ. That was what he wanted and what pleased him,",
-					bookId: 49,
-					chapter: 1,
-					verse: 5,
-				},
-			],
-		},
-	],
+				}],
+			},
+			{
+				id: "exb",
+				refs: [
+					{
+						usfm: "That is, in Christ, he chose us before the world was made so that we would be his holy people—people without blame before him.",
+						bookId: 49,
+						chapter: 1,
+						verse: 4,
+					},
+					{
+						usfm: "Because of his love, God had already decided to make us his own children through Jesus Christ. That was what he wanted and what pleased him,",
+						bookId: 49,
+						chapter: 1,
+						verse: 5,
+					},
+				],
+			},
+		],
+	},
 })
 // Returns: 3
 ```
@@ -502,20 +510,17 @@ window.bibleTagsWidget.hide()
 ```
 
 
-## getCorrespondingVerseLocations()
+## getCorrespondingLocations()
 
-This function is useful when calling [show()](#show) with multiple versions. (See explanation in the `versions` parameter details.)
+This function is useful when calling [show()](#show) with the `multipleVersions` parameter. (See the notes under that function for details.)
 
 #### Parameters
 
 ```javascript
-baseVersion!: {
-	id!: String,
-	ref: {
-		bookId!: Number,
-		chapter!: Number,
-		verse!: Number,
-	},
+originalLanguageRef!: {
+	bookId!: Number,
+	chapter!: Number,
+	verse!: Number,
 }
 ```
 
@@ -524,37 +529,35 @@ lookupVersionIds!: [String]
 ```
 
 ```javascript
-callback: [{
+callback: Function([{
 	id: String,
 	refs: [{
 		bookId: Number,
 		chapter: Number,
 		verse: Number,
-		wordRange: [Number, Number | null],
+		wordRanges: [String] | null,
 	}],
-}]
+}])
 ```
 
-- The `wordRange` parameter is an array with two elements: one integer indicating the start word number (>= 1) and a second integer indicating the end word number. The second element in the array may contain the value `null`, indicating that the word range extends to the end of the given verse.
-- If [getCorrespondingVerseLocations()](#getCorrespondingVerseLocations) is being called in preparation for calling [show()](#show), the `wordRange` parameter is irrelevant and can be ignored.
+- Note that object structure sent in an array to the callback accords with the structure of what is called a `version` throughout this API.
+- The `wordRanges` key will be `null` when the entire verse corresponds. However, when the `originalLanguageRef` maps to only part of a verse in a particular version, `wordRanges` will contain an array of word range strings. For example, `["9-"]` would indicate a range starting with word nine and going through the end of the verse. `["1-5", "8-10"]` would indicate words one through five and eight through ten.
+- If [getCorrespondingLocations()](#getCorrespondingLocations) is being called in preparation for calling [show()](#show) with the `multipleVersions` parameter, the `wordRanges` parameter is irrelevant and can be ignored.
 
 #### Return value
 
 ```javascript
-Promise  // resolves to the same value as the callback
+Promise  // resolves to the same value as that which is passed to the callback
 ```
 
 #### Example
 
 ```javascript
-const correspondingVerseLocations = await window.bibleTagsWidget.getCorrespondingVerseLocations({
-	baseVersion: {
-		id: "esv",
-		ref: {
-			bookId: 1,
-			chapter: 1,
-			verse: 1,
-		},
+const versions = await window.bibleTagsWidget.getCorrespondingLocations({
+	originalLanguageRef: {
+		bookId: 1,
+		chapter: 1,
+		verse: 1,
 	},
 	lookupVersionIds: ["nasb", "niv"],
 })
@@ -579,14 +582,11 @@ const correspondingVerseLocations = await window.bibleTagsWidget.getCorrespondin
 ```
 
 ```javascript
-const correspondingVerseLocations = await window.bibleTagsWidget.getCorrespondingVerseLocations({
-	baseVersion: {
-		id: "esv",
-		ref: {
-			bookId: 3,
-			chapter: 14,
-			verse: 55,
-		},
+const versions = await window.bibleTagsWidget.getCorrespondingLocations({
+	originalLanguageRef: {
+		bookId: 3,
+		chapter: 14,
+		verse: 55,
 	},
 	lookupVersionIds: ["syn"],
 })
@@ -597,23 +597,20 @@ const correspondingVerseLocations = await window.bibleTagsWidget.getCorrespondin
 // 			bookId: 3,
 // 			chapter: 14,
 // 			verse: 55,
-//			wordRange: [1, 8],
+//			wordRanges: ["1-8"],
 // 		}],
 // 	},
 // ]
 ```
 
 ```javascript
-const correspondingVerseLocations = await window.bibleTagsWidget.getCorrespondingVerseLocations({
-	baseVersion: {
-		id: "esv",
-		ref: {
-			bookId: 3,
-			chapter: 14,
-			verse: 56,
-		},
+const versions = await window.bibleTagsWidget.getCorrespondingLocations({
+	originalLanguageRef: {
+		bookId: 3,
+		chapter: 14,
+		verse: 56,
 	},
-	lookupVersionIds: ["syn"],
+	lookupVersionIds: ["syn", "esv"],
 })
 // [
 // 	{
@@ -622,15 +619,60 @@ const correspondingVerseLocations = await window.bibleTagsWidget.getCorrespondin
 // 			bookId: 3,
 // 			chapter: 14,
 // 			verse: 55,
-//			wordRange: [9, null],
+//			wordRanges: ["9-"],
+// 		}],
+// 	},
+// 	{
+// 		id: "esv",
+// 		refs: [{
+// 			bookId: 3,
+// 			chapter: 14,
+// 			verse: 56,
 // 		}],
 // 	},
 // ]
 ```
 
+
+## getOriginalLanguageRef()
+
+This function can be useful as a precursor to calling [show()](#show) with the `multipleVersions` parameter.
+
+#### Parameters
+
 ```javascript
-const correspondingVerseLocations = await window.bibleTagsWidget.getCorrespondingVerseLocations({
-	baseVersion: {
+version!: {
+	id!: String,
+	ref!: {
+		bookId!: Number,
+		chapter!: Number,
+		verse!: Number,
+	},
+}
+```
+
+```javascript
+callback: Function({
+	bookId: Number,
+	chapter: Number,
+	verse: Number,
+	wordRanges: [String] | null,
+})
+```
+
+- See note on `wordRanges` under [getCorrespondingLocations()](#getCorrespondingLocations) as the same dynamic applies.
+
+#### Return value
+
+```javascript
+Promise  // resolves to the same value as that which is passed to the callback
+```
+
+#### Example
+
+```javascript
+const originalLanguageRef = await window.bibleTagsWidget.getOriginalLanguageRef({
+	version: {
 		id: "syn",
 		ref: {
 			bookId: 3,
@@ -638,26 +680,21 @@ const correspondingVerseLocations = await window.bibleTagsWidget.getCorrespondin
 			verse: 55,
 		},
 	},
-	lookupVersionIds: ["esv"],
 })
 // [
 // 	{
-// 		id: "esv",
-// 		refs: [
-//			{
-// 				bookId: 3,
-// 				chapter: 14,
-// 				verse: 55,
-// 			},
-//			{
-//				bookId: 3,
-//				chapter: 14,
-//				verse: 56,
-//			},
-//		],
+//		bookId: 3,
+//		chapter: 14,
+//		verse: 55,
+// 	},
+// 	{
+//		bookId: 3,
+//		chapter: 14,
+//		verse: 56,
 // 	},
 // ]
 ```
+
 
 ## splitVerseIntoWords()
 
@@ -677,7 +714,9 @@ version!: {
 ```
 
 ```javascript
-callback: [String] | null  // null, if the version id is invalid
+callback: Function(
+	[String] | null  // null, if the version id is invalid
+)
 ```
 
 - An array of words from the verse, with punctuation stripped out.
@@ -685,7 +724,7 @@ callback: [String] | null  // null, if the version id is invalid
 #### Return value
 
 ```javascript
-Promise  // resolves to the same value as the callback
+Promise  // resolves to the same value as that which is passed to the callback
 ```
 
 #### Examples
@@ -698,6 +737,7 @@ const wordsArray = await window.bibleTagsWidget.splitVerseIntoWords({
 			usfm: "In the beginning, God created the heavens and the earth.",
 		},
 	},
+})
 // [
 // 	"In",
 // 	"the",
@@ -710,5 +750,4 @@ const wordsArray = await window.bibleTagsWidget.splitVerseIntoWords({
 // 	"the",
 // 	"earth",
 // ]
-})
 ```

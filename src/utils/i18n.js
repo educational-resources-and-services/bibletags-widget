@@ -30,7 +30,7 @@ export const determineUILanguageId = ({ settings, options={} }) => {
   try {
     uiLanguageId = options.uiLanguageId
       || settings.uiLanguageId
-      || localStorage.getItem(`bibleTags-uiLang-${options.versions && (options.versions[0] || {}).id}`)
+      || localStorage.getItem(`bibleTags-uiLang-${(options.version || ((options.multipleVersions && options.multipleVersions.versions) || [])[0] || {}).id}`)
       || localStorage.getItem(`bibleTags-uiLang`)  // latest languageId used
       || 'eng'  // presently unknown
   } catch(e) {

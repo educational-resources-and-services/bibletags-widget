@@ -2,7 +2,7 @@ import md5 from 'md5'
 import i18n from './i18n.js'
 import { getHebrewPOSTerm, getHebrewMorphPartDisplayInfo } from './hebrewMorph.js'
 import { getGreekPOSTerm, getGreekMorphPartDisplayInfo } from './greekMorph.js'
-import { getRefFromLoc } from 'bibletags-versification'
+import { getRefFromLoc } from 'bibletags-versification/src/versification'
 import { splitVerseIntoWords } from './splitting.js'
 
 const hashParametersObject = {}
