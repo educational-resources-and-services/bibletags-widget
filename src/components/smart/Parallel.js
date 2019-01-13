@@ -102,7 +102,7 @@ class Parallel extends React.Component {
 
     const isEntirelyPrefixAndSuffix = getIsEntirelyPrefixAndSuffix(word)
     const morph = word.morph
-    const morphParts = (morph && morph.substr(1).split('/')) || [""]
+    const morphParts = (morph && morph.substr(3).split(':')) || [""]
     const mainPartIdx = getMainWordPartIndex(morphParts)
 
     return (
@@ -111,7 +111,7 @@ class Parallel extends React.Component {
         onClick={updateWordLoc.bind(this, { versionId, wordLoc })}
       >
         {
-          text.split('/').map((wordPart, wpIndex) => {
+          text.split('​').map((wordPart, wpIndex) => {  // There is a zero width space in the ''
 
             const isPrefixOrSuffix = isEntirelyPrefixAndSuffix || wpIndex !== mainPartIdx
             const color = isSelected && getGrammarColor({ isPrefixOrSuffix, morphPart: morphParts[wpIndex] })

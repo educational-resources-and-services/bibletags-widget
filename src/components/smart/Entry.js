@@ -49,8 +49,8 @@ class Entry extends React.Component {
     if(morph) {
 
       if(languageId === 'heb') {
-        morphLang = morph.substr(0,1)
-        morphParts = morph.substr(1).split('/')
+        morphLang = morph.substr(0,2)
+        morphParts = morph.substr(3).split(':')
         mainPartIdx = getMainWordPartIndex(morphParts)
         morphPos = morphParts[mainPartIdx].substr(0,1)
 

@@ -76,7 +76,7 @@ const grammarTerms = {
     o: i18n("direct-object-marker", {}, "", "grammar"),
     r: i18n("relative", {}, "", "grammar"),
   },
-  stemH: {
+  stemHe: {
     q: i18n("qal", {}, "", "grammar"),
     N: i18n("niphal", {}, "", "grammar"),
     p: i18n("piel", {}, "", "grammar"),
@@ -105,7 +105,7 @@ const grammarTerms = {
     y: i18n("nithpoel", {}, "", "grammar"),
     z: i18n("hithpoel", {}, "", "grammar"),
   },
-  stemA: {
+  stemAr: {
     q: i18n("peal", {}, "", "grammar"),
     Q: i18n("peil", {}, "", "grammar"),
     u: i18n("hithpeel", {}, "", "grammar"),
