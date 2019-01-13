@@ -127,9 +127,8 @@ ATTENTION!! There have been changes made to bibletags-widget-script and thus a n
 * Entire chapter preload (chapter and tagSets queries)
 
 * Check in with Bruce McClean - will they make the fix?
+  - https://github.com/translationCoreApps/usfm-js/issues/50
 
-* Hebrew
-  * I will be adding in the slot ids to Hebrew with a book prefix (01, 02, etc) and three more digits, to the edition of the Hebrew we will be publishing as a part of the Hebrew parsing project.
 * Greek
   * Add in temporary ids for now. `x-id="u8Et"` in usfm
 * utilize definitionsByPosition query for when wordnum supplied (so only a single back-and-forth is needed)
