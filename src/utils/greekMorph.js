@@ -1,5 +1,6 @@
 import i18n from './i18n.js'
 
+// pos matches posMapping in bibletags-data/scripts/importUGNTFromUsfm.js
 const posTerms = {
   N: i18n("noun", {}, "", "grammar"),
   A: i18n("adjective", {}, "", "grammar"),
@@ -62,7 +63,7 @@ const morphTerms = [
     N: i18n("infinitive", {}, "", "grammar"),
     P: i18n("participle", {}, "", "grammar"),
   },
-  { // tense
+  { // aspect
     P: i18n("present", {}, "", "grammar"),
     I: i18n("imperfect", {}, "", "grammar"),
     F: i18n("future", {}, "", "grammar"),

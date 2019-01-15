@@ -129,8 +129,16 @@ ATTENTION!! There have been changes made to bibletags-widget-script and thus a n
 * Check in with Bruce McClean - will they make the fix?
   - https://github.com/translationCoreApps/usfm-js/issues/50
 
+* Hebrew
+  * Change sub-strongs numbers to .1, .2 etc.
+  * Indicate in UI if word is Aramaic (see in morph)
+    - record language in definitions table?
 * Greek
-  * Add in temporary ids for now. `x-id="u8Et"` in usfm
+  * Get rid of zero padding on strongs + put a dot before the last digit
+  * pos
+  * Jesse: usfm-js library discussion, updates to UGNT
+
+
 * utilize definitionsByPosition query for when wordnum supplied (so only a single back-and-forth is needed)
 * After I have graphql queries which receive arrays in return, see if my cache -> localstorage strategy works still
 * Authentication
