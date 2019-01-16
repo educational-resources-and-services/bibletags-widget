@@ -206,8 +206,16 @@ export const getMorphPartDisplayInfo = ({ morphLang, morphPart, isPrefixOrSuffix
   return ['He','Ar'].includes(morphLang) ? getHebrewMorphPartDisplayInfo({ morphLang, morphPart, isPrefixOrSuffix, wordIsMultiPart }) : getGreekMorphPartDisplayInfo({ morphPart })
 }
 
-export const getMainWordPartIndex = wordParts => (wordParts ? (wordParts.length - (wordParts[wordParts.length - 1].match(/^S/) ? 2 : 1)) : null)
+// same as in bibletags-data/scripts/importUHBFromOsis.js
+export const getMainWordPartIndex = wordParts => {
+  if(!wordParts) return null
 
+  for(let idx = wordParts.length - 1; idx >= 0 idx--) {
+    if(!wordParts[idx].match(/^S/)) {
+      return idx
+    }
+  }
+}
 export const getStrongs = wordInfo => (wordInfo ? (wordInfo.strong || '').replace(/^[a-z]+:/, '') : '')
 
 export const getIsEntirelyPrefixAndSuffix = wordInfo => (wordInfo && !getStrongs(wordInfo))
