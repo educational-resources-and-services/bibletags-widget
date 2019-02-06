@@ -129,14 +129,6 @@ ATTENTION!! There have been changes made to bibletags-widget-script and thus a n
 * Check in with Bruce McClean - will they make the fix?
   - https://github.com/translationCoreApps/usfm-js/issues/50
 
-* Hebrew
-  * Change sub-strongs numbers to .1, .2 etc.
-  * Indicate in UI if word is Aramaic (see in morph)
-    - record language in definitions table?
-* Greek
-  * Get rid of zero padding on strongs + put a dot before the last digit
-  * pos
-  * Jesse: usfm-js library discussion, updates to UGNT
 
 
 * utilize definitionsByPosition query for when wordnum supplied (so only a single back-and-forth is needed)
@@ -154,6 +146,7 @@ ATTENTION!! There have been changes made to bibletags-widget-script and thus a n
   * Should lang codes only be 3-digit? (i.e. no eng-gb?) Think about Chinese as another example
   * Think about different ways besides chap:verse that translations represent ref's
 * Test that uiLanguageId works correctly
+* record language (Aramaic or Hebrew) in definitions table?
 * hideVerse
 * hideOriginal
 * addlOptions
@@ -173,6 +166,13 @@ ATTENTION!! There have been changes made to bibletags-widget-script and thus a n
   * Examine mock ups and docs to see what remain of initial design and add them to the roadmap
 * Test all implemented aspects of the API
 * Do first beta releases
+* Check if pronoun morph words are right in widget. Looks wrong - should be persongendernumber?
+* Make all work with multiple suffixes in UI - Eg. Ps 91:12
+* Handle multi-word lemmas in UI
+* I need lex and vocal for 69 words in the definitions table (asked Alan of a data dump if he has this)
+  - When I get this, update dodson and then rerun createUGNTDefAndPOS.js
+* I am also missing vocal for another 50-100 words. Have Nate do this?
+* H6307 - lemma is wrong?
 * Have API parameters checked and errors properly thrown when they are invalid (TypeScript?)
 * Get working on Biblearc
 * Check for unnecessary renders (I found one related to the Measure component)
@@ -324,7 +324,7 @@ npm install
 * [bibletags-versification](https://github.com/educational-resources-and-services/bibletags-versification)
   * included by both `bibletags-data` and `bibletags-widget`
   * exposes three functions for aligning verses between versions
-    * `isValidVerse()`
+    * `hasCorrespondingVerseInOriginal()`
     * `isValidVerseInOriginal()`
     * `getCorrespondingVerseLocations()`
   * rarely changes as its consistency is foundational to the integrety of crowd-sourced tagging data
