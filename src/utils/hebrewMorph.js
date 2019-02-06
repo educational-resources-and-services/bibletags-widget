@@ -201,7 +201,7 @@ export const getHebrewMorphPartDisplayInfo = ({ morphLang, morphPart, isPrefixOr
 
     case 'P':
       pushTerm({ morphStrs, term: grammarTerms.pronounType[morphPartLetters[1]] })
-      pushGenderNumberState({ morphStrs, morphPartLetters: morphPartLetters.slice(2) })
+      pushPersonGenderNumber({ morphStrs, morphPartLetters: morphPartLetters.slice(2) })
       break
 
     case 'R':
