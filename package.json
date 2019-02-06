@@ -28,7 +28,7 @@
     "react-transition-group": "2.5.0",
     "regexpu-core": "4.2.0",
     "styled-components": "4.0.2",
-    "usfm-js": "1.0.12"
+    "usfm-js": "github:translationCoreApps/usfm-js#b7ed16cd03423a6132ebbe21b450d096c96e07de"
   },
   "devDependencies": {
     "opn-cli": "3.1.0"
