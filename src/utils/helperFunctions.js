@@ -210,7 +210,7 @@ export const getMorphPartDisplayInfo = ({ morphLang, morphPart, isPrefixOrSuffix
 export const getMainWordPartIndex = wordParts => {
   if(!wordParts) return null
 
-  for(let idx = wordParts.length - 1; idx >= 0 idx--) {
+  for(let idx = wordParts.length - 1; idx >= 0; idx--) {
     if(!wordParts[idx].match(/^S/)) {
       return idx
     }
