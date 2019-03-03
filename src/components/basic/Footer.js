@@ -48,18 +48,18 @@ const FooterAction = styled.span`
 class Footer extends React.Component {
 
   state = {
-    showView: false,
+    showingView: false,
   }
 
-  hideView = () => this.setState({ showView: false })
+  hideView = () => this.setState({ showingView: false })
 
-  showInstructionsView = () => this.setState({ showView: 'instructions' })
+  showInstructionsView = () => this.setState({ showingView: 'instructions' })
   
-  showLoginView = () => this.setState({ showView: 'login' })
+  showLoginView = () => this.setState({ showingView: 'login' })
 
   render() {
     const { showLinks, disableInstructionsLink } = this.props
-    const { showView } = this.state
+    const { showingView } = this.state
 
     return (
       <React.Fragment>
@@ -81,11 +81,11 @@ class Footer extends React.Component {
           </Links>
         }
         <InstructionsView
-          show={showView === 'instructions'}
+          show={showingView === 'instructions'}
           back={this.hideView}
         />
         <LoginView
-          show={showView === 'login'}
+          show={showingView === 'login'}
           back={this.hideView}
         />
       </React.Fragment>

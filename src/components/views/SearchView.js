@@ -20,14 +20,14 @@ class SearchView extends React.PureComponent {
 
   state = {
     mode: 'nt',  // options: nt | ot | both (from NT), hebrew | greek (from OT)
-    showView: false,
+    showingView: false,
   }
 
-  hideView = () => this.setState({ showView: false })
+  hideView = () => this.setState({ showingView: false })
 
   render() {
     const { options, show, back } = this.props 
-    const { mode, showView } = this.state 
+    const { mode, showingView } = this.state 
 
     return (
       <View show={show}>
@@ -57,7 +57,7 @@ class SearchView extends React.PureComponent {
         <Footer />
         <ResultsView
           options={options}
-          show={showView === 'results'}
+          show={showingView === 'results'}
           back={this.hideView}
         />
       </View>

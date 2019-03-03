@@ -21,18 +21,18 @@ class ResultsView extends React.PureComponent {
 
   state = {
     mode: 'translation',  // options: translation | orig | both
-    showView: false,
+    showingView: false,
   }
 
   // I will set up a new window.addEventListener('message', this.postMessageListener) here,
   // checking for the specific verse I'm asking the embedding site for
 
   
-  hideView = () => this.setState({ showView: false })
+  hideView = () => this.setState({ showingView: false })
 
   render() {
     const { options, show, back } = this.props 
-    const { mode, showView } = this.state 
+    const { mode, showingView } = this.state 
 
     return (
       <View show={show}>
@@ -60,7 +60,7 @@ class ResultsView extends React.PureComponent {
         <Footer />
         <CompareView
           options={options}
-          show={showView === 'compare'}
+          show={showingView === 'compare'}
           back={this.hideView}
         />
       </View>

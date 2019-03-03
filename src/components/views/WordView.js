@@ -19,7 +19,7 @@ class WordView extends React.PureComponent {
     shoView: false,
   }
 
-  hideView = () => this.setState({ showView: false })
+  hideView = () => this.setState({ showingView: false })
 
   render() {
     const { something } = this.state 
@@ -27,7 +27,7 @@ class WordView extends React.PureComponent {
     return (
       <View show={show}>
         <SearchView
-          show={showView === 'search'}
+          show={showingView === 'search'}
           back={this.hideView}
         />
         <Footer />

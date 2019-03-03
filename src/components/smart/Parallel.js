@@ -97,7 +97,7 @@ const getCSSFormatting = piece => {
 class Parallel extends React.Component {
 
   state = {
-    showView: false
+    showingView: false
   }
 
   getOriginalhebWord = ({ word, versionId, wordLoc, isSelected, isSemiSelected }) => {
@@ -311,14 +311,14 @@ class Parallel extends React.Component {
     })
   }
 
-  hideView = () => this.setState({ showView: false })
+  hideView = () => this.setState({ showingView: false })
 
-  showTagView = () => this.setState({ showView: 'tag' })
+  showTagView = () => this.setState({ showingView: 'tag' })
 
   render() {
     const { versions, versionInfo, originalLanguageWordLoc, hasMisalignment,
             hasIncompleteTags, originalLanguageId } = this.props
-    const { showView } = this.state
+    const { showingView } = this.state
 
     return (
       <React.Fragment>
@@ -341,7 +341,7 @@ class Parallel extends React.Component {
               showTagView={this.showTagView}
             />
             <TagView
-              show={showView === 'tag'}
+              show={showingView === 'tag'}
               back={this.hideView}
               versions={versions}
               versionInfo={versionInfo}

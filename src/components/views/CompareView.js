@@ -44,7 +44,7 @@ const DashedLine = styled.div`
 class CompareView extends React.PureComponent {
 
   state = {
-    showView: false,
+    showingView: false,
     mode: 'separate',
     originalLanguageWordLoc: null,  // in the original
     translationWordLocAndVersionId: null
@@ -69,7 +69,7 @@ class CompareView extends React.PureComponent {
     return returnVal
   }
 
-  hideView = () => this.setState({ showView: false })
+  hideView = () => this.setState({ showingView: false })
 
   calculateOriginalLanguageWordLocFromTranslation = translationWordLocAndVersionId => {
     return null
@@ -106,7 +106,7 @@ class CompareView extends React.PureComponent {
 
   render() {
     const { options, show, back, style } = this.props 
-    const { showView, originalLanguageWordLoc, translationWordLocAndVersionId, mode } = this.state
+    const { showingView, originalLanguageWordLoc, translationWordLocAndVersionId, mode } = this.state
     const { version, multipleVersions } = options
 
     if(!version && !multipleVersions) return null
@@ -250,7 +250,7 @@ class CompareView extends React.PureComponent {
         <Footer />
         <SearchView
           options={options}
-          show={showView === 'setup'}
+          show={showingView === 'setup'}
           back={this.hideView}
         />
       </View>
