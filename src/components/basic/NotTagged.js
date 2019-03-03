@@ -26,12 +26,15 @@ const InviteLine = styled.div`
 
 const InviteAction = styled.span`
   text-decoration: underline;
-  cursor: pointer;
+  &:hover {
+    color: black;
+    cursor: pointer;
+  }
 `
 
 class Word extends React.Component {
   render() {
-    const { languageId } = this.props 
+    const { languageId, showTagView } = this.props 
 
     return (
       <BoxContainer>
@@ -40,7 +43,7 @@ class Word extends React.Component {
           <InviteLine>
             {i18n("Know {{language}}? ", { language: getOrigLanguageText(languageId) })}
             <InviteAction
-              onClick={() => alert('go tag')}
+              onClick={showTagView}
             >
               {i18n("Tag this verse")}
             </InviteAction>

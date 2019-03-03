@@ -35,7 +35,8 @@ class SwitchButton extends React.Component {
     const { selected, disabled, makeSelected, children } = this.props 
 
     return (
-      <StyledButton raised
+      <StyledButton
+        variant="contained"
         className={selected ? "depressed" : ""}
         disabled={disabled || selected ? true : false}
         onClick={makeSelected}

@@ -4,6 +4,7 @@ import styled from 'styled-components'
 
 import View from '../basic/View'
 import Entry from '../smart/Entry'
+import Footer from '../basic/Footer'
 import SearchView from './SearchView'
 
 // import createCourse from '../../data/mutations/createCourse'
@@ -15,10 +16,10 @@ import SearchView from './SearchView'
 class WordView extends React.PureComponent {
 
   state = {
-    showSearchView: false,
+    shoView: false,
   }
 
-  hideSearchView = () => this.setState({ showSearchView: false })
+  hideView = () => this.setState({ showView: false })
 
   render() {
     const { something } = this.state 
@@ -26,9 +27,10 @@ class WordView extends React.PureComponent {
     return (
       <View show={show}>
         <SearchView
-          show={showSearchView}
-          back={this.hideSearchView}
+          show={showView === 'search'}
+          back={this.hideView}
         />
+        <Footer />
       </View>
     )
   }

@@ -7,6 +7,7 @@ import View from '../basic/View'
 import SwitchButtons from '../basic/SwitchButtons'
 import SwitchButton from '../basic/SwitchButton'
 import SearchGroup from '../basic/SearchGroup'
+import Footer from '../basic/Footer'
 import ResultsView from './ResultsView'
 
 // import createCourse from '../../data/mutations/createCourse'
@@ -19,14 +20,14 @@ class SearchView extends React.PureComponent {
 
   state = {
     mode: 'nt',  // options: nt | ot | both (from NT), hebrew | greek (from OT)
-    showResultsView: false,
+    showView: false,
   }
 
-  hideResultsView = () => this.setState({ showResultsView: false })
+  hideView = () => this.setState({ showView: false })
 
   render() {
     const { options, show, back } = this.props 
-    const { mode, showResultsView } = this.state 
+    const { mode, showView } = this.state 
 
     return (
       <View show={show}>
@@ -53,10 +54,11 @@ class SearchView extends React.PureComponent {
           </SwitchButtons>
         </Bar>
         <SearchGroup />
+        <Footer />
         <ResultsView
           options={options}
-          show={showResultsView}
-          back={this.hideResultsView}
+          show={showView === 'results'}
+          back={this.hideView}
         />
       </View>
     )

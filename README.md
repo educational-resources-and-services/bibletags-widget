@@ -130,9 +130,9 @@ ATTENTION!! There have been changes made to bibletags-widget-script and thus a n
   - https://github.com/translationCoreApps/usfm-js/issues/50
 
 
-
-* utilize definitionsByPosition query for when wordnum supplied (so only a single back-and-forth is needed)
-* After I have graphql queries which receive arrays in return, see if my cache -> localstorage strategy works still
+* UGNT fixes:
+  ‘ appears after the word it should appear before.
+* Fill in the 67-ish missing Greek word lemmas/vocal
 * Authentication
 * Get basic tagging functionality working
   * decide how to flag tags as unconfirmed
@@ -165,10 +165,8 @@ ATTENTION!! There have been changes made to bibletags-widget-script and thus a n
 * Indicate in API which pieces are and are not yet implemented
   * Examine mock ups and docs to see what remain of initial design and add them to the roadmap
 * Test all implemented aspects of the API
+* Consider that developers will be testing the widget with invalid verse data, and we don't want that saved
 * Do first beta releases
-* Check if pronoun morph words are right in widget. Looks wrong - should be persongendernumber?
-* Make all work with multiple suffixes in UI - Eg. Ps 91:12
-* Handle multi-word lemmas in UI
 * I need lex and vocal for 69 words in the definitions table (asked Alan of a data dump if he has this)
   - When I get this, update dodson and then rerun createUGNTDefAndPOS.js
 * I am also missing vocal for another 50-100 words. Have Nate do this?
@@ -187,6 +185,9 @@ ATTENTION!! There have been changes made to bibletags-widget-script and thus a n
 
 Post-launch:
 
+* make login emails multi-lingual
+* utilize definitionsByPosition query for when wordnum supplied (so only a single back-and-forth is needed)
+  * After I have graphql queries which receive arrays in return (like definitionsByPosition), see if my cache -> localstorage strategy works still
 * Have error messages written to console on invalid API calls
 * Implement synonyms and related words
   * Create DB tables with many-to-many relationships to hold this information

@@ -12,7 +12,7 @@ import SwitchButton from '../basic/SwitchButton'
 import Parallel from '../smart/Parallel'
 import Entry from '../smart/Entry'
 import SearchView from './SearchView'
-import NotTagged from '../basic/NotTagged'
+import Footer from '../basic/Footer'
 
 const DoubleLine = styled.div`
   width: 20px;
@@ -44,7 +44,7 @@ const DashedLine = styled.div`
 class CompareView extends React.PureComponent {
 
   state = {
-    showSearchView: false,
+    showView: false,
     mode: 'separate',
     originalLanguageWordLoc: null,  // in the original
     translationWordLocAndVersionId: null
@@ -69,8 +69,8 @@ class CompareView extends React.PureComponent {
     return returnVal
   }
 
-  hideSearchView = () => this.setState({ showSearchView: false })
-  
+  hideView = () => this.setState({ showView: false })
+
   calculateOriginalLanguageWordLocFromTranslation = translationWordLocAndVersionId => {
     return null
   }
@@ -106,7 +106,7 @@ class CompareView extends React.PureComponent {
 
   render() {
     const { options, show, back, style } = this.props 
-    const { showSearchView, originalLanguageWordLoc, translationWordLocAndVersionId, mode } = this.state
+    const { showView, originalLanguageWordLoc, translationWordLocAndVersionId, mode } = this.state
     const { version, multipleVersions } = options
 
     if(!version && !multipleVersions) return null
@@ -234,12 +234,9 @@ class CompareView extends React.PureComponent {
                   originalLanguageWordLoc={calculatedOriginalLanguageWordLoc}
                   updateWordLoc={this.updateWordLoc}
                   hasMisalignment={hasMisalignment}
+                  hasIncompleteTags={hasIncompleteTags}
+                  originalLanguageId={originalLanguageId}
                 />
-                {!!(hasIncompleteTags && preppedVersions.length >= 2) &&
-                  <NotTagged
-                    languageId={originalLanguageId}
-                  />
-                }
                 {!!selectedWordInfo &&
                   <Entry
                     wordInfo={selectedWordInfo}
@@ -250,10 +247,11 @@ class CompareView extends React.PureComponent {
             )
           }}
         </CompareData>
+        <Footer />
         <SearchView
           options={options}
-          show={showSearchView}
-          back={this.hideSearchView}
+          show={showView === 'setup'}
+          back={this.hideView}
         />
       </View>
     )

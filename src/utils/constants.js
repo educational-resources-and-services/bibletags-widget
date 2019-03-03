@@ -1,0 +1,1 @@
+export const CAPTCHA_SITE_KEY = "6Lc0DpUUAAAAALEXeebsJ6kziZ5FbkibzVYqWz1R"

@@ -40,7 +40,8 @@ class SetupView extends React.PureComponent {
           </SwitchButtons>
         </Bar>
         <div>
-          <Button raised
+          <Button
+            variant="contained"
             onClick={() => {}}
           >Submit translations</Button>
         </div>

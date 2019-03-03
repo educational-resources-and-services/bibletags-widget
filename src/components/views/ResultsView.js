@@ -8,6 +8,7 @@ import SwitchButtons from '../basic/SwitchButtons'
 import SwitchButton from '../basic/SwitchButton'
 import ResultBook from '../basic/ResultBook'
 import ResultItem from '../basic/ResultItem'
+import Footer from '../basic/Footer'
 import CompareView from './CompareView'
 
 // import createCourse from '../../data/mutations/createCourse'
@@ -20,18 +21,18 @@ class ResultsView extends React.PureComponent {
 
   state = {
     mode: 'translation',  // options: translation | orig | both
-    showCompareView: false,
+    showView: false,
   }
 
   // I will set up a new window.addEventListener('message', this.postMessageListener) here,
   // checking for the specific verse I'm asking the embedding site for
 
   
-  hideCompareView = () => this.setState({ showCompareView: false })
+  hideView = () => this.setState({ showView: false })
 
   render() {
     const { options, show, back } = this.props 
-    const { mode, showCompareView } = this.state 
+    const { mode, showView } = this.state 
 
     return (
       <View show={show}>
@@ -56,10 +57,11 @@ class ResultsView extends React.PureComponent {
         </Bar>
         <ResultBook />
         <ResultItem />
+        <Footer />
         <CompareView
           options={options}
-          show={showCompareView}
-          back={this.hideCompareView}
+          show={showView === 'compare'}
+          back={this.hideView}
         />
       </View>
     )

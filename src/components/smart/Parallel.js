@@ -9,6 +9,8 @@ import ParallelText from './ParallelText'
 // import ParallelComposite from './ParallelComposite'
 import ParallelHeader from '../basic/ParallelHeader'
 import Progress from '../basic/Progress'
+import NotTagged from '../basic/NotTagged'
+import TagView from '../views/TagView'
 
 // import createCourse from '../../data/mutations/createCourse'
 
@@ -93,6 +95,10 @@ const getCSSFormatting = piece => {
 }
 
 class Parallel extends React.Component {
+
+  state = {
+    showView: false
+  }
 
   getOriginalhebWord = ({ word, versionId, wordLoc, isSelected, isSemiSelected }) => {
     const { updateWordLoc } = this.props
@@ -305,22 +311,46 @@ class Parallel extends React.Component {
     })
   }
 
+  hideView = () => this.setState({ showView: false })
+
+  showTagView = () => this.setState({ showView: 'tag' })
+
   render() {
-    const { versions } = this.props 
+    const { versions, versionInfo, originalLanguageWordLoc, hasMisalignment,
+            hasIncompleteTags, originalLanguageId } = this.props
+    const { showView } = this.state
 
     return (
-      <ParallelContainer>
-        {versions
-          ? this.getJSXFromVersions()
-          : (
-            <Progress
-              containerStyle={{
-                paddingBottom: 10,
-              }}
+      <React.Fragment>
+        <ParallelContainer>
+          {versions
+            ? this.getJSXFromVersions()
+            : (
+              <Progress
+                containerStyle={{
+                  paddingBottom: 10,
+                }}
+              />
+            )
+          }
+        </ParallelContainer>
+        {!!(hasIncompleteTags && versions.length >= 2) &&
+          <React.Fragment>
+            <NotTagged
+              languageId={originalLanguageId}
+              showTagView={this.showTagView}
             />
-          )
+            <TagView
+              show={showView === 'tag'}
+              back={this.hideView}
+              versions={versions}
+              versionInfo={versionInfo}
+              originalLanguageWordLoc={originalLanguageWordLoc}
+              hasMisalignment={hasMisalignment}
+            />
+          </React.Fragment>
         }
-      </ParallelContainer>
+      </React.Fragment>
     )
   }
 
