@@ -111,10 +111,13 @@ class CompareData extends React.PureComponent {
     tagSetIds = []
     versions.forEach(version => {
       const versionRefs = version.refs || [ version.ref ]
-      const neededRefs = getCorrespondingRefs({
-        baseVersion,
-        lookupVersionInfo: versionInfo[version.id],
-      })
+      const neededRefs =
+        multipleVersions
+          ? getCorrespondingRefs({
+            baseVersion,
+            lookupVersionInfo: versionInfo[version.id],
+          })
+          : [ baseVersion.ref ]
 
       if(neededRefs) {
         updateCommonRef(neededRefs)
