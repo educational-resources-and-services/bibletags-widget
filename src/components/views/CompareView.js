@@ -235,7 +235,7 @@ class CompareView extends React.PureComponent {
                   updateWordLoc={this.updateWordLoc}
                   hasMisalignment={hasMisalignment}
                 />
-                {hasIncompleteTags &&
+                {!!(hasIncompleteTags && preppedVersions.length >= 2) &&
                   <NotTagged
                     languageId={originalLanguageId}
                   />
