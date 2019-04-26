@@ -1,3 +1,4 @@
+import React from 'react'
 import md5 from 'md5'
 import i18n from './i18n.js'
 import { getHebrewPOSTerm, getHebrewMorphPartDisplayInfo } from './hebrewMorph.js'
@@ -256,3 +257,23 @@ export const getWordHashes = ({ usfm, wordDividerRegex }) => {
     withBeforeAndAfterHash: hash64(JSON.stringify(words.slice(index === 0 ? 0 : index-1, index+2))),
   }))
 }
+
+export const isValidEmail = email => {
+  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  return re.test(email)
+}
+
+export const isValidToken = token => {
+  const re = /^[A-Z0-9]{3}-?[A-Z0-9]{3}$/
+  return re.test(token.trim())
+}
+
+export const omit = ({ props, omitKeys = [] }) => {
+  const returnObj = Object.assign({}, props)
+  omitKeys.forEach(omitKey => {
+    delete returnObj[omitKey]
+  })
+  return returnObj
+}
+
+export const stripProps = (Component, omitKeys) => (props => <Component {...omit({props, omitKeys})} />)

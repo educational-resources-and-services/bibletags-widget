@@ -134,6 +134,7 @@ ATTENTION!! There have been changes made to bibletags-widget-script and thus a n
   ‘ appears after the word it should appear before.
 * Fill in the 67-ish missing Greek word lemmas/vocal
 * Authentication
+* Only allow a certain number of login token attempts per minute from a given IP
 * Get basic tagging functionality working
   * decide how to flag tags as unconfirmed
   * It needs to throw an error of some sort when a text if fed to the API with a different number of words from what was tagged

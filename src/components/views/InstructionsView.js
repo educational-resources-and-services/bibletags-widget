@@ -1,6 +1,6 @@
 import React from 'react'
 import i18n from '../../utils/i18n.js'
-import styled from 'styled-components'
+// import styled from 'styled-components'
 
 import Bar from '../basic/Bar'
 import View from '../basic/View'

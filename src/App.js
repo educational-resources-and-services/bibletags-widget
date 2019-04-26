@@ -10,6 +10,10 @@ import Measure from 'react-measure'
 import Apollo, { restoreCache, client, getStaleState, setStaleTime, getQueryVars } from './components/smart/Apollo'
 import { getCorrespondingRefs } from 'bibletags-versification/src/versification'
 
+import JssProvider from 'react-jss/lib/JssProvider'
+import { create } from 'jss'
+import { createGenerateClassName, jssPreset } from '@material-ui/core/styles'
+
 import CompareView from './components/views/CompareView'
 import Bar from './components/basic/Bar'
 import Progress from './components/basic/Progress'
@@ -19,6 +23,13 @@ import versionInfoQuery from './data/queries/versionInfo'
 // const dev = !!window.location.href.match(/localhost/)
 
 const compareViewStyle = { position: 'relative' }
+
+const generateClassName = createGenerateClassName()
+const jss = create({
+  ...jssPreset(),
+  // We define a custom insertion point that JSS will look for injecting the styles in the DOM.
+  insertionPoint: document.getElementById('jss-insertion-point'),
+})
 
 const getVersionInfo = async id => {
   const versionInfo = getOrigLangAndLXXVersionInfo()[id]
@@ -261,41 +272,43 @@ class App extends React.Component {
     const { options, uiLanguageId } = this.state
 
     return (
-      <Apollo>
-        {/* <MuiThemeProvider> */}
-          <Measure
-            bounds
-            onResize={this.onResize}
-          >
-            {({ measureRef }) =>
-              <div ref={this.setRefEl}>
-                <div
-                  ref={measureRef}
-                  style={getHashParameter('utility') ? { visibility: "hidden" } : null}
-                >
-                  {uiLanguageId !== null
-                    ?
-                      <CompareView
-                        options={options}
-                        style={compareViewStyle}
-                        show={true}
-                      />
-                    :
-                      <div>
-                        <Bar />
-                        <Progress
-                          containerStyle={{
-                            paddingBottom: 25,
-                          }}
+      <JssProvider jss={jss} generateClassName={generateClassName}>
+        <Apollo>
+          {/* <MuiThemeProvider> */}
+            <Measure
+              bounds
+              onResize={this.onResize}
+            >
+              {({ measureRef }) =>
+                <div ref={this.setRefEl}>
+                  <div
+                    ref={measureRef}
+                    style={getHashParameter('utility') ? { visibility: "hidden" } : null}
+                  >
+                    {uiLanguageId !== null
+                      ?
+                        <CompareView
+                          options={options}
+                          style={compareViewStyle}
+                          show={true}
                         />
-                      </div>
-                  }
+                      :
+                        <div>
+                          <Bar />
+                          <Progress
+                            containerStyle={{
+                              paddingBottom: 25,
+                            }}
+                          />
+                        </div>
+                    }
+                  </div>
                 </div>
-              </div>
-            }
-          </Measure>        
-        {/* </MuiThemeProvider> */}
-      </Apollo>
+              }
+            </Measure>        
+          {/* </MuiThemeProvider> */}
+        </Apollo>
+      </JssProvider>
     )
   }
 }
