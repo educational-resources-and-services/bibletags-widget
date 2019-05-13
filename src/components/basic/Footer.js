@@ -1,10 +1,15 @@
 import React from 'react'
-import styled from 'styled-components'
+import { Mutation } from "react-apollo"
 import i18n from '../../utils/i18n'
+import styled from 'styled-components'
 
 import InstructionsView from '../views/InstructionsView'
 import LoginView from '../views/LoginView'
+import ErrorView from '../views/ErrorView'
 import LinkLikeSpan from './LinkLikeSpan'
+import Progress from '../basic/Progress'
+
+import logOut from '../../data/mutations/logOut'
 
 const LogoLink = styled.a`
   position: absolute;
@@ -29,6 +34,7 @@ class Footer extends React.Component {
 
   state = {
     showingView: false,
+    submitting: false,
   }
 
   hideView = () => this.setState({ showingView: false })
@@ -37,9 +43,30 @@ class Footer extends React.Component {
   
   showLoginView = () => this.setState({ showingView: 'login' })
 
+  logOut = logOut => () => {
+    this.setState({ submitting: true })
+
+    logOut()
+      .then(() => {
+        this.setState({
+          submitting: false,
+        })
+      })
+      .catch(err => {
+        this.setState({
+          showingView: 'error',
+          errorMessage: (err.message || 'Unknown error').replace(/^GraphQL error: /, ''),
+          submitting: false,
+        })
+      })
+
+  }
+
   render() {
     const { showLinks, disableInstructionsLink } = this.props
-    const { showingView } = this.state
+    const { showingView, submitting, errorMessage } = this.state
+
+    const loggedIn = false
 
     return (
       <React.Fragment>
@@ -48,16 +75,21 @@ class Footer extends React.Component {
           <Links>
             <LinkLikeSpan
               onClick={disableInstructionsLink ? null : this.showInstructionsView}
-              disabled={disableInstructionsLink}
+              disabled={disableInstructionsLink || submitting}
             >
               {i18n("Instructions")}
             </LinkLikeSpan>
             <span> · </span>
-            <LinkLikeSpan
-              onClick={this.showLoginView}
-            >
-              {i18n("Login")}
-            </LinkLikeSpan>
+            <Mutation mutation={logOut}>
+              {logOut => (
+                <LinkLikeSpan
+                  onClick={loggedIn ? this.logOut(logOut) : this.showLoginView}
+                  disabled={submitting}
+                >
+                  {loggedIn ? i18n("Log out") : i18n("Login")}
+                </LinkLikeSpan>
+              )}
+            </Mutation>
           </Links>
         }
         <InstructionsView
@@ -68,6 +100,12 @@ class Footer extends React.Component {
           show={showingView === 'login'}
           back={this.hideView}
         />
+        <ErrorView
+          errorMessage={errorMessage}
+          show={showingView === 'error'}
+          back={this.hideView}
+        />
+        {submitting && <Progress cover={true} />}
       </React.Fragment>
     )
   }

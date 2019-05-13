@@ -95,6 +95,7 @@ class LoginView extends React.PureComponent {
   }
 
   doLogIn = logIn => {
+    const { back } = this.props
     const { token } = this.state
 
     this.setState({ submitting: true })
@@ -107,9 +108,13 @@ class LoginView extends React.PureComponent {
       },
     })
       .then(() => {
+
         this.setState({
           submitting: false,
         })
+
+        back()
+
       })
       .catch(err => {
 
@@ -265,45 +270,42 @@ class LoginView extends React.PureComponent {
           }
           {enterCode &&
             <Mutation mutation={logIn}>
-              {logIn => {
-                return (
-                  <React.Fragment>
-                    <Message>
-                      {i18n("Code sent. Check your email.")}
-                    </Message>
-                    <StyledTextField
-                      label={i18n("Code")}
-                      placeholder={i18n("Eg. AU3-GHN")}
-                      id="login.token"
-                      value={token}
-                      onChange={this.handleInputChange}
-                      error={!!formErrors.token}
-                      helperText={formErrors.token}
+              {logIn => (
+                <React.Fragment>
+                  <Message>
+                    {i18n("Code sent. Check your email.")}
+                  </Message>
+                  <StyledTextField
+                    label={i18n("Code")}
+                    placeholder={i18n("Eg. AU3-GHN")}
+                    id="login.token"
+                    value={token}
+                    onChange={this.handleInputChange}
+                    error={!!formErrors.token}
+                    helperText={formErrors.token}
+                    disabled={submitting}
+                    autoFocus
+                  />
+                  <ButtonCont>
+                    <Button
+                      variant="contained"
                       disabled={submitting}
-                      autoFocus
-                    />
-                    <ButtonCont>
-                      <Button
-                        variant="contained"
-                        disabled={submitting}
-                        onClick={this.logIn(logIn)}
-                      >
-                        {i18n("Log in")}
-                      </Button>
-                    </ButtonCont>
-                    <SendNewCodeCont>
-                      <LinkLikeSpan
-                        onClick={this.handleSendNewCode}
-                      >
-                        {i18n("Send new code")}
-                      </LinkLikeSpan>
-                    </SendNewCodeCont>
-                  </React.Fragment>
-                )
-              }}
+                      onClick={this.logIn(logIn)}
+                    >
+                      {i18n("Log in")}
+                    </Button>
+                  </ButtonCont>
+                  <SendNewCodeCont>
+                    <LinkLikeSpan
+                      onClick={this.handleSendNewCode}
+                    >
+                      {i18n("Send new code")}
+                    </LinkLikeSpan>
+                  </SendNewCodeCont>
+                </React.Fragment>
+              )}
             </Mutation>
           }
-          {submitting && <Progress />}
         </LoginContent>
         <Footer />
         <ErrorView
@@ -311,6 +313,7 @@ class LoginView extends React.PureComponent {
           show={showingView === 'error'}
           back={this.hideView}
         />
+        {submitting && <Progress cover={true} />}
       </View>
     )
   }
