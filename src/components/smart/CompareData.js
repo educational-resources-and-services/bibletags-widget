@@ -305,9 +305,9 @@ class CompareData extends React.PureComponent {
                             && Object.values(tagSetsById).some(tagSet => tagSet.status === 'none')
                           ) {
 
-                            const verionsUsfmByVerseId = {}
+                            const versionsUsfmByVerseId = {}
                             versions.forEach(version => (version.refs || [version.ref]).forEach(ref => {
-                              verionsUsfmByVerseId[`${getLocFromRef(ref).split(':')[0]}-${version.id}`] = ref.usfm
+                              versionsUsfmByVerseId[`${getLocFromRef(ref).split(':')[0]}-${version.id}`] = ref.usfm
                             }))
 
                             Object.values(tagSetsById).forEach(tagSet => {
@@ -316,7 +316,7 @@ class CompareData extends React.PureComponent {
                                 const verseId = `${loc}-${versionId}`
                                 const embeddingAppId = getEmbeddingAppId() || 0
                                 const wordHashes = getWordHashes({
-                                  usfm: verionsUsfmByVerseId[verseId] || '',
+                                  usfm: versionsUsfmByVerseId[verseId] || '',
                                   wordDividerRegex: versionInfo[versionId].wordDividerRegex,
                                 })
                                 // setTimeout needed so that there is not a rerender while in the render function.
