@@ -49,7 +49,7 @@ class EntryDetails extends React.Component {
       })
       .reduce((accumulator, value, index) => [
         ...accumulator,
-        <span key={index}>{i18n(", ", {}, "list separator", "grammar")}</span>,
+        <span key={index}>{i18n(", ", "list separator", "grammar")}</span>,
         value,
       ], [])
       .slice(1)

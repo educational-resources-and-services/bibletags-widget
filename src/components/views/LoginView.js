@@ -84,7 +84,7 @@ class LoginView extends React.PureComponent {
 
     // form validation
     if(!isValidToken(token)) {
-      formErrors.token = i18n("Invalid code.") + i18n(" ", {}, "word separator") + i18n("Eg. AU3-GHN")
+      formErrors.token = i18n("Invalid code.") + i18n(" ", "word separator") + i18n("Eg. AU3-GHN")
     }
 
     this.setState({ formErrors })

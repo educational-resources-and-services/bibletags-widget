@@ -10,9 +10,9 @@
   Usage examples:
     i18n("Library")
     i18n("{{num_results}} results!", { num_results: this.props.numResults })
-    i18n("Back", {}, "i.e. go back")
-    i18n("Back", {}, "i.e. the back of the book")  // Differing descriptions create separate variables to translate
-    i18n("John", {}, "", "book")  // Optionally include category as fourth parameter ("book" or "grammar")
+    i18n("Back", "i.e. go back")
+    i18n("Back", "i.e. the back of the book")  // Differing descriptions create separate variables to translate
+    i18n("John", "", "book")  // Optionally include category as fourth parameter ("book" or "grammar")
 
   When `npm run build` is executed, the following needs to happen:
     * `react-scripts build` is executed, creating /build

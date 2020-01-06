@@ -36,7 +36,7 @@ class Parsing extends React.Component {
               style={{ color }}
             >
               {idx > 0 && (
-                <Plus>{i18n(" + ", {}, "combination character")}</Plus>
+                <Plus>{i18n(" + ", "combination character")}</Plus>
               )}
               {str}
             </ParsingPart>

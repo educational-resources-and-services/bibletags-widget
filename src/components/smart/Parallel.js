@@ -231,7 +231,7 @@ class Parallel extends React.Component {
           wordNum-1 === wordRangeArray[0]
         ))) {
           componentGroup.unshift(
-            <span key={idx}>{i18n("…", {}, "ellipsis")}</span>
+            <span key={idx}>{i18n("…", "ellipsis")}</span>
           )
         }
 
@@ -240,7 +240,7 @@ class Parallel extends React.Component {
           && wordRangeArrayIndex === wordRangeArrays.length-1
         ))) {
           componentGroup.push(
-            <span key={idx}>{i18n("…", {}, "ellipsis")}</span>
+            <span key={idx}>{i18n("…", "ellipsis")}</span>
           )
         }
 
@@ -286,7 +286,7 @@ class Parallel extends React.Component {
           {getVersionStr(versionId)}
           {hasMisalignment &&
             <React.Fragment>
-              {i18n(" ", {}, "word separator")}
+              {i18n(" ", "word separator")}
               <VersionPassageStr>
                 {getPassageStr({ refs, skipBookName: true })}
               </VersionPassageStr>

@@ -20,7 +20,7 @@ class ParallelHeader extends React.Component {
     const preppedHeadings = headings
       .reduce((accumulator, value, index) => [
         ...accumulator,
-        <span key={index}>{i18n(" + ", {}, "combination character")}</span>,
+        <span key={index}>{i18n(" + ", "combination character")}</span>,
         value,
       ], [])
       .slice(1)
