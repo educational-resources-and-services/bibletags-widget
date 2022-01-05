@@ -1,21 +1,27 @@
 {
-  "name": "bibletags-widget",
+  "name": "@bibletags/bibletags-widget",
+  "version": "0.1.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/educational-resources-and-services/bibletags-widget.git"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/educational-resources-and-services/bibletags-widget/issues"
+    "url": "https://github.com/educational-resources-and-services/bibletags-data/issues"
   },
   "homepage": "https://bibletags.org",
+  "author": "Andy Hubert",
+  "funding": {
+    "type" : "individual",
+    "url" : "https://gofundme.com/f/yarn4-bible-tags"
+  },
   "dependencies": {
+    "@bibletags/bibletags-versification": "^0.1.0",
     "@material-ui/core": "3.9.2",
     "@material-ui/icons": "3.0.2",
     "apollo-cache-inmemory": "1.3.5",
     "apollo-client": "2.4.2",
     "apollo-link-batch-http": "1.2.3",
-    "bibletags-versification": "github:educational-resources-and-services/bibletags-versification#b91312ea9551b83740d17db2e61a35a102052359",
     "dotenv": "6.1.0",
     "graphql": "14.0.2",
     "graphql-tag": "2.10.0",
