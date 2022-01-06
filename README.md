@@ -26,6 +26,8 @@ For more information on this project, see the [Bible Tags website](https://bible
 
 # Bible Tags Widget
 
+**IMPORTANT NOTE: This aspect of the Bible Tags project has been placed on hold while focus is given to the React Native app. [More on project phases](https://bibletags.org/phases).**
+
 ## Development
 
 This project has been set up in such a way as to allow you to work one of the repositories without the need of cloning and running the others locally.
