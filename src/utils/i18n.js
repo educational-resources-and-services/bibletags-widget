@@ -22,6 +22,8 @@
     
 */
 
+// TODO: THIS IS OLD AND NEEDS TO BE REDONE WITH inline-i18n
+
 let translations = {}
 let uiLanguageId = 'eng'
 

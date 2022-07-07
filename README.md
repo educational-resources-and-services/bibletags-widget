@@ -10,7 +10,7 @@ For more information on this project, see the [Bible Tags website](https://bible
 
 ## Repos
 
-* [bibletags-data](https://github.com/educational-resources-and-services/bibletags-data) **(Contains general information on project design and contributing.)**
+* [bibletags-data](https://github.com/educational-resources-and-services/bibletags-data)
 * [bibletags-react-native-app](https://github.com/educational-resources-and-services/bibletags-react-native-app)
 * [bibletags-ui-helper](https://github.com/educational-resources-and-services/bibletags-ui-helper)
 * [bibletags-versification](https://github.com/educational-resources-and-services/bibletags-versification)
@@ -18,12 +18,9 @@ For more information on this project, see the [Bible Tags website](https://bible
 * [bibletags-widget](https://github.com/educational-resources-and-services/bibletags-widget)
 * [bibletags-widget-script](https://github.com/educational-resources-and-services/bibletags-widget-script)
 
-## Bugs / feature requests
+## Bugs
 
-* See [here](https://github.com/educational-resources-and-services/bibletags-data/issues).
-* Please first check if your bug report / feature request already exists before submitting a new issue.
-* For bug reports, please provide a clear description of the problem and step-by-step explanation of how to reproduce it.
-* For feature requests, please first get to the know the project via the [Design section of the bibletags-data README](https://github.com/educational-resources-and-services/bibletags-data#design) to make sure the desired feature is inline with the direction this project is heading.
+* Report [here](https://github.com/educational-resources-and-services/bibletags-data/issues).
 
 # Bible Tags Widget
 
@@ -31,10 +28,10 @@ For more information on this project, see the [Bible Tags website](https://bible
 
 ## Basic information
 
-* build with `create-react-app`
-* deploys to static files
-* lives on a cdn
-* makes graphql queries and mutations to `bibletags-data`
+* Built with `create-react-app`
+* Deploys to static files
+* Lives on a cdn
+* Sends graphql queries and mutations to `bibletags-data`
 
 ## Development
 
@@ -48,19 +45,7 @@ Note: A lot of data is cached in the browser so as to make this widget fast and 
 
 #### Installation
 
-```bash
-git clone https://github.com/educational-resources-and-services/bibletags-data
-cd bibletags-data
-npm install
-npm run setup
-```
-
-#### Running
-
-* `npm run open` (to open test.html in your browser)
-* `npm start` (to start the local server)
-
-Note: You will need to kill and rerun the server with each change.
+Follow the instructions found [here](https://github.com/educational-resources-and-services/bibletags-data).
 
 ### bibletags-widget
 
